@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Evolution.Data": "1.0.0-*",
+    "Evolution.Framework": "1.0.0-*",
+    "Evolution.Repository": "1.0.0-*",
+    "Microsoft.AspNetCore.Identity": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "System.ComponentModel.Primitives": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
