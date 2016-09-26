@@ -81,7 +81,6 @@ namespace Evolution.Application.SystemManage
             {
                 return menuButtonRepo.IQueryable(t => t.MenuId == menuId).OrderBy(x => x.SortCode).ToList();
             }
-
         }
         /// <summary>
         /// 获取所有表单按钮对象
@@ -94,13 +93,17 @@ namespace Evolution.Application.SystemManage
         /// <summary>
         /// 通过Id获取表单按钮对象
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">按钮Id</param>
         /// <returns></returns>
-        public MenuButtonEntity GetItemById(string id)
+        public MenuButtonEntity GetMenuButtonById(string id)
         {
             return menuButtonRepo.FindEntity(id);
         }
-        public void DeleteItem(string id)
+        /// <summary>
+        /// 删除按钮，若有子项则不能删除
+        /// </summary>
+        /// <param name="id">按钮Id</param>
+        public void Delete(string id)
         {
             if (menuButtonRepo.IQueryable().Count(t => t.ParentId.Equals(id)) > 0)
             {
@@ -115,21 +118,26 @@ namespace Evolution.Application.SystemManage
         /// 保存
         /// </summary>
         /// <param name="menuButtonEntity">表单按钮对象</param>
-        /// <param name="keyValue">Id</param>
+        /// <param name="keyValue">按钮Id</param>
         public void Save(MenuButtonEntity menuButtonEntity, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                menuButtonEntity.Modify(keyValue, context);
+                menuButtonEntity.AttachModifyInfo(keyValue, context);
                 menuButtonRepo.Update(menuButtonEntity);
             }
             else
             {
-                menuButtonEntity.Create(context);
+                menuButtonEntity.AttachCreateInfo(context);
                 menuButtonRepo.Insert(menuButtonEntity);
             }
         }
-        public void SubmitCloneButton(string moduleId, string Ids)
+        /// <summary>
+        /// 保存克隆的按钮
+        /// </summary>
+        /// <param name="menuId">菜单Id</param>
+        /// <param name="Ids">要复制的按钮Id，逗号分隔</param>
+        public void SaveCloneButton(string menuId, string Ids)
         {
             string[] ArrayId = Ids.Split(',');
             var data = this.GetList();
@@ -138,10 +146,10 @@ namespace Evolution.Application.SystemManage
             {
                 MenuButtonEntity moduleButtonEntity = data.Find(t => t.Id == item);
                 moduleButtonEntity.Id = Common.GuId();
-                moduleButtonEntity.MenuId = moduleId;
+                moduleButtonEntity.MenuId = menuId;
                 entitys.Add(moduleButtonEntity);
             }
-            menuButtonRepo.SubmitCloneButton(entitys);
+            menuButtonRepo.SaveCloneButton(entitys);
         }
     }
 }

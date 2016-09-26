@@ -20,19 +20,17 @@ namespace Evolution.Application.SystemManage
         private IUserLogOnRepository service = null;
         private RoleApp roleApp = null;
         private RoleAuthorizeApp roleAuth = null;
-        private ModuleApp module = null;
         private MenuButtonApp mb = null;
 
-        public UserLogOnApp(IUserLogOnRepository service, RoleApp roleApp,RoleAuthorizeApp roleAuth,ModuleApp module,MenuButtonApp mb)
+        public UserLogOnApp(IUserLogOnRepository service, RoleApp roleApp,RoleAuthorizeApp roleAuth,MenuButtonApp mb)
         {
             this.service = service;
             this.roleApp = roleApp;
             this.roleAuth = roleAuth;
-            this.module = module;
             this.mb = mb;
         }
 
-        public void SignIn(OperatorModel om,HttpContext context)
+        public void SignIn(LoginModel om,HttpContext context)
         {
             //RoleEntity re = this.roleApp.GetForm(userEntity.F_RoleId);
 
@@ -55,7 +53,7 @@ namespace Evolution.Application.SystemManage
             identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, om.UserName));
             identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
 
-            identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetPermissionsByRoleId(om.RoleId))));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId))));
 
             ClaimsPrincipal cp = new ClaimsPrincipal(identity);
             //"Cookies",CookieAuthenticationDefaults.AuthenticationScheme

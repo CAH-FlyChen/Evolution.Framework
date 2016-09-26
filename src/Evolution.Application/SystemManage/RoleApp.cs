@@ -15,18 +15,24 @@ namespace Evolution.Application.SystemManage
 {
     public class RoleApp
     {
+        #region 私有变量
         private IRoleRepository service = null;
         private MenuApp menuApp = null;
         private MenuButtonApp moduleButtonApp = null;
-
+        #endregion
+        #region 构造函数
         public RoleApp(IRoleRepository service, MenuApp menuApp, MenuButtonApp moduleButtonApp)
         {
             this.service = service;
             this.menuApp = menuApp;
             this.moduleButtonApp = moduleButtonApp;
         }
-
-
+        #endregion
+        /// <summary>
+        /// 获取角色列表
+        /// </summary>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
         public List<RoleEntity> GetList(string keyword = "")
         {
             var expression = ExtLinq.True<RoleEntity>();
@@ -38,21 +44,30 @@ namespace Evolution.Application.SystemManage
             expression = expression.And(t => t.Category == 1);
             return service.IQueryable(expression).OrderBy(t => t.SortCode).ToList();
         }
-        public RoleEntity GetForm(string keyValue)
+        /// <summary>
+        /// 根据Id获取角色对象
+        /// </summary>
+        /// <param name="id">角色Id</param>
+        /// <returns></returns>
+        public RoleEntity GetRoleById(string id)
         {
-            return service.FindEntity(keyValue);
-        }
-        public void DeleteForm(string keyValue)
-        {
-            service.DeleteForm(keyValue);
+            return service.FindEntity(id);
         }
         /// <summary>
-        /// 保存菜单授权
+        /// 删除角色对象及相关授权
         /// </summary>
-        /// <param name="roleEntity"></param>
-        /// <param name="permissionIds"></param>
-        /// <param name="keyValue"></param>
-        public void SubmitForm(RoleEntity roleEntity, string[] permissionIds, string keyValue)
+        /// <param name="id">角色对象</param>
+        public void Delete(string id)
+        {
+            service.Delete(id);
+        }
+        /// <summary>
+        /// 保存角色及角色菜单授权
+        /// </summary>
+        /// <param name="roleEntity">角色对象</param>
+        /// <param name="permissionIds">菜单授权Id</param>
+        /// <param name="keyValue">角色Id</param>
+        public void Save(RoleEntity roleEntity, string[] permissionIds, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
@@ -83,7 +98,7 @@ namespace Evolution.Application.SystemManage
                 roleAuthorizeEntitys.Add(roleAuthorizeEntity);
             }
             //保存菜单授权
-            service.SubmitForm(roleEntity, roleAuthorizeEntitys, keyValue);
+            service.Save(roleEntity, roleAuthorizeEntitys, keyValue);
         }
     }
 }

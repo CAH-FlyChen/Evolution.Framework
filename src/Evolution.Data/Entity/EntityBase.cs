@@ -22,7 +22,7 @@ namespace Evolution.Data.Entity
         public DateTime? DeleteTime { get; set; }
         public string DeleteUserId { get; set; }
 
-        public void Create(HttpContext httpContext)
+        public void AttachCreateInfo(HttpContext httpContext)
         {
             var entity = this as ICreationAudited;
             this.Id = Common.GuId();
@@ -32,15 +32,20 @@ namespace Evolution.Data.Entity
                 entity.CreatorUserId = userClaim.Value;
             entity.CreatorTime = DateTime.Now;
         }
-        public void Modify(string keyValue, HttpContext httpContext)
+        /// <summary>
+        /// 修改实体的Modify属性。涉及：修改者和修改日期
+        /// </summary>
+        /// <param name="id">实体Id</param>
+        /// <param name="httpContext"></param>
+        public void AttachModifyInfo(string id, HttpContext httpContext)
         {
             var entity = this as IModificationAudited;
-            this.Id = keyValue;
+            this.Id = id;
             var userId = httpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserId).Value;
             entity.LastModifyUserId = userId;
             entity.LastModifyTime = DateTime.Now;
         }
-        public void Remove(HttpContext httpContext)
+        public void AttachRemoveInfo(HttpContext httpContext)
         {
             var entity = this as IDeleteAudited;
             var userId = httpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserId).Value;

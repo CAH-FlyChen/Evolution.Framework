@@ -87,24 +87,24 @@
             btn: null,
         });
     }
-    function btn_grantPermissionToRole() {
+    function btn_resourcePermission() {
         var keyValue = $("#gridList").jqGridRowValue().Id;
         $.modalOpen({
             id: "Permission",
             title: "角色授权",
-            url: "/SystemManage/Role/Permission?keyValue=" + keyValue,
+            url: "/SystemManage/Role/ResourcePermission?keyValue=" + keyValue,
             width: "1200px",
             height: "1000px",
             btn: null,
         });
     }
-    function btn_grantPermissionToMenu() {
+    function btn_menuPermission() {
         debugger;
         var keyValue = $("#gridList").jqGridRowValue().Id;
         $.modalOpen({
             id: "Permission",
             title: "角色授权",
-            url: "/SystemManage/Role/GrantPermissionToMenu?keyValue=" + keyValue,
+            url: "/SystemManage/Role/MenuPermission?keyValue=" + keyValue,
             width: "550px",
             height: "570px",
             scrollbar: false,
@@ -127,8 +127,8 @@
                     <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>修改角色</a></li>
                     <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>删除角色</a></li>
                     <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>查看角色</a></li>
-                    <li><a id="NF-Permission" authorize="yes" onclick="btn_grantPermissionToRole()"><i class="fa fa-search-plus"></i>给角色授权</a></li>
-                    <li><a id="NF-PermissionToMenu" authorize="yes" onclick="btn_grantPermissionToMenu()"><i class="fa fa-search-plus"></i>给菜单及按钮授权</a></li>
+                    <li><a id="NF-Permission" authorize="yes" onclick="btn_resourcePermission()"><i class="fa fa-search-plus"></i>给角色授权</a></li>
+                    <li><a id="NF-PermissionToMenu" authorize="yes" onclick="btn_menuPermission()"><i class="fa fa-search-plus"></i>给菜单及按钮授权</a></li>
                 </ul>
                 <a href="javascript:;" class="close"></a>
             </div>

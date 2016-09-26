@@ -14,19 +14,24 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
     [Area("SystemManage")]
     public class RoleController : ControllerBase
     {
+        #region 私有变量
         private RoleApp roleApp = null;
         private RoleAuthorizeApp roleAuthorizeApp = null;
-        private ModuleApp moduleApp = null;
         private MenuButtonApp moduleButtonApp = null;
-
-        public RoleController(RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp, ModuleApp moduleApp, MenuButtonApp moduleButtonApp)
+        #endregion
+        #region 构造函数
+        public RoleController(RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp, MenuButtonApp moduleButtonApp)
         {
             this.roleApp = roleApp;
             this.roleAuthorizeApp = roleAuthorizeApp;
-            this.moduleApp = moduleApp;
             this.moduleButtonApp = moduleButtonApp;
         }
-
+        #endregion
+        /// <summary>
+        /// 获取角色表格数据
+        /// </summary>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetGridJson(string keyword)
@@ -34,37 +39,63 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             var data = roleApp.GetList(keyword);
             return Content(data.ToJson());
         }
+        /// <summary>
+        /// 获取角色表单数据
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)
         {
-            var data = roleApp.GetForm(keyValue);
+            var data = roleApp.GetRoleById(keyValue);
             return Content(data.ToJson());
         }
+        /// <summary>
+        /// 提交角色表单数据
+        /// </summary>
+        /// <param name="roleEntity">角色对象</param>
+        /// <param name="permissionIds">授权菜单Id列表</param>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
         public ActionResult SubmitForm(RoleEntity roleEntity, string permissionIds, string keyValue)
         {
-            roleApp.SubmitForm(roleEntity, permissionIds.Split(','), keyValue);
+            roleApp.Save(roleEntity, permissionIds.Split(','), keyValue);
             return Success("操作成功。");
         }
+        /// <summary>
+        /// 删除角色及相关授权
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            roleApp.DeleteForm(keyValue);
+            roleApp.Delete(keyValue);
             return Success("删除成功。");
         }
+        /// <summary>
+        /// 角色资源授权页面
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Permission(string keyValue)
         {
             return View();
         }
+        /// <summary>
+        /// 角色菜单授权界面
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult GrantPermissionToMenu(string keyValue)
+        public ActionResult MenuPermission(string keyValue)
         {
             return View();
         }

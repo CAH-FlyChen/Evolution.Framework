@@ -45,11 +45,11 @@ namespace Evolution.Application.SystemSecurity
         {
             return service.FindEntity(keyValue);
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
-            service.DeleteForm(keyValue);
+            service.Delete(keyValue);
         }
-        public void SubmitForm(DbBackupEntity dbBackupEntity)
+        public void Save(DbBackupEntity dbBackupEntity)
         {
             dbBackupEntity.Id = Common.GuId();
             dbBackupEntity.EnabledMark = true;

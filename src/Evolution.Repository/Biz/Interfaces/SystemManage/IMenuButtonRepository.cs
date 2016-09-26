@@ -12,6 +12,10 @@ namespace Evolution.Domain.IRepository.SystemManage
 {
     public interface IMenuButtonRepository : IRepositoryBase<MenuButtonEntity>
     {
-        void SubmitCloneButton(List<MenuButtonEntity> entitys);
+        /// <summary>
+        /// 保存克隆的按钮
+        /// </summary>
+        /// <param name="entitys">按钮对象列表</param>
+        void SaveCloneButton(List<MenuButtonEntity> entitys);
     }
 }

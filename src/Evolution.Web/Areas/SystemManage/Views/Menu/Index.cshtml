@@ -113,10 +113,11 @@
     }
     function btn_modulebutton() {
         var keyValue = $("#gridList").jqGridRowValue().Id;
+        debugger;
         $.modalOpen({
             id: "modulebutton",
             title: "系统按钮",
-            url: "/SystemManage/MenuButton/Index?moduleId=" + keyValue,
+            url: "/SystemManage/MenuButton/Index?menuId=" + keyValue,
             width: "950px",
             height: "600px",
             btn: null,

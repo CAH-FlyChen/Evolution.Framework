@@ -125,7 +125,7 @@ namespace Evolution.Web.Controllers
                 return null;
             }
             string roleId = HttpContext.User.Claims.FirstOrDefault(t => t.Type== OperatorModelClaimNames.RoleId).Value;
-            return ToMenuJson(this.menuApp.GetMenuListByRoleId(roleId,HttpContext), "0");
+            return ToMenuJson(this.menuApp.GetMenuListByRoleId(roleId), "0");
         }
         private string ToMenuJson(List<MenuEntity> data, string parentId)
         {

@@ -27,11 +27,16 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             this.menuButtonApp = moduleButtonApp;
         }
         #endregion
+        /// <summary>
+        /// 获取菜单按钮下拉选择框，选择上级使用。
+        /// </summary>
+        /// <param name="menuId"></param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeSelectJson(string moduleId)
+        public ActionResult GetTreeSelectJson(string menuId)
         {
-            var data = menuButtonApp.GetListByMenuId(moduleId);
+            var data = menuButtonApp.GetListByMenuId(menuId);
             var treeList = new List<TreeSelectModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -43,11 +48,16 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeSelectJson());
         }
+        /// <summary>
+        /// 获取树形菜单按钮
+        /// </summary>
+        /// <param name="menuId">菜单Id</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string moduleId)
+        public ActionResult GetTreeGridJson(string menuId)
         {
-            var data = menuButtonApp.GetListByMenuId(moduleId);
+            var data = menuButtonApp.GetListByMenuId(menuId);
             var treeList = new List<TreeGridModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -62,13 +72,24 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeGridJson());
         }
+        /// <summary>
+        /// 获取菜单按钮
+        /// </summary>
+        /// <param name="keyValue">菜单按钮Id</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)
         {
-            var data = menuButtonApp.GetItemById(keyValue);
+            var data = menuButtonApp.GetMenuButtonById(keyValue);
             return Content(data.ToJson());
         }
+        /// <summary>
+        /// 保存菜单按钮
+        /// </summary>
+        /// <param name="entity">菜单按钮对象</param>
+        /// <param name="keyValue">菜单按钮Id，无id则新建，有id则修改</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
@@ -77,19 +98,32 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             menuButtonApp.Save(entity, keyValue);
             return Success("操作成功。");
         }
+        /// <summary>
+        /// 删除菜单按钮
+        /// </summary>
+        /// <param name="keyValue">菜单按钮Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            menuButtonApp.DeleteItem(keyValue);
+            menuButtonApp.Delete(keyValue);
             return Success("删除成功。");
         }
+        /// <summary>
+        /// 克隆按钮的页面
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult CloneButton()
         {
             return View();
         }
+        /// <summary>
+        /// 初始化按钮树状结构
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetCloneButtonTreeJson()
@@ -130,11 +164,17 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeViewJson());
         }
+        /// <summary>
+        /// 保存克隆按钮
+        /// </summary>
+        /// <param name="menuId">菜单Id</param>
+        /// <param name="Ids">按钮Id字符串，用逗号分隔</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public ActionResult SubmitCloneButton(string moduleId, string Ids)
+        public ActionResult SubmitCloneButton(string menuId, string Ids)
         {
-            menuButtonApp.SubmitCloneButton(moduleId, Ids);
+            menuButtonApp.SaveCloneButton(menuId, Ids);
             return Success("克隆成功。");
         }
     }

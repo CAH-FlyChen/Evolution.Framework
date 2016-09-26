@@ -25,58 +25,56 @@ namespace Evolution.Application.SystemManage
     {
         #region 私有变量
         private IRoleAuthorizeRepository service = null;
-        private ModuleApp moduleApp = null;
         private MenuButtonApp moduleButtonApp = null;
         private IMemoryCache memoryCache;
         private MenuApp menuApp = null;
         private RoleApp roleApp = null;
+        private HttpContext context = null;
         #endregion
         #region 构造函数
-        public RoleAuthorizeApp(IRoleAuthorizeRepository service, ModuleApp moduleApp, MenuButtonApp moduleButtonApp, MenuApp menuApp,IMemoryCache _memoryCache,RoleApp roleApp)
+        public RoleAuthorizeApp(IRoleAuthorizeRepository service, MenuButtonApp moduleButtonApp, MenuApp menuApp,IMemoryCache _memoryCache,RoleApp roleApp,IHttpContextAccessor contextAccessor)
         {
             this.service = service;
-            this.moduleApp = moduleApp;
             this.moduleButtonApp = moduleButtonApp;
             this.memoryCache = _memoryCache;
             this.menuApp = menuApp;
             this.roleApp = roleApp;
+            this.context = contextAccessor.HttpContext;
         }
         #endregion
         /// <summary>
-        /// 根据对象id获取所有授权对象
+        /// 根据权限所有者对象id获取所有授权对象
         /// </summary>
-        /// <param name="ObjectId">对象Id</param>
+        /// <param name="ObjectId">权限所有者对象Id（OwnerId）</param>
         /// <returns>授权对象</returns>
         public List<RoleAuthorizeEntity> GetListByObjectId(string ObjectId)
         {
             return service.IQueryable(t => t.ObjectId == ObjectId).ToList();
         }
-        
         /// <summary>
-        /// 通过角色获取该角色的授权
+        /// 通过角色Id获取该角色的资源授权
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="permissionIds">输出参数：逗号分隔的权限Id文本</param>
         /// <returns>角色对象</returns>
-        public RoleEntity GetForm(string roleId,out string permissionIds)
+        public RoleEntity GetResoucesByRoleId(string roleId,out string permissionIds)
         {
             List<string> r = service.IQueryable(t => t.ItemType == 4 && t.ObjectType == 1 && t.ObjectId == roleId).Select(t=>t.ItemId).ToList();
             permissionIds = String.Join(",", r);
-            return roleApp.GetForm(roleId);
+            return roleApp.GetRoleById(roleId);
         }
         /// <summary>
-        /// 角色资源授权
+        /// 保存角色资源授权
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="resourceIds">资源Ids</param>
-        /// <param name="context"></param>
-        public void Save(string roleId,List<string> resourceIds,HttpContext context)
+        public void Save(string roleId,List<string> resourceIds)
         {
             service.Delete(t => t.ObjectId == roleId && t.ObjectType == 1 && t.ItemType == 4);
             foreach(string resourceId in resourceIds)
             {
                 RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
-                entity.Create(context);
+                entity.AttachCreateInfo(context);
                 entity.ItemId = resourceId;
                 entity.ItemType = 4;
                 entity.ObjectId = roleId;
@@ -130,15 +128,16 @@ namespace Evolution.Application.SystemManage
         /// <summary>
         /// 根据角色id获取权限ID
         /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        public List<string> GetPermissionsByRoleId(string roleId)
+        /// <param name="roleId">角色Id</param>
+        /// <returns>资源权限列表</returns>
+        public List<string> GetResorucePermissionsByRoleId(string roleId)
         {
-            return service.GetPermissionsByRoleId(roleId);
+            return service.GetResorucePermissionsByRoleId(roleId);
         }
-        /// <summary>
+/// <summary>
         /// 检测资源（Resource）的权限。
         /// 当访问资源的时候，会通过此方法来判断是否具有权限。
+        /// 如果是系统管理员则自动获取到所有权限
         /// </summary>
         /// <param name="ctx">context</param>
         /// <returns>是否通过</returns>
@@ -146,9 +145,9 @@ namespace Evolution.Application.SystemManage
         {
             AuthorizationFilterContext res = (AuthorizationFilterContext)ctx.Resource;
             string url = res.HttpContext.Request.Path.Value;
-            Claim roleClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.RoleName);
-            if (roleClaim == null) return false;
-            if (roleClaim.Value == "超级管理员") return true;
+            Claim isSystemClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem);
+            if (isSystemClaim == null) return false;
+            if (Convert.ToBoolean(isSystemClaim.Value)) return true;
             Claim permissionClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.Permission);
             if (permissionClaim == null) return false;
             List<string> permissionIds = JsonConvert.DeserializeObject<List<string>>(permissionClaim.Value);

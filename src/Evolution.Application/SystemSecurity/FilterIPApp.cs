@@ -34,20 +34,20 @@ namespace Evolution.Application.SystemSecurity
         {
             return service.FindEntity(keyValue);
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
             service.Delete(t => t.Id == keyValue);
         }
-        public void SubmitForm(FilterIPEntity filterIPEntity, string keyValue,HttpContext context)
+        public void Save(FilterIPEntity filterIPEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                filterIPEntity.Modify(keyValue, context);
+                filterIPEntity.AttachModifyInfo(keyValue, context);
                 service.Update(filterIPEntity);
             }
             else
             {
-                filterIPEntity.Create(context);
+                filterIPEntity.AttachCreateInfo(context);
                 service.Insert(filterIPEntity);
             }
         }

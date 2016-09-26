@@ -90,7 +90,7 @@
         var code = $("#Id").val();
         //postData["permissionIds"] = String($("#permissionTree").getCheckedNodes());
         $.submitForm({
-            url: "/SystemManage/RoleAuthorize/SubmitForm?keyValue=" + code,
+            url: "/SystemManage/RoleAuthorize/SubmitResourceForm?keyValue=" + code,
             param: postData,
             success: function () {
                 $.currentWindow().$("#gridList").trigger("reloadGrid");

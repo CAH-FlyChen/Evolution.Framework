@@ -11,7 +11,7 @@ namespace Evolution.Domain.IRepository.SystemSecurity
 {
     public interface IDbBackupRepository : IRepositoryBase<DbBackupEntity>
     {
-        void DeleteForm(string keyValue);
+        void Delete(string keyValue);
         void ExecuteDbBackup(DbBackupEntity dbBackupEntity);
     }
 }

@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Form.cshtml";
 }
 <script>
-    var moduleId = $.request("moduleId");
+    var menuId = $.request("menuId");
     $(function () {
         $("#itemTree").treeview({
             showcheck: true,
@@ -14,7 +14,7 @@
         var Ids = $("#itemTree").getCheckedNodes();
         $.submitForm({
             url: "/SystemManage/MenuButton/SubmitCloneButton",
-            param: { moduleId: moduleId, Ids: String(Ids) },
+            param: { menuId: menuId, Ids: String(Ids) },
             success: function () {
                 top.modulebutton.$("#gridList").resetSelection();
                 top.modulebutton.$("#gridList").trigger("reloadGrid");

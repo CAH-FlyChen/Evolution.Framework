@@ -18,15 +18,22 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Evolution.Data;
+using Evolution.IInfrastructure;
 
 namespace Evolution.Application.SystemManage
 {
     public class UserApp 
     {
+        #region 私有变量
+
         private IUserRepository service = null;
         private UserLogOnApp userLogOnApp = null;
         private RoleApp roleApp = null;
         private HttpContext currentContext = null;
+
+        #endregion
+
+        #region 构造函数
         public UserApp (IUserRepository service, UserLogOnApp userLogOnApp, RoleApp roleApp,IHttpContextAccessor accessor)
         {
             this.service = service;
@@ -34,7 +41,14 @@ namespace Evolution.Application.SystemManage
             this.currentContext = accessor.HttpContext;
             this.roleApp = roleApp;
         }
+        #endregion
 
+        /// <summary>
+        /// 获取用户列表
+        /// </summary>
+        /// <param name="pagination">分页信息</param>
+        /// <param name="keyword">关键字，只允用户名，真实姓名，电话号码</param>
+        /// <returns>用户实体列表</returns>
         public List<UserEntity> GetList(Pagination pagination, string keyword)
         {
             var expression = ExtLinq.True<UserEntity>();
@@ -47,65 +61,84 @@ namespace Evolution.Application.SystemManage
             expression = expression.And(t => t.Account != "admin");
             return service.FindList(expression, pagination);
         }
-        public UserEntity GetForm(string keyValue)
+        /// <summary>
+        /// 通过id获取用户实体对象
+        /// </summary>
+        /// <param name="id">用户Id</param>
+        /// <returns>用户实体对象</returns>
+        public UserEntity GetEntityById(string id)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntity(id);
         }
-        public void DeleteForm(string keyValue)
+        /// <summary>
+        /// 删除用户实体对象
+        /// </summary>
+        /// <param name="id">用户id</param>
+        public void Delete(string id)
         {
-            service.DeleteForm(keyValue);
+            service.Delete(id);
         }
-        public void SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue,HttpContext context)
+        /// <summary>
+        /// 保存用户对象
+        /// </summary>
+        /// <param name="userEntity">用户实体</param>
+        /// <param name="userLogOnEntity">登录实体</param>
+        /// <param name="id">用户Id，为空则创建实体，否则更新实体</param>
+        public void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
         {
-            if (!string.IsNullOrEmpty(keyValue))
-                userEntity.Modify(keyValue, context);
+            if (!string.IsNullOrEmpty(id))
+                userEntity.AttachModifyInfo(id, currentContext);
             else
-                userEntity.Create(context);
-            service.SubmitForm(userEntity, userLogOnEntity, keyValue);
+                userEntity.AttachCreateInfo(currentContext);
+            service.Save(userEntity, userLogOnEntity, id);
         }
-        public void UpdateForm(UserEntity userEntity)
+        /// <summary>
+        /// 更新用户实体
+        /// </summary>
+        /// <param name="userEntity">用户实体</param>
+        public void Update(UserEntity userEntity)
         {
             service.Update(userEntity);
         }
+
+        /// <summary>
+        /// 验证用户名密码
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="password">md5（16位）加密后的秘密</param>
+        /// <returns></returns>
         public UserEntity CheckLogin(string username, string password)
         {
+            //获取用户对象
             UserEntity userEntity = service.FindEntity(t => t.Account == username);
-            if (userEntity != null)
-            {
-                if (userEntity.EnabledMark == true)
-                {
-                    UserLogOnEntity userLogOnEntity = userLogOnApp.GetForm(userEntity.Id);
-                    //0000 de54ef2d07c608096fddb77a27c5f126
-                    string dbPassword = Md5.md5(AESEncrypt.Encrypt(password.ToLower(), userLogOnEntity.UserSecretkey).ToLower(), 32).ToLower();
-                    if (dbPassword == userLogOnEntity.UserPassword)
-                    {
-                        DateTime lastVisitTime = DateTime.Now;
-                        int LogOnCount = (userLogOnEntity.LogOnCount).ToInt() + 1;
-                        if (userLogOnEntity.LastVisitTime != null)
-                        {
-                            userLogOnEntity.PreviousVisitTime = userLogOnEntity.LastVisitTime.ToDate();
-                        }
-                        userLogOnEntity.LastVisitTime = lastVisitTime;
-                        userLogOnEntity.LogOnCount = LogOnCount;
-                        userLogOnApp.UpdateForm(userLogOnEntity);
-
-                        return userEntity;
-                    }
-                    else
-                    {
-                        throw new Exception("密码不正确，请重新输入");
-                    }
-                }
-                else
-                {
-                    throw new Exception("账户被系统锁定,请联系管理员");
-                }
-            }
-            else
-            {
-                throw new Exception("账户不存在，请重新输入");
-            }
+            if (userEntity == null) throw new Exception("账户不存在，请重新输入");
+            if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
+            //获取用户登录对象
+            UserLogOnEntity userLogOnEntity = userLogOnApp.GetForm(userEntity.Id);
+            //密码0000 MD5加密后 de54ef2d07c608096fddb77a27c5f126
+            //验证密码
+            string pwd = Tools.CaculatePWD(password, userLogOnEntity.UserSecretkey);
+            if (pwd == userLogOnEntity.UserPassword) throw new Exception("密码不正确，请重新输入");
+            //记录登录日志
+            WriteLoginLog(userLogOnEntity);
+            return userEntity;
         }
 
+        #region 私有方法
+        /// <summary>
+        /// 记录登录日志
+        /// </summary>
+        /// <param name="userLogOnEntity">用户登录对象</param>
+        private void WriteLoginLog(UserLogOnEntity userLogOnEntity)
+        {
+            DateTime lastVisitTime = DateTime.Now;
+            int LogOnCount = (userLogOnEntity.LogOnCount).ToInt() + 1;
+            if (userLogOnEntity.LastVisitTime != null)
+                userLogOnEntity.PreviousVisitTime = userLogOnEntity.LastVisitTime.ToDate();
+            userLogOnEntity.LastVisitTime = lastVisitTime;
+            userLogOnEntity.LogOnCount = LogOnCount;
+            userLogOnApp.UpdateForm(userLogOnEntity);
+        }
+        #endregion
     }
 }

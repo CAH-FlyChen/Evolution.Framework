@@ -92,7 +92,6 @@ namespace Evolution.Web
             services.AddTransient<IItemsDetailRepository, ItemsDetailRepository>();
             services.AddTransient<IItemsRepository, ItemsRepository>();
             services.AddTransient<IMenuButtonRepository, MenuButtonRepository>();
-            services.AddTransient<IModuleRepository, ModuleRepository>();
             services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IRoleAuthorizeRepository, RoleAuthorizeRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
@@ -107,7 +106,6 @@ namespace Evolution.Web
             services.AddTransient<AreaApp>();
             services.AddTransient<MenuButtonApp>();
             services.AddTransient<RoleAuthorizeApp>();
-            services.AddTransient<ModuleApp>();
             services.AddTransient<UserLogOnApp>();
             services.AddTransient<UserApp>();
             services.AddTransient<LogApp>();

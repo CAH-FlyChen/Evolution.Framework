@@ -10,36 +10,35 @@ using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System;
-using Evolution;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     public class RoleAuthorizeController : ControllerBase
     {
+        #region 私有变量
         private RoleAuthorizeApp roleAuthorizeApp = null;
-        private ModuleApp moduleApp = null;
         private MenuButtonApp moduleButtonApp = null;
         private RoleApp roleApp = null;
         private ResourceApp resourceApp = null;
-
-        public RoleAuthorizeController(RoleAuthorizeApp roleAuthorizeApp, ModuleApp moduleApp, MenuButtonApp moduleButtonApp,RoleApp roleApp,ResourceApp resourceApp)
+        #endregion
+        #region 构造函数
+        public RoleAuthorizeController(RoleAuthorizeApp roleAuthorizeApp,  MenuButtonApp moduleButtonApp,RoleApp roleApp,ResourceApp resourceApp)
         {
             this.roleAuthorizeApp = roleAuthorizeApp;
-            this.moduleApp = moduleApp;
             this.moduleButtonApp = moduleButtonApp;
             this.roleApp = roleApp;
             this.resourceApp = resourceApp;
         }
-
+        #endregion
 
         /// <summary>
         /// 获取并初始化授权树
         /// </summary>
-        /// <param name="roleId"></param>
+        /// <param name="roleId">角色Id</param>
         /// <returns></returns>
+        [HttpGet]
+        [HandlerAjaxOnly]
         public ActionResult GetResourceTree(string roleId)
         {
             var resourcedata = resourceApp.GetList();
@@ -60,8 +59,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
                 tree.isexpand = true;
                 tree.complete = true;
                 tree.showcheck = true;
-                tree.checkstate = authorizedata.Count(t => t.ItemId == item.ClientID
-                    );
+                tree.checkstate = authorizedata.Count(t => t.ItemId == item.ClientID);
                 tree.hasChildren = hasChildren;
                 //tree.img = item.Icon == "" ? "" : item.Icon;
                 treeList.Add(tree);
@@ -69,16 +67,15 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             return Content(treeList.TreeViewJson());
         }
         /// <summary>
-        /// 用于保存内容
+        /// 保存角色资源授权
         /// </summary>
-        /// <param name="userEntity"></param>
-        /// <param name="userLogOnEntity"></param>
-        /// <param name="keyValue"></param>
+        /// <param name="data">授权对象，key为md5的Url值，value为是否选中，默认均为选中，可随意。</param>
+        /// <param name="keyValue">角色Id</param>
         /// <returns></returns>
         [HttpPost]
-        //[HandlerAjaxOnly]
-        //[ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(Dictionary<string,string> data,string keyValue)
+        [HandlerAjaxOnly]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitResourceForm(Dictionary<string,string> data,string keyValue)
         {
             List<string> keys = new List<string>();
             foreach(var d in data)
@@ -86,18 +83,20 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
                 if (d.Key == "FullName" || d.Key== "EnCode" || d.Key == "Id") continue;
                 keys.Add(d.Key);
             }
-
-            roleAuthorizeApp.Save(keyValue, keys,HttpContext);
-
+            roleAuthorizeApp.Save(keyValue, keys);
             return Success("操作成功。");
         }
-
+        /// <summary>
+        /// 获取角色资源表单
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)
         {
             string permissionIds = "";
-            var data = roleAuthorizeApp.GetForm(keyValue,out permissionIds);
+            var data = roleAuthorizeApp.GetResoucesByRoleId(keyValue,out permissionIds);
             var rData = new
             {
                 Id = keyValue,
@@ -107,13 +106,17 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             };
             return Content(rData.ToJson());
         }
-
-        [HttpGet]
-        [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
-        {
-            var data = roleApp.GetList(keyword);
-            return Content(data.ToJson());
-        }
+        /// <summary>
+        /// 获取角色资源表格
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
+        //[HttpGet]
+        //[HandlerAjaxOnly]
+        //public ActionResult GetGridJson(string keyword)
+        //{
+        //    var data = roleApp.GetList(keyword);
+        //    return Content(data.ToJson());
+        //}
     }
 }

@@ -31,7 +31,7 @@ namespace Evolution.Application.SystemManage
         {
             return service.FindEntity(keyValue);
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -42,16 +42,16 @@ namespace Evolution.Application.SystemManage
                 service.Delete(t => t.Id == keyValue);
             }
         }
-        public void SubmitForm(ItemsEntity itemsEntity, string keyValue,HttpContext context)
+        public void Save(ItemsEntity itemsEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                itemsEntity.Modify(keyValue, context);
+                itemsEntity.AttachModifyInfo(keyValue, context);
                 service.Update(itemsEntity);
             }
             else
             {
-                itemsEntity.Create(context);
+                itemsEntity.AttachCreateInfo(context);
                 service.Insert(itemsEntity);
             }
         }

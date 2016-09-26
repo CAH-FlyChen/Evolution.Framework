@@ -9,46 +9,55 @@ using Evolution.Data;
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.Domain.IRepository.SystemManage;
 using Microsoft.AspNetCore.Http;
+using Evolution.IInfrastructure;
 
 namespace Evolution.Repository.SystemManage
 {
     public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
     {
-        HttpContext context = null;
+        #region 私有变量
+        private HttpContext context = null;
+        #endregion
+        #region 构造函数
         public UserRepository(EvolutionDbContext ctx, IHttpContextAccessor contextAccessor) : base(ctx)
         {
             context = contextAccessor.HttpContext;
         }
-        public void DeleteForm(string keyValue)
+        #endregion
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="id">用户Id</param>
+        public void Delete(string id)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {
-                db.Delete<UserEntity>(t => t.Id == keyValue);
-                db.Delete<UserLogOnEntity>(t => t.UserId == keyValue);
+                db.Delete<UserEntity>(t => t.Id == id);
+                db.Delete<UserLogOnEntity>(t => t.UserId == id);
                 db.Commit();
             }
         }
-        public void SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue)
+/// <summary>
+        /// 保存用户。若id空则创建用户实体和登录实体，否则只更新用户实体
+        /// </summary>
+        /// <param name="userEntity">用户实体</param>
+        /// <param name="userLogOnEntity">用户登录实体</param>
+        /// <param name="id">Id</param>
+        public void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
         {
             using (var repo = new RepositoryBase(dbcontext).BeginTrans())
             {
-                if (!string.IsNullOrEmpty(keyValue))
+                if (!string.IsNullOrEmpty(id))
                 {
                     repo.Update(userEntity);
                 }
                 else
                 {
-                    userEntity.Create(context);
+                    userEntity.AttachCreateInfo(context);
                     userLogOnEntity.Id = userEntity.Id;
                     userLogOnEntity.UserId = userEntity.Id;
                     userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();
-                    userLogOnEntity.UserPassword = Md5.md5(
-                        AESEncrypt.Encrypt(
-                            userLogOnEntity.UserPassword.ToLower(), 
-                            userLogOnEntity.UserSecretkey
-                            ).ToLower(), 
-                            32
-                        ).ToLower();
+                    userLogOnEntity.UserPassword = Tools.CaculatePWD(userLogOnEntity.UserPassword.ToLower(), userLogOnEntity.UserSecretkey);
                     repo.Insert(userEntity);
                     repo.Insert(userLogOnEntity);
                 }

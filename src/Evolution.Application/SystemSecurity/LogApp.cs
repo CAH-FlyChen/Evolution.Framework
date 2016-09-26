@@ -90,7 +90,7 @@ namespace Evolution.Application.SystemSecurity
             logEntity.IPAddressName = Net.GetLocation(logEntity.IPAddress);
             logEntity.Result = result;
             logEntity.Description = resultLog;
-            logEntity.Create(context);
+            logEntity.AttachCreateInfo(context);
             service.Insert(logEntity);
         }
         public void WriteDbLog(LogEntity logEntity,HttpContext context)
@@ -99,7 +99,7 @@ namespace Evolution.Application.SystemSecurity
             logEntity.Date = DateTime.Now;
             logEntity.IPAddress = "117.81.192.182";
             logEntity.IPAddressName = Net.GetLocation(logEntity.IPAddress);
-            logEntity.Create(context);
+            logEntity.AttachCreateInfo(context);
             service.Insert(logEntity);
         }
     }

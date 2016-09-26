@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Index.cshtml";
 }
 <script>
-    var moduleId = $.request("moduleId");
+    var menuId = $.request("menuId");
     $(function () {
         gridList();
     })
@@ -12,7 +12,7 @@
             treeGrid: true,
             treeGridModel: "adjacency",
             ExpandColumn: "Location",
-            url: "/SystemManage/MenuButton/GetTreeGridJson?moduleId=" + moduleId,
+            url: "/SystemManage/MenuButton/GetTreeGridJson?menuId=" + menuId,
             height: $(window).height() - 90,
             colModel: [
                 { label: "主键", name: "Id", hidden: true, key: true },
@@ -67,7 +67,7 @@
         $.modalOpen({
             id: "Form",
             title: "修改按钮",
-            url: "/SystemManage/MenuButton/Form?moduleId=" + moduleId + "&keyValue=" + keyValue,
+            url: "/SystemManage/MenuButton/Form?menuId=" + menuId + "&keyValue=" + keyValue,
             width: "700px",
             height: "440px",
             callBack: function (iframeId) {
@@ -90,7 +90,7 @@
         $.modalOpen({
             id: "Details",
             title: "查看按钮",
-            url: "/SystemManage/MenuButton/Details?moduleId=" + moduleId + "&keyValue=" + keyValue,
+            url: "/SystemManage/MenuButton/Details?menuId=" + menuId + "&keyValue=" + keyValue,
             width: "700px",
             height: "490px",
             btn: null,
@@ -100,7 +100,7 @@
         $.modalOpen({
             id: "CloneButton",
             title: "克隆按钮",
-            url: "/SystemManage/MenuButton/CloneButton?moduleId=" + moduleId,
+            url: "/SystemManage/MenuButton/CloneButton?menuId=" + menuId,
             width: "400px",
             height: "600px",
             callBack: function (iframeId) {

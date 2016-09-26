@@ -16,16 +16,22 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
     [Area("SystemManage")]
     public class ResourceController : ControllerBase
     {
+        #region 私有变量
         private ResourceApp resourceApp = null;
-
+        #endregion
+        #region 构造函数
         public ResourceController(ResourceApp resourceApp)
         {
             this.resourceApp = resourceApp;
         }
-
+        #endregion
+        /// <summary>
+        /// 获取资源授权树
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        //[HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string keyword)
+        [HandlerAjaxOnly]
+        public ActionResult GetTreeGridJson()
         {
             var data = resourceApp.GetList();
             var treeList = new List<TreeGridModel>();

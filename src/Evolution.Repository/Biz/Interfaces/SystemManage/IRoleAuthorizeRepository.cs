@@ -13,10 +13,10 @@ namespace Evolution.Domain.IRepository.SystemManage
     public interface IRoleAuthorizeRepository : IRepositoryBase<RoleAuthorizeEntity>
     {
         /// <summary>
-        /// 通过角色id获取权限id
+        /// 根据角色id获取权限ID
         /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        List<string> GetPermissionsByRoleId(string roleId);
+        /// <param name="roleId">角色Id</param>
+        /// <returns>资源权限列表</returns>
+        List<string> GetResorucePermissionsByRoleId(string roleId);
     }
 }

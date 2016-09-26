@@ -36,11 +36,11 @@ namespace Evolution.Application.SystemManage
         {
             return service.FindEntity(keyValue);
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
             service.Delete(t => t.Id == keyValue);
         }
-        public void SubmitForm(RoleEntity roleEntity, string keyValue,HttpContext context)
+        public void Save(RoleEntity roleEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {

@@ -17,21 +17,25 @@ namespace Evolution.Application.SystemManage
 {
     public class MenuApp
     {
+        #region 私有变量
         private IMenuRepository service = null;
         private IRoleAuthorizeRepository roleAuthRepo = null;
-        public MenuApp(IMenuRepository service,IRoleAuthorizeRepository roleAuthRepo)
+        private HttpContext context = null;
+        #endregion
+        #region 构造函数
+        public MenuApp(IMenuRepository service,IRoleAuthorizeRepository roleAuthRepo,IHttpContextAccessor contextAccessor)
         {
             this.service = service;
             this.roleAuthRepo = roleAuthRepo;
+            this.context = contextAccessor.HttpContext;
         }
-
+        #endregion
         /// <summary>
         /// 根据角色获取菜单条目
         /// </summary>
         /// <param name="roleId">角色Id</param>
-        /// <param name="context">context</param>
         /// <returns></returns>
-        public List<MenuEntity> GetMenuListByRoleId(string roleId, HttpContext context)
+        public List<MenuEntity> GetMenuListByRoleId(string roleId)
         {
             var data = new List<MenuEntity>();
             var isSystem = context.User.Claims.FirstOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
@@ -53,17 +57,28 @@ namespace Evolution.Application.SystemManage
             }
             return data.OrderBy(t => t.SortCode).ToList();
         }
-
-
+        /// <summary>
+        /// 获取所有菜单列表
+        /// </summary>
+        /// <returns></returns>
         public List<MenuEntity> GetList()
         {
             return service.IQueryable().OrderBy(t => t.SortCode).ToList();
         }
-        public MenuEntity GetForm(string keyValue)
+        /// <summary>
+        /// 通过菜单Id获取菜单
+        /// </summary>
+        /// <param name="keyValue">菜单Id</param>
+        /// <returns></returns>
+        public MenuEntity GetMenuById(string keyValue)
         {
             return service.FindEntity(keyValue);
         }
-        public void DeleteForm(string keyValue)
+        /// <summary>
+        /// 删除菜单，若有父菜单，则禁止删除
+        /// </summary>
+        /// <param name="keyValue">菜单Id</param>
+        public void Delete(string keyValue)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -74,17 +89,22 @@ namespace Evolution.Application.SystemManage
                 service.Delete(t => t.Id == keyValue);
             }
         }
-        public void SubmitForm(MenuEntity moduleEntity, string keyValue,HttpContext context)
+        /// <summary>
+        /// 保存菜单
+        /// </summary>
+        /// <param name="menuEntity">菜单实体</param>
+        /// <param name="keyValue">菜单Id，有id则更新，无id则新建</param>
+        public void Save(MenuEntity menuEntity, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                moduleEntity.Modify(keyValue, context);
-                service.Update(moduleEntity);
+                menuEntity.AttachModifyInfo(keyValue, context);
+                service.Update(menuEntity);
             }
             else
             {
-                moduleEntity.Create(context);
-                service.Insert(moduleEntity);
+                menuEntity.AttachCreateInfo(context);
+                service.Insert(menuEntity);
             }
         }
     }

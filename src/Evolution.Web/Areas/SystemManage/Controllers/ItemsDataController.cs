@@ -55,7 +55,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SubmitForm(ItemsDetailEntity itemsDetailEntity, string keyValue)
         {
-            itemsDetailApp.SubmitForm(itemsDetailEntity, keyValue,HttpContext);
+            itemsDetailApp.Save(itemsDetailEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -64,7 +64,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            itemsDetailApp.DeleteForm(keyValue);
+            itemsDetailApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

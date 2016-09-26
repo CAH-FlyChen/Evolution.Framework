@@ -40,7 +40,7 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult SubmitForm(FilterIPEntity filterIPEntity, string keyValue)
         {
-            filterIPApp.SubmitForm(filterIPEntity, keyValue,HttpContext);
+            filterIPApp.Save(filterIPEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -49,7 +49,7 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            filterIPApp.DeleteForm(keyValue);
+            filterIPApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

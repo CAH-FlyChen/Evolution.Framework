@@ -10,17 +10,20 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
+using Microsoft.AspNetCore.Http;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     public class MenuController : ControllerBase
     {
+        #region 私有变量
         private MenuApp menuApp = null;
         private MenuButtonApp menuButtonApp = null;
         private RoleAuthorizeApp roleAuthorizeApp = null;
         private RoleApp roleApp = null;
-
+        #endregion
+        #region 构造函数
         public MenuController(MenuApp menuApp,MenuButtonApp menuButtonApp, RoleAuthorizeApp roleAuthorizeApp,RoleApp roleApp)
         {
             this.menuApp = menuApp;
@@ -28,12 +31,14 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             this.roleAuthorizeApp = roleAuthorizeApp;
             this.roleApp = roleApp;
         }
-
+        #endregion
         /// <summary>
-        /// 根据角色获取菜单内容树，配置角色的菜单权限时使用
+        /// 根据角色Id获取系统菜单树内容，配置角色的菜单权限时使用
         /// </summary>
-        /// <param name="roleId"></param>
+        /// <param name="roleId">角色Id</param>
         /// <returns></returns>
+        [HttpGet]
+        [HandlerAjaxOnly]
         public ActionResult GetPermissionTree(string roleId)
         {
             var moduledata = menuApp.GetList();
@@ -78,16 +83,26 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeViewJson());
         }
-
+        /// <summary>
+        /// 保存菜单权限
+        /// </summary>
+        /// <param name="roleEntity">角色对象</param>
+        /// <param name="menuIds">选中的菜单Id字符串，逗号分隔</param>
+        /// <param name="keyValue">角色Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
         public ActionResult SaveMenuPermission(RoleEntity roleEntity, string menuIds, string keyValue)
         {
-            roleApp.SubmitForm(roleEntity, menuIds.Split(','), keyValue);
+            roleApp.Save(roleEntity, menuIds.Split(','), keyValue);
             return Success("操作成功。");
         }
 
+        /// <summary>
+        /// 获取界面上下拉选择框内容，供界面选择上级菜单使用
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetTreeSelectJson()
@@ -104,6 +119,12 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeSelectJson());
         }
+
+        /// <summary>
+        /// 获取菜单树状列表
+        /// </summary>
+        /// <param name="keyword">搜索关键字</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetTreeGridJson(string keyword)
@@ -127,28 +148,46 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
             }
             return Content(treeList.TreeGridJson());
         }
+
+        /// <summary>
+        /// 获取菜单对象
+        /// </summary>
+        /// <param name="keyValue">菜单Id</param>
+        /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)
         {
-            var data = menuApp.GetForm(keyValue);
+            var data = menuApp.GetMenuById(keyValue);
             return Content(data.ToJson());
         }
+
+        /// <summary>
+        /// 保存菜单
+        /// </summary>
+        /// <param name="menuEntity">菜单对象</param>
+        /// <param name="keyValue">菜单Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(MenuEntity moduleEntity, string keyValue)
+        public ActionResult SubmitForm(MenuEntity menuEntity, string keyValue)
         {
-            menuApp.SubmitForm(moduleEntity, keyValue,HttpContext);
+            menuApp.Save(menuEntity, keyValue);
             return Success("操作成功。");
         }
+
+        /// <summary>
+        /// 删除菜单，若有父菜单，则禁止删除
+        /// </summary>
+        /// <param name="keyValue">菜单项目Id</param>
+        /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            menuApp.DeleteForm(keyValue);
+            menuApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

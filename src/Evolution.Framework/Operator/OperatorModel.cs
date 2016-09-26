@@ -8,6 +8,9 @@ using System;
 
 namespace Evolution.Framework
 {
+    /// <summary>
+    /// Claim常量
+    /// </summary>
     public static class OperatorModelClaimNames
     {
         public static string UserId
@@ -64,8 +67,10 @@ namespace Evolution.Framework
         }
     }
 
-
-    public class OperatorModel
+    /// <summary>
+    /// 登录对象。用于保存登陆后获取到的用户信息
+    /// </summary>
+    public class LoginModel
     {
         public string UserId { get; set; }
         public string UserCode { get; set; }

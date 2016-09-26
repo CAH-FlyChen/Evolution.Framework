@@ -16,7 +16,11 @@ namespace Evolution.Repository.SystemManage
     public class RoleRepository : RepositoryBase<RoleEntity>, IRoleRepository
     {
         public RoleRepository(EvolutionDbContext ctx) : base(ctx){}
-        public void DeleteForm(string keyValue)
+        /// <summary>
+        /// 删除角色对象及相关授权
+        /// </summary>
+        /// <param name="keyValue">角色Id</param>
+        public void Delete(string keyValue)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {
@@ -26,12 +30,12 @@ namespace Evolution.Repository.SystemManage
             }
         }
         /// <summary>
-        /// 保存菜单授权
+        /// 保存角色对象及角色菜单授权
         /// </summary>
-        /// <param name="roleEntity"></param>
-        /// <param name="roleAuthorizeEntitys"></param>
-        /// <param name="keyValue"></param>
-        public void SubmitForm(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue)
+        /// <param name="roleEntity">角色对象</param>
+        /// <param name="roleAuthorizeEntitys">角色的授权列表</param>
+        /// <param name="keyValue">角色Id</param>
+        public void Save(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {

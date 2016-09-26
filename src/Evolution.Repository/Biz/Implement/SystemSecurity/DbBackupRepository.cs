@@ -18,7 +18,7 @@ namespace Evolution.Repository.SystemSecurity
         {
 
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {

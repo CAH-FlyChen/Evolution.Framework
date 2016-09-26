@@ -11,7 +11,18 @@ namespace Evolution.Domain.IRepository.SystemManage
 {
     public interface IUserRepository : IRepositoryBase<UserEntity>
     {
-        void DeleteForm(string keyValue);
-        void SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue);
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="id">用户Id</param>
+        void Delete(string id);
+        /// <summary>
+        /// 保存用户。
+        /// 若id空则创建用户实体和登录实体，否则只更新用户实体
+        /// </summary>
+        /// <param name="userEntity">用户实体</param>
+        /// <param name="userLogOnEntity">用户登录实体</param>
+        /// <param name="id">Id</param>
+        void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id);
     }
 }

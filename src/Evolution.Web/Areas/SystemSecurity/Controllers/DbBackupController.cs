@@ -38,7 +38,7 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
         {
             dbBackupEntity.FilePath = wwwPath.ContentRootPath+"/Resource/DbBackup/" + dbBackupEntity.FileName + ".bak";
             dbBackupEntity.FileName = dbBackupEntity.FileName + ".bak";
-            dbBackupApp.SubmitForm(dbBackupEntity);
+            dbBackupApp.Save(dbBackupEntity);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -47,7 +47,7 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            dbBackupApp.DeleteForm(keyValue);
+            dbBackupApp.Delete(keyValue);
             return Success("删除成功。");
         }
         [HttpPost]

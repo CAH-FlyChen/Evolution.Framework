@@ -19,7 +19,11 @@ namespace Evolution.Repository.SystemManage
         {
 
         }
-        public void SubmitCloneButton(List<MenuButtonEntity> entitys)
+        /// <summary>
+        /// 保存克隆的按钮
+        /// </summary>
+        /// <param name="entitys">按钮对象列表</param>
+        public void SaveCloneButton(List<MenuButtonEntity> entitys)
         {
             
             using (var db = new RepositoryBase(dbcontext).BeginTrans())

@@ -103,7 +103,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("保存组织结构数据", "保存组织结构数据")]
         public ActionResult SubmitForm(OrganizeEntity organizeEntity, string keyValue)
         {
-            organizeApp.SubmitForm(organizeEntity, keyValue,HttpContext);
+            organizeApp.Save(organizeEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -113,7 +113,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("删除组织结构数据", "删除组织结构数据")]
         public ActionResult DeleteForm(string keyValue)
         {
-            organizeApp.DeleteForm(keyValue);
+            organizeApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

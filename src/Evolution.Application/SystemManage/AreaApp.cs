@@ -35,7 +35,7 @@ namespace Evolution.Application.SystemManage
         {
             return areaRepo.FindEntity(t=>t.Id==keyValue);
         }
-        public void DeleteForm(string keyValue)
+        public void Delete(string keyValue)
         {
             if (areaRepo.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -46,16 +46,16 @@ namespace Evolution.Application.SystemManage
                 areaRepo.Delete(t => t.Id == keyValue);
             }
         }
-        public void SubmitForm(AreaEntity areaEntity, string keyValue,HttpContext httpContext)
+        public void Save(AreaEntity areaEntity, string keyValue,HttpContext httpContext)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                areaEntity.Modify(keyValue, httpContext);
+                areaEntity.AttachModifyInfo(keyValue, httpContext);
                 areaRepo.Update(areaEntity);
             }
             else
             {
-                areaEntity.Create(httpContext);
+                areaEntity.AttachCreateInfo(httpContext);
                 areaRepo.Insert(areaEntity);
             }
         }
