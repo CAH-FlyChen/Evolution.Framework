@@ -1,25 +1,27 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Domain.Entity.SystemSecurity;
-using NFine.Application.SystemSecurity;
+using Evolution.Application.SystemSecurity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Evolution.Domain.Entity.SystemManage;
-using NFine.Application.SystemManage;
-using NFine.Application;
+using Evolution.Application.SystemManage;
+using Evolution.Application;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
-namespace NFine.Web.Controllers
+namespace Evolution.Web.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         UserApp userApp = null;
@@ -75,12 +77,11 @@ namespace NFine.Web.Controllers
             var currentContext = HttpContext;
             try
             {
-                if (WebHelper.GetSession("nfine_session_verifycode", currentContext).IsEmpty() || Md5.md5(code.ToLower(), 16) != 
-                    WebHelper.GetSession("nfine_session_verifycode", currentContext))
+                var verifyCodeInSession = WebHelper.GetSession("nfine_session_verifycode", currentContext);
+                if (verifyCodeInSession.IsEmpty() ||  Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
                 {
                     throw new Exception("验证码错误，请重新输入");
                 }
-
                 UserEntity userEntity = userApp.CheckLogin(username, password);
                 if (userEntity != null)
                 {
@@ -98,14 +99,8 @@ namespace NFine.Web.Controllers
                     operatorModel.LoginTime = DateTime.Now;
                     operatorModel.LoginToken = AESEncrypt.Encrypt(Guid.NewGuid().ToString());
                     operatorModel.RoleName = role.FullName;
-                    if (userEntity.Account == "admin")
-                    {
-                        operatorModel.IsSystem = true;
-                    }
-                    else
-                    {
-                        operatorModel.IsSystem = false;
-                    }
+                    operatorModel.IsSystem = userEntity.Account == "admin";
+
                     logEntity.Account = userEntity.Account;
                     logEntity.NickName = userEntity.RealName;
                     logEntity.Result = true;
@@ -113,10 +108,7 @@ namespace NFine.Web.Controllers
 
                     logApp.WriteDbLog(logEntity, HttpContext);
                     logonApp.SignIn(operatorModel, HttpContext);
-
-                    
-
-                    
+  
                 }
                 return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
             }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 
-namespace NFine.Web
+namespace Evolution.Web
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class HandlerAjaxOnlyAttribute : ActionMethodSelectorAttribute

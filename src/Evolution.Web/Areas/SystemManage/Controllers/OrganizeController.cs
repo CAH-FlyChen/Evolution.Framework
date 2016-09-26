@@ -1,18 +1,18 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using NFine.Application.SystemManage;
+using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.Framework;
 using Evolution;
 
-namespace NFine.Web.Areas.SystemManage.Controllers
+namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     [PermissionLevelDescrip("组织结构数据","")]

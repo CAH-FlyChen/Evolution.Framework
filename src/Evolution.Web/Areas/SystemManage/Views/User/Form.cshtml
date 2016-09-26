@@ -2,6 +2,7 @@
     ViewBag.Title = "Form";
     Layout = "~/Views/Shared/_Form.cshtml";
 }
+<script src="~/Content/js/md5/jquery.md5.js"></script>
 <script>
     var keyValue = $.request("keyValue");
     $(function () {
@@ -44,6 +45,8 @@
         if (!$('#form1').formValid()) {
             return false;
         }
+        var md5Pw = $.md5($("#UserPassword").val());
+        $("#UserPassword").val(md5Pw);
         $.submitForm({
             url: "/SystemManage/User/SubmitForm?keyValue=" + keyValue,
             param: $("#form1").formSerialize(),

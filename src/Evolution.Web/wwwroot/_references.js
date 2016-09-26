@@ -54,6 +54,7 @@
 /// <reference path="content/js/jquery-ui/jquery-ui.min.js" />
 /// <reference path="content/js/layout/jquery.layout.js" />
 /// <reference path="content/js/loading/pace.min.js" />
+/// <reference path="content/js/md5.js" />
 /// <reference path="content/js/md5/jquery.md5.js" />
 /// <reference path="content/js/qrcode/jquery.qrcode.js" />
 /// <reference path="content/js/qrcode/qrcode.js" />

@@ -1,15 +1,16 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Evolution.Web;
 
-namespace NFine.Web.Controllers
+namespace Evolution.Web.Controllers
 {
-    [Authorize(Policy = nameof(PermissionEnum.PERSON_LIST))]
+
 
     public class HomeController : Controller
     {
@@ -26,6 +27,11 @@ namespace NFine.Web.Controllers
         }
         [HttpGet]
         public ActionResult About()
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult Error()
         {
             return View();
         }

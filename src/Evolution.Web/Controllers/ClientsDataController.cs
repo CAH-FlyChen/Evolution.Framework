@@ -1,30 +1,35 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
 using Microsoft.AspNetCore.Mvc;
-using NFine.Application.SystemManage;
+using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Claims;
 
-namespace NFine.Web.Controllers
+namespace Evolution.Web.Controllers
 {
     //[HandlerLogin]
     public class ClientsDataController : Controller
     {
+        #region 私有变量
         private ItemsDetailApp itemDetailApp = null;
         private ItemsApp itemsApp = null;
         private OrganizeApp organizeApp = null;
         private RoleApp roleApp = null;
         private DutyApp dutyApp = null;
         private RoleAuthorizeApp roleAuthorizeApp = null;
-        public ClientsDataController(ItemsDetailApp itemDetailApp, ItemsApp itemsApp,OrganizeApp organizeApp, RoleApp roleApp, DutyApp dutyApp, RoleAuthorizeApp roleAuthorizeApp)
+        private MenuApp menuApp = null;
+        private MenuButtonApp menuButtonApp = null;
+        #endregion
+        #region 构造函数
+        public ClientsDataController(ItemsDetailApp itemDetailApp, ItemsApp itemsApp,OrganizeApp organizeApp, RoleApp roleApp, DutyApp dutyApp, RoleAuthorizeApp roleAuthorizeApp,MenuApp menuApp,MenuButtonApp menuButtonApp)
         {
             this.itemDetailApp = itemDetailApp;
             this.itemsApp = itemsApp;
@@ -32,7 +37,10 @@ namespace NFine.Web.Controllers
             this.roleApp = roleApp;
             this.dutyApp = dutyApp;
             this.roleAuthorizeApp = roleAuthorizeApp;
+            this.menuApp = menuApp;
+            this.menuButtonApp = menuButtonApp;
         }
+        #endregion 
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetClientsDataJson()
@@ -117,13 +125,13 @@ namespace NFine.Web.Controllers
                 return null;
             }
             string roleId = HttpContext.User.Claims.FirstOrDefault(t => t.Type== OperatorModelClaimNames.RoleId).Value;
-            return ToMenuJson(this.roleAuthorizeApp.GetMenuList(roleId,HttpContext), "0");
+            return ToMenuJson(this.menuApp.GetMenuListByRoleId(roleId,HttpContext), "0");
         }
-        private string ToMenuJson(List<ModuleEntity> data, string parentId)
+        private string ToMenuJson(List<MenuEntity> data, string parentId)
         {
             StringBuilder sbJson = new StringBuilder();
             sbJson.Append("[");
-            List<ModuleEntity> entitys = data.FindAll(t => t.ParentId == parentId);
+            List<MenuEntity> entitys = data.FindAll(t => t.ParentId == parentId);
             if (entitys.Count > 0)
             {
                 foreach (var item in entitys)
@@ -140,13 +148,13 @@ namespace NFine.Web.Controllers
         private object GetMenuButtonList()
         {
             var roleId = User.Claims.First(t => t.Type == OperatorModelClaimNames.RoleId).Value;
-            var data = this.roleAuthorizeApp.GetButtonList(roleId, HttpContext);
-            var dataModuleId = data.Distinct(new ExtList<ModuleButtonEntity>("ModuleId"));
+            var authedButtonList = menuButtonApp.GetButtonListByRoleId(roleId);
+            var distinctAuthedMenuButtonList = authedButtonList.Distinct(new ExtList<MenuButtonEntity>("MenuId"));
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
-            foreach (ModuleButtonEntity item in dataModuleId)
+            foreach (MenuButtonEntity item in distinctAuthedMenuButtonList)
             {
-                var buttonList = data.Where(t => t.ModuleId.Equals(item.ModuleId));
-                dictionary.Add(item.ModuleId, buttonList);
+                var buttonList = authedButtonList.Where(t => t.MenuId.Equals(item.MenuId));
+                dictionary.Add(item.MenuId, buttonList);
             }
             return dictionary;
         }

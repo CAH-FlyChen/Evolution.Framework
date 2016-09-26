@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
@@ -12,7 +12,7 @@ using System.Linq;
 using Evolution.Data;
 using Evolution.Domain.IRepository.SystemManage;
 
-namespace NFine.Application.SystemManage
+namespace Evolution.Application.SystemManage
 {
     public class ItemsDetailApp
     {
@@ -35,6 +35,7 @@ namespace NFine.Application.SystemManage
                 expression = expression.And(t => t.ItemName.Contains(keyword));
                 expression = expression.Or(t => t.ItemCode.Contains(keyword));
             }
+
             return service.IQueryable(expression).OrderBy(t => t.SortCode).ToList();
         }
         public List<ItemsDetailEntity> GetItemList(string enCode)

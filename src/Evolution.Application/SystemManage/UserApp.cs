@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
@@ -19,7 +19,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Evolution.Data;
 
-namespace NFine.Application.SystemManage
+namespace Evolution.Application.SystemManage
 {
     public class UserApp 
     {
@@ -58,13 +58,9 @@ namespace NFine.Application.SystemManage
         public void SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
-            {
-                //userEntity.Modify(keyValue, context);
-            }
+                userEntity.Modify(keyValue, context);
             else
-            {
-                //userEntity.Create(context);
-            }
+                userEntity.Create(context);
             service.SubmitForm(userEntity, userLogOnEntity, keyValue);
         }
         public void UpdateForm(UserEntity userEntity)

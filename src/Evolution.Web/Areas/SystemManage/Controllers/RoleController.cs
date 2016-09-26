@@ -1,15 +1,15 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
-using NFine.Application.SystemManage;
+using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 
-namespace NFine.Web.Areas.SystemManage.Controllers
+namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     public class RoleController : ControllerBase
@@ -17,16 +17,15 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         private RoleApp roleApp = null;
         private RoleAuthorizeApp roleAuthorizeApp = null;
         private ModuleApp moduleApp = null;
-        private ModuleButtonApp moduleButtonApp = null;
+        private MenuButtonApp moduleButtonApp = null;
 
-        public RoleController(RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp, ModuleApp moduleApp, ModuleButtonApp moduleButtonApp)
+        public RoleController(RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp, ModuleApp moduleApp, MenuButtonApp moduleButtonApp)
         {
             this.roleApp = roleApp;
             this.roleAuthorizeApp = roleAuthorizeApp;
             this.moduleApp = moduleApp;
             this.moduleButtonApp = moduleButtonApp;
         }
-
 
         [HttpGet]
         [HandlerAjaxOnly]
@@ -58,6 +57,16 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         {
             roleApp.DeleteForm(keyValue);
             return Success("删除成功。");
+        }
+        [HttpGet]
+        public ActionResult Permission(string keyValue)
+        {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult GrantPermissionToMenu(string keyValue)
+        {
+            return View();
         }
     }
 }

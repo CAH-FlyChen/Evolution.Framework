@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using System;
@@ -14,7 +14,7 @@ namespace Evolution.Framework
 {
     public static class TreeQuery
     {
-        public static List<T> TreeWhere<T>(this List<T> entityList, Predicate<T> condition, string keyValue = "F_Id", string parentId = "F_ParentId") where T : class
+        public static List<T> TreeWhere<T>(this List<T> entityList, Predicate<T> condition, string keyValue = "Id", string parentId = "ParentId") where T : class
         {
             List<T> locateList = entityList.FindAll(condition);
             var parameter = Expression.Parameter(typeof(T), "t");

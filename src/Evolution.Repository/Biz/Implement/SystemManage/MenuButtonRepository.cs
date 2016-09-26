@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Repository;
@@ -13,14 +13,15 @@ using System.Collections.Generic;
 
 namespace Evolution.Repository.SystemManage
 {
-    public class ModuleButtonRepository : RepositoryBase<ModuleButtonEntity>, IModuleButtonRepository
+    public class MenuButtonRepository : RepositoryBase<MenuButtonEntity>, IMenuButtonRepository
     {
-        public ModuleButtonRepository(NFineDbContext ctx) : base(ctx)
+        public MenuButtonRepository(EvolutionDbContext ctx) : base(ctx)
         {
 
         }
-        public void SubmitCloneButton(List<ModuleButtonEntity> entitys)
+        public void SubmitCloneButton(List<MenuButtonEntity> entitys)
         {
+            
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {
                 foreach (var item in entitys)

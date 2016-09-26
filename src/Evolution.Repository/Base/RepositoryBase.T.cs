@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.IRepository;
@@ -27,9 +27,9 @@ namespace Evolution.Repository
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class,new()
     {
 
-        public NFineDbContext dbcontext = null;
+        public EvolutionDbContext dbcontext = null;
 
-        public RepositoryBase(NFineDbContext ctx)
+        public RepositoryBase(EvolutionDbContext ctx)
         {
             dbcontext = ctx;
         }

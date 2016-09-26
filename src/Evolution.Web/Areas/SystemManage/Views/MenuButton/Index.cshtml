@@ -12,7 +12,7 @@
             treeGrid: true,
             treeGridModel: "adjacency",
             ExpandColumn: "Location",
-            url: "/SystemManage/ModuleButton/GetTreeGridJson?moduleId=" + moduleId,
+            url: "/SystemManage/MenuButton/GetTreeGridJson?moduleId=" + moduleId,
             height: $(window).height() - 90,
             colModel: [
                 { label: "主键", name: "Id", hidden: true, key: true },
@@ -54,7 +54,7 @@
         $.modalOpen({
             id: "Form",
             title: "新增按钮",
-            url: "/SystemManage/ModuleButton/Form?moduleId=" + moduleId,
+            url: "/SystemManage/MenuButton/Form?moduleId=" + moduleId,
             width: "700px",
             height: "440px",
             callBack: function (iframeId) {
@@ -67,7 +67,7 @@
         $.modalOpen({
             id: "Form",
             title: "修改按钮",
-            url: "/SystemManage/ModuleButton/Form?moduleId=" + moduleId + "&keyValue=" + keyValue,
+            url: "/SystemManage/MenuButton/Form?moduleId=" + moduleId + "&keyValue=" + keyValue,
             width: "700px",
             height: "440px",
             callBack: function (iframeId) {
@@ -77,7 +77,7 @@
     }
     function btn_delete() {
         $.deleteForm({
-            url: "/SystemManage/ModuleButton/DeleteForm",
+            url: "/SystemManage/MenuButton/DeleteForm",
             param: { keyValue: $("#gridList").jqGridRowValue().Id },
             success: function () {
                 $("#gridList").resetSelection();
@@ -90,7 +90,7 @@
         $.modalOpen({
             id: "Details",
             title: "查看按钮",
-            url: "/SystemManage/ModuleButton/Details?moduleId=" + moduleId + "&keyValue=" + keyValue,
+            url: "/SystemManage/MenuButton/Details?moduleId=" + moduleId + "&keyValue=" + keyValue,
             width: "700px",
             height: "490px",
             btn: null,
@@ -100,7 +100,7 @@
         $.modalOpen({
             id: "CloneButton",
             title: "克隆按钮",
-            url: "/SystemManage/ModuleButton/CloneButton?moduleId=" + moduleId,
+            url: "/SystemManage/MenuButton/CloneButton?moduleId=" + moduleId,
             width: "400px",
             height: "600px",
             callBack: function (iframeId) {

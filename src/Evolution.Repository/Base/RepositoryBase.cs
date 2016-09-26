@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.IRepository;
@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Evolution.Framework;
 using Evolution.Data;
 using Evolution.Data.Extensions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Evolution.Repository
 {
@@ -25,14 +26,14 @@ namespace Evolution.Repository
     /// </summary>
     public class RepositoryBase : IRepositoryBase, IDisposable
     {
-        private NFineDbContext dbcontext = null;
+        private EvolutionDbContext dbcontext = null;
 
-        public RepositoryBase(NFineDbContext ctx)
+        public RepositoryBase(EvolutionDbContext ctx)
         {
             dbcontext = ctx;
         }
 
-        private DbTransaction dbTransaction { get; set; }
+        private IDbContextTransaction dbTransaction { get; set; }
         public IRepositoryBase BeginTrans()
         {
             DbConnection dbConnection = dbcontext.Database.GetDbConnection();
@@ -40,7 +41,7 @@ namespace Evolution.Repository
             {
                 dbConnection.Open();
             }
-            dbTransaction = dbConnection.BeginTransaction();
+            dbTransaction = dbcontext.Database.BeginTransaction();
             return this;
         }
         public int Commit()
@@ -94,7 +95,7 @@ namespace Evolution.Repository
             PropertyInfo[] props = entity.GetType().GetProperties();
             foreach (PropertyInfo prop in props)
             {
-                if (prop.GetValue(entity, null) != null)
+                if (prop.GetValue(entity, null) != null && prop.Name!="Id")
                 {
                     if (prop.GetValue(entity, null).ToString() == "&nbsp;")
                         dbcontext.Entry(entity).Property(prop.Name).CurrentValue = null;

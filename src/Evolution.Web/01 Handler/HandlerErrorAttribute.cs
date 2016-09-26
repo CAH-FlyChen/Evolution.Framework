@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace NFine.Web
+namespace Evolution.Web
 {
     public class HandlerErrorAttribute : ExceptionFilterAttribute
     {

@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
@@ -11,18 +11,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
 
-namespace NFine.Application.SystemManage
+namespace Evolution.Application.SystemManage
 {
     public class RoleApp
     {
         private IRoleRepository service = null;
-        private ModuleApp moduleApp = null;
-        private ModuleButtonApp moduleButtonApp = null;
+        private MenuApp menuApp = null;
+        private MenuButtonApp moduleButtonApp = null;
 
-        public RoleApp(IRoleRepository service, ModuleApp moduleApp, ModuleButtonApp moduleButtonApp)
+        public RoleApp(IRoleRepository service, MenuApp menuApp, MenuButtonApp moduleButtonApp)
         {
             this.service = service;
-            this.moduleApp = moduleApp;
+            this.menuApp = menuApp;
             this.moduleButtonApp = moduleButtonApp;
         }
 
@@ -46,6 +46,12 @@ namespace NFine.Application.SystemManage
         {
             service.DeleteForm(keyValue);
         }
+        /// <summary>
+        /// 保存菜单授权
+        /// </summary>
+        /// <param name="roleEntity"></param>
+        /// <param name="permissionIds"></param>
+        /// <param name="keyValue"></param>
         public void SubmitForm(RoleEntity roleEntity, string[] permissionIds, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
@@ -56,8 +62,8 @@ namespace NFine.Application.SystemManage
             {
                 roleEntity.Id = Common.GuId();
             }
-            var moduledata = moduleApp.GetList();
-            var buttondata = moduleButtonApp.GetList();
+            var menuData = menuApp.GetList();
+            var buttonData = moduleButtonApp.GetList();
             List<RoleAuthorizeEntity> roleAuthorizeEntitys = new List<RoleAuthorizeEntity>();
             foreach (var itemId in permissionIds)
             {
@@ -66,16 +72,17 @@ namespace NFine.Application.SystemManage
                 roleAuthorizeEntity.ObjectType = 1;
                 roleAuthorizeEntity.ObjectId = roleEntity.Id;
                 roleAuthorizeEntity.ItemId = itemId;
-                if (moduledata.Find(t => t.Id == itemId) != null)
+                if (menuData.Find(t => t.Id == itemId) != null)
                 {
                     roleAuthorizeEntity.ItemType = 1;
                 }
-                if (buttondata.Find(t => t.Id == itemId) != null)
+                if (buttonData.Find(t => t.Id == itemId) != null)
                 {
                     roleAuthorizeEntity.ItemType = 2;
                 }
                 roleAuthorizeEntitys.Add(roleAuthorizeEntity);
             }
+            //保存菜单授权
             service.SubmitForm(roleEntity, roleAuthorizeEntitys, keyValue);
         }
     }

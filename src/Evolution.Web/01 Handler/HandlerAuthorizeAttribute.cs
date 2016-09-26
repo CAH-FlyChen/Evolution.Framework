@@ -1,11 +1,11 @@
 ﻿//using Evolution.Framework;
 //using Microsoft.AspNetCore.Mvc;
 //using Microsoft.AspNetCore.Mvc.Filters;
-//using NFine.Application.SystemManage;
+//using Evolution.Application.SystemManage;
 //using System.Linq;
 //using System.Text;
 
-//namespace NFine.Web
+//namespace Evolution.Web
 //{
 //    public class HandlerAuthorizeAttribute : ActionFilterAttribute
 //    {

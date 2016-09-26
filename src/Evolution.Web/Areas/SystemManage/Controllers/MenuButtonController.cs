@@ -1,36 +1,39 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using System.Collections.Generic;
 using System.Linq;
-using NFine.Application.SystemManage;
+using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 
-namespace NFine.Web.Areas.SystemManage.Controllers
+namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    public class ModuleButtonController : ControllerBase
+    public class MenuButtonController : ControllerBase
     {
-        private ModuleApp moduleApp = null;
-        private ModuleButtonApp moduleButtonApp = null;
-
-        public ModuleButtonController(ModuleApp moduleApp, ModuleButtonApp moduleButtonApp)
+        #region 私有变量
+        private MenuApp menuApp = null;
+        private MenuButtonApp menuButtonApp = null;
+        #endregion
+        #region 构造函数
+        public MenuButtonController(MenuApp menuApp, MenuButtonApp moduleButtonApp)
         {
-            this.moduleApp = moduleApp;
-            this.moduleButtonApp = moduleButtonApp;
+            this.menuApp = menuApp;
+            this.menuButtonApp = moduleButtonApp;
         }
+        #endregion
         [HttpGet]
         [HandlerAjaxOnly]
         public ActionResult GetTreeSelectJson(string moduleId)
         {
-            var data = moduleButtonApp.GetList(moduleId);
+            var data = menuButtonApp.GetListByMenuId(moduleId);
             var treeList = new List<TreeSelectModel>();
-            foreach (ModuleButtonEntity item in data)
+            foreach (MenuButtonEntity item in data)
             {
                 TreeSelectModel treeModel = new TreeSelectModel();
                 treeModel.id = item.Id;
@@ -44,9 +47,9 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public ActionResult GetTreeGridJson(string moduleId)
         {
-            var data = moduleButtonApp.GetList(moduleId);
+            var data = menuButtonApp.GetListByMenuId(moduleId);
             var treeList = new List<TreeGridModel>();
-            foreach (ModuleButtonEntity item in data)
+            foreach (MenuButtonEntity item in data)
             {
                 TreeGridModel treeModel = new TreeGridModel();
                 bool hasChildren = data.Count(t => t.ParentId == item.Id) == 0 ? false : true;
@@ -63,15 +66,15 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public ActionResult GetFormJson(string keyValue)
         {
-            var data = moduleButtonApp.GetForm(keyValue);
+            var data = menuButtonApp.GetItemById(keyValue);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(ModuleButtonEntity moduleButtonEntity, string keyValue)
+        public ActionResult SubmitForm(MenuButtonEntity entity, string keyValue)
         {
-            moduleButtonApp.SubmitForm(moduleButtonEntity, keyValue,HttpContext);
+            menuButtonApp.Save(entity, keyValue);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -79,7 +82,7 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteForm(string keyValue)
         {
-            moduleButtonApp.DeleteForm(keyValue);
+            menuButtonApp.DeleteItem(keyValue);
             return Success("删除成功。");
         }
         [HttpGet]
@@ -91,13 +94,13 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public ActionResult GetCloneButtonTreeJson()
         {
-            var moduledata = moduleApp.GetList();
-            var buttondata = moduleButtonApp.GetList();
+            var menuData = menuApp.GetList();
+            var buttonData = menuButtonApp.GetList();
             var treeList = new List<TreeViewModel>();
-            foreach (ModuleEntity item in moduledata)
+            foreach (MenuEntity item in menuData)
             {
                 TreeViewModel tree = new TreeViewModel();
-                bool hasChildren = moduledata.Count(t => t.ParentId == item.Id) == 0 ? false : true;
+                bool hasChildren = menuData.Count(t => t.ParentId == item.Id) == 0 ? false : true;
                 tree.id = item.Id;
                 tree.text = item.FullName;
                 tree.value = item.EnCode;
@@ -107,21 +110,14 @@ namespace NFine.Web.Areas.SystemManage.Controllers
                 tree.hasChildren = true;
                 treeList.Add(tree);
             }
-            foreach (ModuleButtonEntity item in buttondata)
+            foreach (MenuButtonEntity item in buttonData)
             {
                 TreeViewModel tree = new TreeViewModel();
-                bool hasChildren = buttondata.Count(t => t.ParentId == item.Id) == 0 ? false : true;
+                bool hasChildren = buttonData.Count(t => t.ParentId == item.Id) == 0 ? false : true;
                 tree.id = item.Id;
                 tree.text = item.FullName;
                 tree.value = item.EnCode;
-                if (item.ParentId == "0")
-                {
-                    tree.parentId = item.ModuleId;
-                }
-                else
-                {
-                    tree.parentId = item.ParentId;
-                }
+                tree.parentId = item.ParentId == "0" ? item.MenuId : item.ParentId;
                 tree.isexpand = true;
                 tree.complete = true;
                 tree.showcheck = true;
@@ -138,7 +134,7 @@ namespace NFine.Web.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public ActionResult SubmitCloneButton(string moduleId, string Ids)
         {
-            moduleButtonApp.SubmitCloneButton(moduleId, Ids);
+            menuButtonApp.SubmitCloneButton(moduleId, Ids);
             return Success("克隆成功。");
         }
     }

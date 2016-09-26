@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemSecurity
 {
     public class DbBackupRepository : RepositoryBase<DbBackupEntity>, IDbBackupRepository
     {
-        public DbBackupRepository(NFineDbContext ctx) : base(ctx)
+        public DbBackupRepository(EvolutionDbContext ctx) : base(ctx)
         {
 
         }

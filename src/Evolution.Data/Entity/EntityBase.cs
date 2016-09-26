@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Evolution.Data.Entity
 {
-    public class EntityBase
+    public class EntityBase :ICreationAudited,IModificationAudited,IDeleteAudited
     {
         public string Id { get; set; }
         public string Description { get; set; }

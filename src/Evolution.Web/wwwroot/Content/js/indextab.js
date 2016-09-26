@@ -22,7 +22,7 @@
         },
         refreshTab: function () {
             var currentId = $('.page-tabs-content').find('.active').attr('data-id');
-            var target = $('.NFine_iframe[data-id="' + currentId + '"]');
+            var target = $('.Evolution_iframe[data-id="' + currentId + '"]');
             var url = target.attr('src');
             $.loading(true);
             target.attr('src', url).load(function () {
@@ -32,9 +32,9 @@
         activeTab: function () {
             var currentId = $(this).data('id');
             if (!$(this).hasClass('active')) {
-                $('.mainContent .NFine_iframe').each(function () {
+                $('.mainContent .Evolution_iframe').each(function () {
                     if ($(this).data('id') == currentId) {
-                        $(this).show().siblings('.NFine_iframe').hide();
+                        $(this).show().siblings('.Evolution_iframe').hide();
                         return false;
                     }
                 });
@@ -44,7 +44,7 @@
         },
         closeOtherTabs: function () {
             $('.page-tabs-content').children("[data-id]").find('.fa-remove').parents('a').not(".active").each(function () {
-                $('.NFine_iframe[data-id="' + $(this).data('id') + '"]').remove();
+                $('.Evolution_iframe[data-id="' + $(this).data('id') + '"]').remove();
                 $(this).remove();
             });
             $('.page-tabs-content').css("margin-left", "0");
@@ -56,9 +56,9 @@
                 if ($(this).parents('.menuTab').next('.menuTab').size()) {
                     var activeId = $(this).parents('.menuTab').next('.menuTab:eq(0)').data('id');
                     $(this).parents('.menuTab').next('.menuTab:eq(0)').addClass('active');
-                    $('.mainContent .NFine_iframe').each(function () {
+                    $('.mainContent .Evolution_iframe').each(function () {
                         if ($(this).data('id') == activeId) {
-                            $(this).show().siblings('.NFine_iframe').hide();
+                            $(this).show().siblings('.Evolution_iframe').hide();
                             return false;
                         }
                     });
@@ -69,7 +69,7 @@
                         }, "fast");
                     }
                     $(this).parents('.menuTab').remove();
-                    $('.mainContent .NFine_iframe').each(function () {
+                    $('.mainContent .Evolution_iframe').each(function () {
                         if ($(this).data('id') == closeTabId) {
                             $(this).remove();
                             return false;
@@ -79,14 +79,14 @@
                 if ($(this).parents('.menuTab').prev('.menuTab').size()) {
                     var activeId = $(this).parents('.menuTab').prev('.menuTab:last').data('id');
                     $(this).parents('.menuTab').prev('.menuTab:last').addClass('active');
-                    $('.mainContent .NFine_iframe').each(function () {
+                    $('.mainContent .Evolution_iframe').each(function () {
                         if ($(this).data('id') == activeId) {
-                            $(this).show().siblings('.NFine_iframe').hide();
+                            $(this).show().siblings('.Evolution_iframe').hide();
                             return false;
                         }
                     });
                     $(this).parents('.menuTab').remove();
-                    $('.mainContent .NFine_iframe').each(function () {
+                    $('.mainContent .Evolution_iframe').each(function () {
                         if ($(this).data('id') == closeTabId) {
                             $(this).remove();
                             return false;
@@ -96,7 +96,7 @@
             }
             else {
                 $(this).parents('.menuTab').remove();
-                $('.mainContent .NFine_iframe').each(function () {
+                $('.mainContent .Evolution_iframe').each(function () {
                     if ($(this).data('id') == closeTabId) {
                         $(this).remove();
                         return false;
@@ -123,9 +123,9 @@
                     if (!$(this).hasClass('active')) {
                         $(this).addClass('active').siblings('.menuTab').removeClass('active');
                         $.nfinetab.scrollToTab(this);
-                        $('.mainContent .NFine_iframe').each(function () {
+                        $('.mainContent .Evolution_iframe').each(function () {
                             if ($(this).data('id') == dataUrl) {
-                                $(this).show().siblings('.NFine_iframe').hide();
+                                $(this).show().siblings('.Evolution_iframe').hide();
                                 return false;
                             }
                         });
@@ -137,8 +137,8 @@
             if (flag) {
                 var str = '<a href="javascript:;" class="active menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-remove"></i></a>';
                 $('.menuTab').removeClass('active');
-                var str1 = '<iframe class="NFine_iframe" id="iframe' + dataId + '" name="iframe' + dataId + '"  width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
-                $('.mainContent').find('iframe.NFine_iframe').hide();
+                var str1 = '<iframe class="Evolution_iframe" id="iframe' + dataId + '" name="iframe' + dataId + '"  width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
+                $('.mainContent').find('iframe.Evolution_iframe').hide();
                 $('.mainContent').append(str1);
                 $.loading(true);
                 $('.mainContent iframe:visible').load(function () {
@@ -245,11 +245,11 @@
             });
             $('.tabCloseAll').on('click', function () {
                 $('.page-tabs-content').children("[data-id]").find('.fa-remove').each(function () {
-                    $('.NFine_iframe[data-id="' + $(this).data('id') + '"]').remove();
+                    $('.Evolution_iframe[data-id="' + $(this).data('id') + '"]').remove();
                     $(this).parents('a').remove();
                 });
                 $('.page-tabs-content').children("[data-id]:first").each(function () {
-                    $('.NFine_iframe[data-id="' + $(this).data('id') + '"]').show();
+                    $('.Evolution_iframe[data-id="' + $(this).data('id') + '"]').show();
                     $(this).addClass("active");
                 });
                 $('.page-tabs-content').css("margin-left", "0");

@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Repository;
@@ -15,10 +15,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class RoleRepository : RepositoryBase<RoleEntity>, IRoleRepository
     {
-        public RoleRepository(NFineDbContext ctx) : base(ctx)
-        {
-
-        }
+        public RoleRepository(EvolutionDbContext ctx) : base(ctx){}
         public void DeleteForm(string keyValue)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
@@ -28,6 +25,12 @@ namespace Evolution.Repository.SystemManage
                 db.Commit();
             }
         }
+        /// <summary>
+        /// 保存菜单授权
+        /// </summary>
+        /// <param name="roleEntity"></param>
+        /// <param name="roleAuthorizeEntitys"></param>
+        /// <param name="keyValue"></param>
         public void SubmitForm(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
@@ -41,7 +44,7 @@ namespace Evolution.Repository.SystemManage
                     roleEntity.Category = 1;
                     db.Insert(roleEntity);
                 }
-                db.Delete<RoleAuthorizeEntity>(t => t.ObjectId == roleEntity.Id);
+                db.Delete<RoleAuthorizeEntity>(t => t.ObjectId == roleEntity.Id && t.ItemType==1);
                 db.Insert(roleAuthorizeEntitys);
                 db.Commit();
             }

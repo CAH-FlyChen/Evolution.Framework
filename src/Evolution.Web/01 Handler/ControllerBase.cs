@@ -3,7 +3,7 @@ using Evolution.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace NFine.Web
+namespace Evolution.Web
 {
     //[HandlerLogin]
     public abstract class ControllerBase : Controller

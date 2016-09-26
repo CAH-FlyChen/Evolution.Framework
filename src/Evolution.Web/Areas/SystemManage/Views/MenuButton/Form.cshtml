@@ -9,7 +9,7 @@
         initControl();
         if (!!keyValue) {
             $.ajax({
-                url: "/SystemManage/ModuleButton/GetFormJson",
+                url: "/SystemManage/MenuButton/GetFormJson",
                 data: { keyValue: keyValue },
                 dataType: "json",
                 async: false,
@@ -22,7 +22,7 @@
     function initControl() {
         $("#Location").select2({ minimumResultsForSearch: -1 })
         $("#ParentId").bindSelect({
-            url: "/SystemManage/ModuleButton/GetTreeSelectJson",
+            url: "/SystemManage/MenuButton/GetTreeSelectJson",
             param: { moduleId: moduleId },
         });
     }
@@ -33,7 +33,7 @@
         var postData = $("#form1").formSerialize();
         postData["ModuleId"] = moduleId;
         $.submitForm({
-            url: "/SystemManage/ModuleButton/SubmitForm?keyValue=" + keyValue,
+            url: "/SystemManage/MenuButton/SubmitForm?keyValue=" + keyValue,
             param: postData,
             success: function () {
                 top.modulebutton.$("#gridList").resetSelection();

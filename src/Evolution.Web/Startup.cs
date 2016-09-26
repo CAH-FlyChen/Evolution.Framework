@@ -6,15 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Evolution.Data;
 using Microsoft.EntityFrameworkCore;
-using NFine.Application.SystemManage;
-using NFine.Application.SystemSecurity;
+using Evolution.Application.SystemManage;
+using Evolution.Application.SystemSecurity;
 using Evolution.Domain.IRepository.SystemManage;
 using Evolution.Domain.IRepository.SystemSecurity;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Text;
 using Evolution.Repository.SystemManage;
 using Evolution.Repository.SystemSecurity;
-using NFine.Web;
+using Evolution.Web;
 using Microsoft.AspNetCore.Authorization;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +25,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Evolution.Domain.Entity.SystemSecurity;
+using Evolution.Web.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Evolution.Web
 {
@@ -45,13 +48,11 @@ namespace Evolution.Web
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
             Configuration = builder.Build();
-
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
-
-
         }
 
         public IConfigurationRoot Configuration { get; }
+        public IApplicationBuilder App { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -59,55 +60,11 @@ namespace Evolution.Web
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            //services.AddAuthorization(opts =>
-            //{
-            //    opts.DefaultPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().RequireRole("admin").Build();
-            //    opts.AddPolicy("Users", policy => policy.RequireAuthenticatedUser().RequireRole("admin", "users"));
-            //});
-
             services.AddMvc(opts =>
             {
-                //opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireRole("admin").Build()));
+                Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeApp.CheckPermission;
+                opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
             });
-
-            services.AddAuthorization(options =>
-            {
-                //UserDbContext context = ...;
-                //foreach (var permission in context.Permissions)
-                //{
-                //    // assuming .Permission is enum
-                //    options.AddPolicy(permission.Permission.ToString(),
-                //        policy => policy.Requirements.Add(new PermissionRequirement(permission.Permission)));
-                //}
-                options.AddPolicy(nameof(PermissionEnum.PERSON_LIST),
-                        policy => policy.Requirements.Add(new PermissionRequirement(PermissionEnum.PERSON_LIST)));
-            });
-
-            //services.AddIdentity<UserEntity, RoleEntity>()
-            //    .AddEntityFrameworkStores<NFineDbContext, string>();
-
-            // services.AddIdentity<UserEntity, RoleEntity>(config => {
-            //     // Config here
-            //     config.User.RequireUniqueEmail = true;
-            //     config.Password = new PasswordOptions
-            //     {
-            //         RequireDigit = true,
-            //         //RequireNonLetterOrDigit = false,
-            //         RequireUppercase = false,
-            //         RequireLowercase = true,
-            //         RequiredLength = 4,
-            //     };
-            //     config.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents
-            //     {
-            //         OnRedirectToLogin = ctx =>
-            //         {
-            //             ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            //             return Task.FromResult<object>(null);
-            //         }
-            //     };
-            // }).AddEntityFrameworkStores<NFineDbContext, string>()
-            //.AddDefaultTokenProviders();
-
 
             services.AddMemoryCache();
             //services.AddDistributedMemoryCache();
@@ -116,29 +73,25 @@ namespace Evolution.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.CookieName = ".MyApplication";
             });
-
-   
-
-            //services.AddDbContext<NFineDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("MDatabase")));
+            
             services.AddEntityFramework()
-            .AddDbContext<NFineDbContext>(options =>
-            {
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("MDatabase"),
-                    b => b.UseRowNumberForPaging()
-                        );
-                
-            });
+                    .AddDbContext<EvolutionDbContext>(options =>
+                    {
+                        options.UseSqlServer(
+                            Configuration.GetConnectionString("MDatabase"),
+                            b => b.UseRowNumberForPaging()
+                                );
 
+                    });
+
+            #region 注册Service
             services.AddLogging();
             services.AddScoped<IAuthorizationHandler, PermissionHandler>();
-
             //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IAreaRepository, AreaRepository>();
             services.AddTransient<IItemsDetailRepository, ItemsDetailRepository>();
             services.AddTransient<IItemsRepository, ItemsRepository>();
-            services.AddTransient<IModuleButtonRepository, ModuleButtonRepository>();
+            services.AddTransient<IMenuButtonRepository, MenuButtonRepository>();
             services.AddTransient<IModuleRepository, ModuleRepository>();
             services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IRoleAuthorizeRepository, RoleAuthorizeRepository>();
@@ -150,9 +103,9 @@ namespace Evolution.Web
             //services.AddTransient<ILogger, Logger>();
             services.AddTransient<IFilterIPRepository, FilterIPRepository>();
             //services.AddTransient<IPermissionRepository, PermissionRepository>();
-
+            services.AddTransient<IMenuRepository, MenuRepository>();
             services.AddTransient<AreaApp>();
-            services.AddTransient<ModuleButtonApp>();
+            services.AddTransient<MenuButtonApp>();
             services.AddTransient<RoleAuthorizeApp>();
             services.AddTransient<ModuleApp>();
             services.AddTransient<UserLogOnApp>();
@@ -167,18 +120,18 @@ namespace Evolution.Web
             services.AddTransient<DbBackupApp>();
             services.AddTransient<FilterIPApp>();
             //services.AddTransient<PermissionApp>();
-
+            services.AddTransient<MenuApp>();
+            services.AddTransient<ResourceApp>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            App = app;
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-
             app.UseApplicationInsightsRequestTelemetry();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -188,26 +141,18 @@ namespace Evolution.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
             app.UseApplicationInsightsExceptionTelemetry();
-
             app.UseStaticFiles();
-
             app.UseSession();
-            
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationScheme = "CookieAuth",
                 LoginPath = new PathString("/Login/"),
-                AccessDeniedPath = new PathString("/Login/"),
+                AccessDeniedPath = new PathString("/error.html"),
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
 
             });
-
-
-
             app.UseMvc(routes =>
             {
                 // Areas support
@@ -230,7 +175,7 @@ namespace Evolution.Web
         private static async Task InitializeDb(IServiceProvider applicationServices)
         {
             using (var dbContext =
-              applicationServices.GetService<NFineDbContext>())
+              applicationServices.GetService<EvolutionDbContext>())
             {
                 var sqlServerDatabase = dbContext.Database;
                 await sqlServerDatabase.EnsureDeletedAsync();
@@ -316,8 +261,8 @@ namespace Evolution.Web
                         entity.CreatorUserId = colums[12];
                         dbContext.Logs.Add(entity);
                     });
-                    ProcessFile("Sys_Module.csv", colums => {
-                        ModuleEntity entity = new ModuleEntity();
+                    ProcessFile("Sys_Menu.csv", colums => {
+                        MenuEntity entity = new MenuEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
                         entity.Layers = int.Parse(colums[2]);
@@ -337,12 +282,12 @@ namespace Evolution.Web
                         entity.CreatorTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[20];
-                        dbContext.Modules.Add(entity);
+                        dbContext.Menus.Add(entity);
                     });
-                    ProcessFile("Sys_ModuleButton.csv", colums => {
-                        ModuleButtonEntity entity = new ModuleButtonEntity();
+                    ProcessFile("Sys_MenuButton.csv", colums => {
+                        MenuButtonEntity entity = new MenuButtonEntity();
                         entity.Id = colums[0];
-                        entity.ModuleId = colums[1];
+                        entity.MenuId = colums[1];
                         entity.ParentId = colums[2];
                         if (!string.IsNullOrEmpty(colums[3]))
                             entity.Layers = int.Parse(colums[3]);
@@ -371,7 +316,6 @@ namespace Evolution.Web
                         entity.LastModifyUserId = colums[20];
                         dbContext.ModuleButtons.Add(entity);
                     });
-
                     ProcessFile("Sys_Organize.csv", colums => {
                         OrganizeEntity entity = new OrganizeEntity();
                         entity.Id = colums[0];
@@ -456,15 +400,10 @@ namespace Evolution.Web
                             entityt.LogOnCount = int.Parse(colums[13]);
                         dbContext.UserLogOn.Add(entityt);
                     });
-
-                    
-
                     dbContext.SaveChanges();
                 }
             }
         }
-
-
         public static void ProcessFile(string fileName,Action<string[]> processCode)
         {
             var pathToFile = WebRootPath

@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +15,14 @@ using System.Data;
 
 namespace Evolution.Data
 {
-    public class NFineDbContext : DbContext
+    public class EvolutionDbContext : DbContext
     {
-        public NFineDbContext(DbContextOptions<NFineDbContext> options) 
+        public EvolutionDbContext(DbContextOptions<EvolutionDbContext> options) 
             : base(options)
         {
         }
 
-        //public NFineDbContext()
+        //public EvolutionDbContext()
         //{
         //    //this.Configuration.AutoDetectChangesEnabled = false;
         //    //this.Configuration.ValidateOnSaveEnabled = false;
@@ -40,7 +40,7 @@ namespace Evolution.Data
             modelBuilder.AddConfiguration(new AreaEFConfiguration());
             modelBuilder.AddConfiguration(new ItemsDetailEFConfiguration());
             modelBuilder.AddConfiguration(new ItemsEFConfiguration());
-            modelBuilder.AddConfiguration(new ModuleButtonEFConfiguration());
+            modelBuilder.AddConfiguration(new MenuButtonEFConfiguration());
             modelBuilder.AddConfiguration(new ModuleEFConfiguration());
             modelBuilder.AddConfiguration(new OrganizeEFConfiguration());
             modelBuilder.AddConfiguration(new RoleAuthorizeEFConfiguration());
@@ -50,7 +50,7 @@ namespace Evolution.Data
             modelBuilder.AddConfiguration(new DbBackupEFConfiguration());
             modelBuilder.AddConfiguration(new FilterIPEFConfiguration());
             modelBuilder.AddConfiguration(new LogEFConfiguration());
-            
+            modelBuilder.AddConfiguration(new MenuEFConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -59,7 +59,7 @@ namespace Evolution.Data
         public DbSet<ItemsEntity> Items { get; set; }
         public DbSet<ItemsDetailEntity> ItemsDetails { get; set; }
         public DbSet<ModuleEntity> Modules { get; set; }
-        public DbSet<ModuleButtonEntity> ModuleButtons { get; set; }
+        public DbSet<MenuButtonEntity> ModuleButtons { get; set; }
         public DbSet<OrganizeEntity> Organizes { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<RoleAuthorizeEntity> RoleAuthorize { get; set; }
@@ -70,5 +70,6 @@ namespace Evolution.Data
         public DbSet<DbBackupEntity> DbBackups { get; set; }
         public DbSet<FilterIPEntity> FilterIPs { get; set; }
         public DbSet<LogEntity> Logs { get; set; }
+        public DbSet<MenuEntity> Menus { get; set; }
     }
 }

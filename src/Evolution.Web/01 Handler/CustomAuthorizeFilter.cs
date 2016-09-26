@@ -6,20 +6,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 using System.Text;
 using System;
-using NFine.Application.SystemManage;
+using Evolution.Application.SystemManage;
 
-namespace NFine.Web
+namespace Evolution.Web
 {
-    public static class PermissionEnum
-    {
-        public static string PERSON_LIST
-        {
-            get
-            {
-                return "PERSON_LIST";
-            }
-        }
-    }
     /// <summary>
     /// 用于权限控制
     /// </summary>
@@ -59,7 +49,8 @@ namespace NFine.Web
                 return Task.FromResult(1);
             }
             //check permission
-            bool hasPermission = roleAuth.CheckPermissionForUser(context.User, requirement.Permission.ToString());
+            //bool hasPermission = roleAuth.CheckPermissionForUser(context);
+            bool hasPermission = true;
             if (hasPermission)
             {
                 context.Succeed(requirement);
@@ -83,19 +74,29 @@ namespace NFine.Web
         }
     }
 
-
-
-
     public class CustomAuthorizeFilter : AuthorizeFilter
     {
         private AuthorizationPolicy policy = null;
-        public CustomAuthorizeFilter(AuthorizationPolicy policy) 
+        public CustomAuthorizeFilter(AuthorizationPolicy policy)
             : base(policy)
         {
             this.policy = policy;
         }
 
+        public override Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            if (context.Filters.Any(item => item is IAllowAnonymousFilter))
+            {
+                return Task.FromResult<int>(0);
+            }
 
+            
+
+
+
+
+            return base.OnAuthorizationAsync(context);
+        }
 
     }
 }

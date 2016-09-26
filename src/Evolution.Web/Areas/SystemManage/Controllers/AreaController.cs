@@ -1,20 +1,20 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 
 using System.Collections.Generic;
 using System.Linq;
-using NFine.Web;
-using NFine.Application.SystemManage;
+using Evolution.Web;
+using Evolution.Application.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Authorization;
 
-namespace NFine.Web.Areas.SystemManage.Controllers
+namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
     public class AreaController : ControllerBase

@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using Evolution.Domain.Entity.SystemManage;
 using Evolution.Data;
 using Evolution.Domain.IRepository.SystemManage;
 
-namespace NFine.Application.SystemManage
+namespace Evolution.Application.SystemManage
 {
     public class ItemsApp
     {

@@ -40,7 +40,7 @@ $.request = function (name) {
     return "";
 }
 $.currentWindow = function () {
-    var iframeId = top.$(".NFine_iframe:visible").attr("id");
+    var iframeId = top.$(".Evolution_iframe:visible").attr("id");
     return top.frames[iframeId];
 }
 $.browser = function () {
@@ -94,6 +94,7 @@ $.modalOpen = function (options) {
     var _height = top.$(window).height() > parseInt(options.height.replace('px', '')) ? options.height : top.$(window).height() + 'px';
     top.layer.open({
         id: options.id,
+        scrollbar: options.scrollbar,
         type: 2,
         shade: options.shade,
         title: options.title,
@@ -102,6 +103,7 @@ $.modalOpen = function (options) {
         content: options.url,
         btn: options.btn,
         btnclass: options.btnclass,
+        maxmin: false,//不带最大化按钮
         yes: function () {
             options.callBack(options.id)
         }, cancel: function () {
@@ -391,7 +393,7 @@ $.fn.bindSelect = function (options) {
     }
 }
 $.fn.authorizeButton = function () {
-    var moduleId = top.$(".NFine_iframe:visible").attr("id").substr(6);
+    var moduleId = top.$(".Evolution_iframe:visible").attr("id").substr(6);
     var dataJson = top.clients.authorizeButton[moduleId];
     var $element = $(this);
     $element.find('a[authorize=yes]').attr('authorize', 'no');

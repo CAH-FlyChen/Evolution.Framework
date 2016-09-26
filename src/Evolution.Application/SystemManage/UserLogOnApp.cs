@@ -1,7 +1,7 @@
 ﻿/*******************************************************************************
- * Copyright © 2016 NFine.Framework 版权所有
- * Author: NFine
- * Description: NFine快速开发平台
+ * Copyright © 2016 Evolution.Framework 版权所有
+ * Author: Evolution
+ * Description: Evolution快速开发平台
  * Website：http://www.nfine.cn
 *********************************************************************************/
 using Evolution.Framework;
@@ -10,24 +10,31 @@ using Evolution.Domain.IRepository.SystemManage;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Evolution.Data;
+using System;
+using Newtonsoft.Json;
 
-namespace NFine.Application.SystemManage
+namespace Evolution.Application.SystemManage
 {
     public class UserLogOnApp
     {
         private IUserLogOnRepository service = null;
         private RoleApp roleApp = null;
+        private RoleAuthorizeApp roleAuth = null;
+        private ModuleApp module = null;
+        private MenuButtonApp mb = null;
 
-        public UserLogOnApp(IUserLogOnRepository service, RoleApp roleApp)
+        public UserLogOnApp(IUserLogOnRepository service, RoleApp roleApp,RoleAuthorizeApp roleAuth,ModuleApp module,MenuButtonApp mb)
         {
             this.service = service;
             this.roleApp = roleApp;
+            this.roleAuth = roleAuth;
+            this.module = module;
+            this.mb = mb;
         }
 
         public void SignIn(OperatorModel om,HttpContext context)
         {
             //RoleEntity re = this.roleApp.GetForm(userEntity.F_RoleId);
-
 
             ClaimsIdentity identity = new ClaimsIdentity("local");
             //system
@@ -47,6 +54,8 @@ namespace NFine.Application.SystemManage
             identity.AddClaim(new Claim(OperatorModelClaimNames.UserId, om.UserId));
             identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, om.UserName));
             identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
+
+            identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetPermissionsByRoleId(om.RoleId))));
 
             ClaimsPrincipal cp = new ClaimsPrincipal(identity);
             //"Cookies",CookieAuthenticationDefaults.AuthenticationScheme
@@ -72,7 +81,7 @@ namespace NFine.Application.SystemManage
             UserLogOnEntity userLogOnEntity = new UserLogOnEntity();
             userLogOnEntity.Id = keyValue;
             userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();
-            userLogOnEntity.UserPassword = Md5.md5(AESEncrypt.Encrypt(Md5.md5(userPassword, 32).ToLower(), userLogOnEntity.UserSecretkey).ToLower(), 32).ToLower();
+            userLogOnEntity.UserPassword = Md5.md5(AESEncrypt.Encrypt(userPassword.ToLower(), userLogOnEntity.UserSecretkey).ToLower(), 32).ToLower();
             service.Update(userLogOnEntity);
         }
     }
