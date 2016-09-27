@@ -118,7 +118,7 @@ namespace Evolution.Application.SystemManage
             //密码0000 MD5加密后 de54ef2d07c608096fddb77a27c5f126
             //验证密码
             string pwd = Tools.CaculatePWD(password, userLogOnEntity.UserSecretkey);
-            if (pwd == userLogOnEntity.UserPassword) throw new Exception("密码不正确，请重新输入");
+            if (pwd != userLogOnEntity.UserPassword) throw new Exception("密码不正确，请重新输入");
             //记录登录日志
             WriteLoginLog(userLogOnEntity);
             return userEntity;
