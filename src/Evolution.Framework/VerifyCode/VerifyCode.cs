@@ -9,12 +9,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Evolution.Framework
 {
     public class VerifyCode
     {
-        public byte[] GetVerifyCode(HttpContext context)
+        public Task<byte[]> GetVerifyCode(HttpContext context)
         {
             int codeW = 80;
             int codeH = 30;
@@ -61,7 +62,7 @@ namespace Evolution.Framework
             try
             {
                 bmp.Save(ms, ImageFormat.Png);
-                return ms.ToArray();
+                return Task.FromResult(ms.ToArray());
             }
             catch (Exception)
             {

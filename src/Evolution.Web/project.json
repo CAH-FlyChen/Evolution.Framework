@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "Microsoft.NETCore.App": {
-      "version": "1.0.0",
-      "type": "platform"
+      "version": "1.0.0"
+      //"type": "platform"
     },
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -55,7 +55,10 @@
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
-
+  "runtimes": { //º”»Îruntime
+    "ubuntu.14.04-x64": {},
+    "win10-x64": {}
+  },
   "runtimeOptions": {
     "configProperties": {
       "System.GC.Server": true

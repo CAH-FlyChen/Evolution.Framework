@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Evolution.IRepository
 {
@@ -23,7 +24,7 @@ namespace Evolution.IRepository
         int Delete<TEntity>(TEntity entity) where TEntity : class;
         int Delete<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
         TEntity FindEntity<TEntity>(object keyValue) where TEntity : class;
-        TEntity FindEntity<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
+        Task<TEntity> FindEntityASync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
         IQueryable<TEntity> IQueryable<TEntity>() where TEntity : class;
         IQueryable<TEntity> IQueryable<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
         List<TEntity> FindList<TEntity>(string strSql) where TEntity : class;

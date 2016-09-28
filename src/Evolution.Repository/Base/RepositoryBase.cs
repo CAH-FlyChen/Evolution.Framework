@@ -18,6 +18,7 @@ using Evolution.Framework;
 using Evolution.Data;
 using Evolution.Data.Extensions;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository
 {
@@ -120,9 +121,9 @@ namespace Evolution.Repository
         {
             return dbcontext.Set<TEntity>().Find(keyValue);
         }
-        public TEntity FindEntity<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        public Task<TEntity> FindEntityASync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
-            return dbcontext.Set<TEntity>().FirstOrDefault(predicate);
+            return dbcontext.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
         public IQueryable<TEntity> IQueryable<TEntity>() where TEntity : class
         {

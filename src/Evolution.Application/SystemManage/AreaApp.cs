@@ -33,7 +33,7 @@ namespace Evolution.Application.SystemManage
         }
         public AreaEntity GetForm(string keyValue)
         {
-            return areaRepo.FindEntity(t=>t.Id==keyValue);
+            return areaRepo.FindEntityASync(t=>t.Id==keyValue).Result;
         }
         public void Delete(string keyValue)
         {

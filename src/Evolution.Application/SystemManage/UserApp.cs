@@ -107,10 +107,10 @@ namespace Evolution.Application.SystemManage
         /// <param name="username">用户名</param>
         /// <param name="password">md5（16位）加密后的秘密</param>
         /// <returns></returns>
-        public UserEntity CheckLogin(string username, string password)
+        public async Task<UserEntity> CheckLogin(string username, string password)
         {
             //获取用户对象
-            UserEntity userEntity = service.FindEntity(t => t.Account == username);
+            UserEntity userEntity = await service.FindEntityASync(t => t.Account == username);
             if (userEntity == null) throw new Exception("账户不存在，请重新输入");
             if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
             //获取用户登录对象

@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Evolution.Framework;
 using Evolution.Data.Extensions;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository
 {
@@ -84,9 +85,9 @@ namespace Evolution.Repository
         {
             return dbcontext.Set<TEntity>().Find(keyValue);
         }
-        public TEntity FindEntity(Expression<Func<TEntity, bool>> predicate)
+        public Task<TEntity> FindEntityASync(Expression<Func<TEntity, bool>> predicate)
         {
-            return dbcontext.Set<TEntity>().FirstOrDefault(predicate);
+            return dbcontext.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
         public IQueryable<TEntity> IQueryable()
         {

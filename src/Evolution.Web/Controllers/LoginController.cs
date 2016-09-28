@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Controllers
 {
@@ -50,14 +51,17 @@ namespace Evolution.Web.Controllers
             var test = string.Format("{0:E2}", 1);
             return View();
         }
+
         /// <summary>
         /// 获取验证码
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetAuthCode()
+        public async Task<ActionResult> GetAuthCode()
         {
-            return File(new VerifyCode().GetVerifyCode(HttpContext), @"image/Gif");
+            VerifyCode vc = new VerifyCode();
+            byte[] content = await vc.GetVerifyCode(HttpContext);
+            return File(content, @"image/Gif");
         }
         /// <summary>
         /// 登出系统
@@ -92,7 +96,7 @@ namespace Evolution.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public ActionResult CheckLogin(string username, string password, string code)
+        public async Task<ActionResult> CheckLogin(string username, string password, string code)
         {
             //初始化登录日志
             LogEntity logEntity = new LogEntity();
@@ -105,7 +109,7 @@ namespace Evolution.Web.Controllers
                 if (verifyCodeInSession.IsEmpty() || Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
                     throw new Exception("验证码错误，请重新输入！");
                 //验证用户名密码
-                UserEntity userEntity = userApp.CheckLogin(username, password);
+                UserEntity userEntity = await userApp.CheckLogin(username, password);
                 var role = roleApp.GetRoleById(userEntity.RoleId);
                 //设置登录对象
                 LoginModel operatorModel = CreateLoginModel(userEntity, role);
