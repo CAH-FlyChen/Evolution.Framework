@@ -32,7 +32,6 @@
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
     "Evolution.Application": "1.0.0-*",
     "Evolution.Data": "1.0.0-*",
-    "Evolution.Domain": "1.0.0-*",
     "Newtonsoft.Json": "9.0.1"
   },
 
