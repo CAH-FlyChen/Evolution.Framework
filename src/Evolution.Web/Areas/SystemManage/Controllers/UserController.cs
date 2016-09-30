@@ -8,8 +8,7 @@ using Evolution.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
-
-
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -35,11 +34,11 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(Pagination pagination, string keyword)
+        public async Task<IActionResult> GetGridJson(Pagination pagination, string keyword)
         {
             var data = new
             {
-                rows = userApp.GetList(pagination, keyword),
+                rows = await userApp.GetList(pagination, keyword),
                 total = pagination.total,
                 page = pagination.page,
                 records = pagination.records
@@ -53,9 +52,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = userApp.GetEntityById(keyValue);
+            var data = await userApp.GetEntityById(keyValue);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -68,9 +67,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue)
         {
-            userApp.Save(userEntity, userLogOnEntity, keyValue);
+            await userApp.Save(userEntity, userLogOnEntity, keyValue);
             return Success("操作成功。");
         }
         /// <summary>
@@ -81,9 +80,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            userApp.Delete(keyValue);
+            await userApp.Delete(keyValue);
             return Success("删除成功。");
         }
         /// <summary>
@@ -91,7 +90,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult RevisePassword()
+        public IActionResult RevisePassword()
         {
             return View();
         }
@@ -104,9 +103,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitRevisePassword(string userPassword, string keyValue)
+        public async Task<IActionResult> SubmitRevisePassword(string userPassword, string keyValue)
         {
-            userLogOnApp.RevisePassword(userPassword, keyValue);
+            await userLogOnApp.RevisePassword(userPassword, keyValue);
             return Success("重置密码成功。");
         }
         /// <summary>
@@ -117,12 +116,12 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DisabledAccount(string keyValue)
+        public async Task<IActionResult> DisabledAccount(string keyValue)
         {
             UserEntity userEntity = new UserEntity();
             userEntity.Id = keyValue;
             userEntity.EnabledMark = false;
-            userApp.Update(userEntity);
+            await userApp.Update(userEntity);
             return Success("账户禁用成功。");
         }
         /// <summary>
@@ -133,12 +132,12 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult EnabledAccount(string keyValue)
+        public async Task<IActionResult> EnabledAccount(string keyValue)
         {
             UserEntity userEntity = new UserEntity();
             userEntity.Id = keyValue;
             userEntity.EnabledMark = true;
-            userApp.Update(userEntity);
+            await userApp.Update(userEntity);
             return Success("账户启用成功。");
         }
         /// <summary>

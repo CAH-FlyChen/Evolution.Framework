@@ -7,6 +7,7 @@
 using Evolution.IRepository;
 using Evolution.Domain.Entity.SystemManage;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Evolution.Domain.IRepository.SystemManage
 {
@@ -16,13 +17,13 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// 删除角色对象及相关授权
         /// </summary>
         /// <param name="keyValue">角色Id</param>
-        void Delete(string keyValue);
+        Task<int> DeleteAsync(string keyValue);
         /// <summary>
         /// 保存角色对象及角色菜单授权
         /// </summary>
         /// <param name="roleEntity">角色对象</param>
         /// <param name="roleAuthorizeEntitys">角色的授权列表</param>
         /// <param name="keyValue">角色Id</param>
-        void Save(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue);
+        Task<int> SaveAsync(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue);
     }
 }

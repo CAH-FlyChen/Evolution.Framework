@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemManage
 {
@@ -36,19 +37,19 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns>菜单按钮对象</returns>
-        public List<MenuButtonEntity> GetButtonListByRoleId(string roleId)
+        public async Task<List<MenuButtonEntity>> GetButtonListByRoleId(string roleId)
         {
             var data = new List<MenuButtonEntity>();
             var isSystem = context.User.Claims.First(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
             if (isSystem.ToBool())
             {
-                data = this.GetList();
+                data = await this.GetList();
             }
             else
             {
-                var buttondata = this.GetList();
+                var buttondata = await this.GetList();
                 //获取授权过的按钮
-                var authorizedata = roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 2).ToList();
+                var authorizedata = await roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 2).ToListAsync();
                 foreach (var item in authorizedata)
                 {
                     MenuButtonEntity menuButtonEntity = buttondata.Find(t => t.Id == item.ItemId);
@@ -65,7 +66,7 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="menuId">菜单Id</param>
         /// <returns>表单按钮对象</returns>
-        public List<MenuButtonEntity> GetListByMenuId(string menuId)
+        public Task<List<MenuButtonEntity>> GetListByMenuId(string menuId)
         {
             //var expression = ExtLinq.True<MenuButtonEntity>();
             //if (!string.IsNullOrEmpty(menuId))
@@ -75,18 +76,18 @@ namespace Evolution.Application.SystemManage
             //return menuButtonRepo.IQueryable(expression).OrderBy(t => t.SortCode).ToList();
             if(menuId=="")
             {
-                return menuButtonRepo.IQueryable().OrderBy(x => x.SortCode).ToList();
+                return menuButtonRepo.IQueryable().OrderBy(x => x.SortCode).ToListAsync();
             }
             else
             {
-                return menuButtonRepo.IQueryable(t => t.MenuId == menuId).OrderBy(x => x.SortCode).ToList();
+                return menuButtonRepo.IQueryable(t => t.MenuId == menuId).OrderBy(x => x.SortCode).ToListAsync();
             }
         }
         /// <summary>
         /// 获取所有表单按钮对象
         /// </summary>
         /// <returns>表单按钮对象列表</returns>
-        public List<MenuButtonEntity> GetList()
+        public Task<List<MenuButtonEntity>> GetList()
         {
             return GetListByMenuId("");
         }
@@ -95,15 +96,15 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="id">按钮Id</param>
         /// <returns></returns>
-        public MenuButtonEntity GetMenuButtonById(string id)
+        public Task<MenuButtonEntity> GetMenuButtonById(string id)
         {
-            return menuButtonRepo.FindEntity(id);
+            return menuButtonRepo.FindEntityAsync(id);
         }
         /// <summary>
         /// 删除按钮，若有子项则不能删除
         /// </summary>
         /// <param name="id">按钮Id</param>
-        public void Delete(string id)
+        public Task<int> Delete(string id)
         {
             if (menuButtonRepo.IQueryable().Count(t => t.ParentId.Equals(id)) > 0)
             {
@@ -111,7 +112,7 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                menuButtonRepo.Delete(t => t.Id == id);
+                return menuButtonRepo.DeleteAsync(t => t.Id == id);
             }
         }
         /// <summary>
@@ -119,17 +120,17 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="menuButtonEntity">表单按钮对象</param>
         /// <param name="keyValue">按钮Id</param>
-        public void Save(MenuButtonEntity menuButtonEntity, string keyValue)
+        public Task Save(MenuButtonEntity menuButtonEntity, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 menuButtonEntity.AttachModifyInfo(keyValue, context);
-                menuButtonRepo.Update(menuButtonEntity);
+                return menuButtonRepo.UpdateAsync(menuButtonEntity);
             }
             else
             {
                 menuButtonEntity.AttachCreateInfo(context);
-                menuButtonRepo.Insert(menuButtonEntity);
+                return menuButtonRepo.InsertAsync(menuButtonEntity);
             }
         }
         /// <summary>
@@ -137,10 +138,10 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="menuId">菜单Id</param>
         /// <param name="Ids">要复制的按钮Id，逗号分隔</param>
-        public void SaveCloneButton(string menuId, string Ids)
+        public async Task<int> SaveCloneButton(string menuId, string Ids)
         {
             string[] ArrayId = Ids.Split(',');
-            var data = this.GetList();
+            var data = await this.GetList();
             List<MenuButtonEntity> entitys = new List<MenuButtonEntity>();
             foreach (string item in ArrayId)
             {
@@ -149,7 +150,7 @@ namespace Evolution.Application.SystemManage
                 moduleButtonEntity.MenuId = menuId;
                 entitys.Add(moduleButtonEntity);
             }
-            menuButtonRepo.SaveCloneButton(entitys);
+            return await menuButtonRepo.SaveCloneButton(entitys);
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.ExampleManage.Controllers
 {
@@ -27,7 +28,7 @@ namespace Evolution.Web.Areas.ExampleManage.Controllers
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
         //[ValidateInput(false)]
-        public ActionResult SendMail(string account, string title, string content)
+        public async Task<IActionResult> SendMail(string account, string title, string content)
         {
             MailHelper mail = new MailHelper();
             //mail.MailServer = Configs.GetValue("MailHost");
@@ -35,6 +36,7 @@ namespace Evolution.Web.Areas.ExampleManage.Controllers
             //mail.MailPassword = Configs.GetValue("MailPassword");
             mail.MailName = "Evolution快速开发平台";
             mail.Send(account, title, content);
+            await Task.FromResult(0);
             return Success("发送成功。");
         }
     }

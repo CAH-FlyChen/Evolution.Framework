@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Application.SystemSecurity;
 using Evolution.Domain.Entity.SystemSecurity;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemSecurity.Controllers
 {
@@ -26,35 +27,35 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string queryJson)
+        public async Task<IActionResult> GetGridJson(string queryJson)
         {
-            var data = dbBackupApp.GetList(queryJson);
+            var data = await dbBackupApp.GetList(queryJson);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(DbBackupEntity dbBackupEntity)
+        public async Task<IActionResult> SubmitForm(DbBackupEntity dbBackupEntity)
         {
             dbBackupEntity.FilePath = wwwPath.ContentRootPath+"/Resource/DbBackup/" + dbBackupEntity.FileName + ".bak";
             dbBackupEntity.FileName = dbBackupEntity.FileName + ".bak";
-            dbBackupApp.Save(dbBackupEntity);
+            await dbBackupApp.Save(dbBackupEntity);
             return Success("操作成功。");
         }
         [HttpPost]
         [HandlerAjaxOnly]
         //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            dbBackupApp.Delete(keyValue);
+            await dbBackupApp.Delete(keyValue);
             return Success("删除成功。");
         }
         [HttpPost]
         //[HandlerAuthorize]
-        public void DownloadBackup(string keyValue)
+        public async void DownloadBackup(string keyValue)
         {
-            var data = dbBackupApp.GetForm(keyValue);
+            var data = await dbBackupApp.GetForm(keyValue);
             string filename = WebHelper.UrlDecode(data.FileName);
             string filepath = wwwPath+data.FilePath;
             //if (FileDownHelper.FileExists(filepath))

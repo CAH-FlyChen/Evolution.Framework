@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
 using Evolution.Domain.IRepository.SystemSecurity;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemSecurity
 {
@@ -22,7 +23,7 @@ namespace Evolution.Application.SystemSecurity
         {
             this.service = service;
         }
-        public List<LogEntity> GetList(Pagination pagination, string queryJson)
+        public Task<List<LogEntity>> GetList(Pagination pagination, string queryJson)
         {
             var expression = ExtLinq.True<LogEntity>();
             var queryParam = queryJson.ToJObject();
@@ -54,9 +55,9 @@ namespace Evolution.Application.SystemSecurity
                 }
                 expression = expression.And(t => t.Date >= startTime && t.Date <= endTime);
             }
-            return service.FindList(expression, pagination);
+            return service.FindListAsync(expression, pagination);
         }
-        public void RemoveLog(string keepTime)
+        public Task<int> RemoveLog(string keepTime)
         {
             DateTime operateTime = DateTime.Now;
             if (keepTime == "7")            //保留近一周
@@ -73,9 +74,9 @@ namespace Evolution.Application.SystemSecurity
             }
             var expression = ExtLinq.True<LogEntity>();
             expression = expression.And(t => t.Date <= operateTime);
-            service.Delete(expression);
+            return service.DeleteAsync(expression);
         }
-        public void WriteDbLog(bool result, string resultLog,HttpContext context)
+        public Task<int> WriteDbLog(bool result, string resultLog,HttpContext context)
         {
             var userCode = context.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserCode).Value;
             var userName = context.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserName).Value;
@@ -91,16 +92,16 @@ namespace Evolution.Application.SystemSecurity
             logEntity.Result = result;
             logEntity.Description = resultLog;
             logEntity.AttachCreateInfo(context);
-            service.Insert(logEntity);
+            return service.InsertAsync(logEntity);
         }
-        public void WriteDbLog(LogEntity logEntity,HttpContext context)
+        public Task<int> WriteDbLog(LogEntity logEntity,HttpContext context)
         {
             logEntity.Id = Common.GuId();
             logEntity.Date = DateTime.Now;
             logEntity.IPAddress = "117.81.192.182";
             logEntity.IPAddressName = Net.GetLocation(logEntity.IPAddress);
             logEntity.AttachCreateInfo(context);
-            service.Insert(logEntity);
+            return service.InsertAsync(logEntity);
         }
     }
 }

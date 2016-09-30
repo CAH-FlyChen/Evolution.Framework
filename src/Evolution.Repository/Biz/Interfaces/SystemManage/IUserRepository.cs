@@ -6,6 +6,7 @@
 *********************************************************************************/
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.IRepository;
+using System.Threading.Tasks;
 
 namespace Evolution.Domain.IRepository.SystemManage
 {
@@ -15,7 +16,7 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// 删除用户
         /// </summary>
         /// <param name="id">用户Id</param>
-        void Delete(string id);
+        Task<int> Delete(string id);
         /// <summary>
         /// 保存用户。
         /// 若id空则创建用户实体和登录实体，否则只更新用户实体
@@ -23,6 +24,6 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">用户登录实体</param>
         /// <param name="id">Id</param>
-        void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id);
+        Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id);
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemManage
 {
@@ -28,7 +29,7 @@ namespace Evolution.Application.SystemManage
         /// 获取系统资源列表
         /// </summary>
         /// <returns>系统资源列表</returns>
-        public List<ResourceEntity> GetList()
+        public Task<List<ResourceEntity>> GetList()
         {
             var loadableAssemblies = new List<ResourceEntity>();
             var deps = DependencyContext.Default;
@@ -74,7 +75,7 @@ namespace Evolution.Application.SystemManage
                     }
                 }
             }
-            return loadableAssemblies;
+            return Task.FromResult(loadableAssemblies);
         }
     }
 }

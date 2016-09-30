@@ -11,6 +11,7 @@ using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -39,14 +40,14 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetPermissionTree(string roleId)
+        public async Task<ActionResult> GetPermissionTree(string roleId)
         {
-            var moduledata = menuApp.GetList();
-            var buttondata = menuButtonApp.GetList();
+            var moduledata = await menuApp.GetList();
+            var buttondata = await menuButtonApp.GetList();
             var authorizedata = new List<RoleAuthorizeEntity>();
             if (!string.IsNullOrEmpty(roleId))
             {
-                authorizedata = roleAuthorizeApp.GetListByObjectId(roleId);
+                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId);
             }
             var treeList = new List<TreeViewModel>();
             foreach (MenuEntity item in moduledata)
@@ -93,9 +94,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveMenuPermission(RoleEntity roleEntity, string menuIds, string keyValue)
+        public async Task<ActionResult> SaveMenuPermission(RoleEntity roleEntity, string menuIds, string keyValue)
         {
-            roleApp.Save(roleEntity, menuIds.Split(','), keyValue);
+            await roleApp.Save(roleEntity, menuIds.Split(','), keyValue);
             return Success("操作成功。");
         }
 
@@ -105,9 +106,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeSelectJson()
+        public async Task<ActionResult> GetTreeSelectJson()
         {
-            var data = menuApp.GetList();
+            var data = await menuApp.GetList();
             var treeList = new List<TreeSelectModel>();
             foreach (MenuEntity item in data)
             {
@@ -127,9 +128,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string keyword)
+        public async Task<ActionResult> GetTreeGridJson(string keyword)
         {
-            var data = menuApp.GetList();
+            var data = await menuApp.GetList();
             if (!string.IsNullOrEmpty(keyword))
             {
                 data = data.TreeWhere(t => t.FullName.Contains(keyword));
@@ -156,9 +157,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = menuApp.GetMenuById(keyValue);
+            var data = await menuApp.GetMenuById(keyValue);
             return Content(data.ToJson());
         }
 
@@ -171,9 +172,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(MenuEntity menuEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(MenuEntity menuEntity, string keyValue)
         {
-            menuApp.Save(menuEntity, keyValue);
+            await menuApp.Save(menuEntity, keyValue);
             return Success("操作成功。");
         }
 
@@ -185,9 +186,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            menuApp.Delete(keyValue);
+            await menuApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

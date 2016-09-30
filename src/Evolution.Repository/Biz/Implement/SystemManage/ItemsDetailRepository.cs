@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository.SystemManage
 {
@@ -25,14 +26,14 @@ namespace Evolution.Repository.SystemManage
         {
             this.ctx = ctx;
         }
-        public List<ItemsDetailEntity> GetItemList(string enCode)
+        public Task<List<ItemsDetailEntity>> GetItemList(string enCode)
         {
             var x = from a in ctx.ItemsDetails
                      join b in ctx.Items on a.ItemId equals b.Id
                      where b.EnCode == enCode && a.EnabledMark == true && a.DeleteMark == false
                      orderby a.SortCode
                      select a;
-            return x.ToList();
+            return x.ToListAsync();
             
             //StringBuilder strSql = new StringBuilder();
             //strSql.Append(@"SELECT  d.*

@@ -10,6 +10,7 @@ using Evolution.Domain.Entity.SystemManage;
 using Evolution.Domain.IRepository.SystemManage;
 using Evolution.Repository.SystemManage;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository.SystemManage
 {
@@ -23,16 +24,16 @@ namespace Evolution.Repository.SystemManage
         /// 保存克隆的按钮
         /// </summary>
         /// <param name="entitys">按钮对象列表</param>
-        public void SaveCloneButton(List<MenuButtonEntity> entitys)
+        public Task<int> SaveCloneButton(List<MenuButtonEntity> entitys)
         {
             
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {
                 foreach (var item in entitys)
                 {
-                    db.Insert(item);
+                    db.InsertAsync(item);
                 }
-                db.Commit();
+                return db.CommitAsync();
             }
         }
     }

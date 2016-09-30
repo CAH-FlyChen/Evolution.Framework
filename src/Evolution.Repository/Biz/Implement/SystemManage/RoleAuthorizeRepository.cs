@@ -12,6 +12,8 @@ using Evolution.Repository.SystemManage;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository.SystemManage
 {
@@ -26,9 +28,11 @@ namespace Evolution.Repository.SystemManage
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns>被授权的ItemId</returns>
-        public List<string> GetResorucePermissionsByRoleId(string roleId)
+        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId)
         {
-            var hasPermissionPathres = dbcontext.RoleAuthorize.Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4).Select(t => t.ItemId).ToList();
+            var hasPermissionPathres = dbcontext.RoleAuthorize.Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4)
+                .Select(t => t.ItemId)
+                .ToListAsync();
             return hasPermissionPathres;
         }
     }

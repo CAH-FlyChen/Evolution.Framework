@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
 using Evolution.Domain.IRepository.SystemManage;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemManage
 {
@@ -23,7 +25,7 @@ namespace Evolution.Application.SystemManage
             this.service = service;
         }
 
-        public List<ItemsDetailEntity> GetList(string itemId = "", string keyword = "")
+        public Task<List<ItemsDetailEntity>> GetList(string itemId = "", string keyword = "")
         {
             var expression = ExtLinq.True<ItemsDetailEntity>();
             if (!string.IsNullOrEmpty(itemId))
@@ -36,31 +38,31 @@ namespace Evolution.Application.SystemManage
                 expression = expression.Or(t => t.ItemCode.Contains(keyword));
             }
 
-            return service.IQueryable(expression).OrderBy(t => t.SortCode).ToList();
+            return service.IQueryable(expression).OrderBy(t => t.SortCode).ToListAsync();
         }
-        public List<ItemsDetailEntity> GetItemList(string enCode)
+        public Task<List<ItemsDetailEntity>> GetItemList(string enCode)
         {
             return service.GetItemList(enCode);
         }
-        public ItemsDetailEntity GetForm(string keyValue)
+        public Task<ItemsDetailEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
-            service.Delete(t => t.Id == keyValue);
+            return service.DeleteAsync(t => t.Id == keyValue);
         }
-        public void Save(ItemsDetailEntity itemsDetailEntity, string keyValue,HttpContext context)
+        public Task<int> Save(ItemsDetailEntity itemsDetailEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 itemsDetailEntity.AttachModifyInfo(keyValue, context);
-                service.Update(itemsDetailEntity);
+                return service.UpdateAsync(itemsDetailEntity);
             }
             else
             {
                 itemsDetailEntity.AttachCreateInfo(context);
-                service.Insert(itemsDetailEntity);
+                return service.InsertAsync(itemsDetailEntity);
             }
         }
     }

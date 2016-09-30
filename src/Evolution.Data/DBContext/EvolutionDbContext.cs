@@ -12,6 +12,8 @@ using Evolution.Domain.Entity.SystemManage;
 using Evolution.Domain.Entity.SystemSecurity;
 using System.Data.Common;
 using System.Data;
+using System.Linq;
+using System;
 
 namespace Evolution.Data
 {
@@ -71,5 +73,10 @@ namespace Evolution.Data
         public DbSet<FilterIPEntity> FilterIPs { get; set; }
         public DbSet<LogEntity> Logs { get; set; }
         public DbSet<MenuEntity> Menus { get; set; }
+
+
+
+
+
     }
 }

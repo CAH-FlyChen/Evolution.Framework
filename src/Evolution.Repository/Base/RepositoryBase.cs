@@ -45,11 +45,11 @@ namespace Evolution.Repository
             dbTransaction = dbcontext.Database.BeginTransaction();
             return this;
         }
-        public int Commit()
+        public Task<int> CommitAsync()
         {
             try
             {
-                var returnValue = dbcontext.SaveChanges();
+                var returnValue = dbcontext.SaveChangesAsync();
                 if (dbTransaction != null)
                 {
                     dbTransaction.Commit();
@@ -77,20 +77,21 @@ namespace Evolution.Repository
             }
             this.dbcontext.Dispose();
         }
-        public int Insert<TEntity>(TEntity entity) where TEntity : class
+        public Task<int> InsertAsync<TEntity>(TEntity entity) where TEntity : class
         {
             dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
-            return dbTransaction == null ? this.Commit() : 0;
+
+            return dbTransaction == null ? this.CommitAsync() : Task.FromResult(0);
         }
-        public int Insert<TEntity>(List<TEntity> entitys) where TEntity : class
+        public Task<int> InsertAsync<TEntity>(List<TEntity> entitys) where TEntity : class
         {
             foreach (var entity in entitys)
             {
                 dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
             }
-            return dbTransaction == null ? this.Commit() : 0;
+            return dbTransaction == null ? this.CommitAsync() : Task.FromResult(0);
         }
-        public int Update<TEntity>(TEntity entity) where TEntity : class
+        public Task<int> UpdateAsync<TEntity>(TEntity entity) where TEntity : class
         {
             dbcontext.Set<TEntity>().Attach(entity);
             PropertyInfo[] props = entity.GetType().GetProperties();
@@ -103,23 +104,23 @@ namespace Evolution.Repository
                     dbcontext.Entry(entity).Property(prop.Name).IsModified = true;
                 }
             }
-            return dbTransaction == null ? this.Commit() : 0;
+            return dbTransaction == null ? this.CommitAsync() : Task.FromResult(0);
         }
-        public int Delete<TEntity>(TEntity entity) where TEntity : class
+        public Task<int> DeleteAsync<TEntity>(TEntity entity) where TEntity : class
         {
             dbcontext.Set<TEntity>().Attach(entity);
             dbcontext.Entry<TEntity>(entity).State = EntityState.Deleted;
-            return dbTransaction == null ? this.Commit() : 0;
+            return dbTransaction == null ? this.CommitAsync() : Task.FromResult(0);
         }
-        public int Delete<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
+        public Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
             var entitys = dbcontext.Set<TEntity>().Where(predicate).ToList();
             entitys.ForEach(m => dbcontext.Entry<TEntity>(m).State = EntityState.Deleted);
-            return dbTransaction == null ? this.Commit() : 0;
+            return dbTransaction == null ? this.CommitAsync() : Task.FromResult(0);
         }
-        public TEntity FindEntity<TEntity>(object keyValue) where TEntity : class
+        public Task<TEntity> FindEntityAsync<TEntity>(object keyValue) where TEntity : class
         {
-            return dbcontext.Set<TEntity>().Find(keyValue);
+            return dbcontext.Set<TEntity>().FindAsync(keyValue);
         }
         public Task<TEntity> FindEntityASync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
@@ -133,15 +134,15 @@ namespace Evolution.Repository
         {
             return dbcontext.Set<TEntity>().Where(predicate);
         }
-        public List<TEntity> FindList<TEntity>(string strSql) where TEntity : class
+        public Task<List<TEntity>> FindListAsync<TEntity>(string strSql) where TEntity : class
         {
-            return dbcontext.Set<TEntity>().FromSql(strSql).ToList<TEntity>();
+            return dbcontext.Set<TEntity>().FromSql(strSql).ToListAsync<TEntity>();
         }
-        public List<TEntity> FindList<TEntity>(string strSql, DbParameter[] dbParameter) where TEntity : class
+        public Task<List<TEntity>> FindListAsync<TEntity>(string strSql, DbParameter[] dbParameter) where TEntity : class
         {
-            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql, dbParameter).ToList<TEntity>();
+            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql, dbParameter).ToListAsync<TEntity>();
         }
-        public List<TEntity> FindList<TEntity>(Pagination pagination) where TEntity : class,new()
+        public Task<List<TEntity>> FindListAsync<TEntity>(Pagination pagination) where TEntity : class,new()
         {
             bool isAsc = pagination.sord.ToLower() == "asc" ? true : false;
             string[] _order = pagination.sidx.Split(',');
@@ -167,9 +168,9 @@ namespace Evolution.Repository
             tempData = tempData.Provider.CreateQuery<TEntity>(resultExp);
             pagination.records = tempData.Count();
             tempData = tempData.Skip<TEntity>(pagination.rows * (pagination.page - 1)).Take<TEntity>(pagination.rows).AsQueryable();
-            return tempData.ToList();
+            return tempData.ToListAsync();
         }
-        public List<TEntity> FindList<TEntity>(Expression<Func<TEntity, bool>> predicate, Pagination pagination) where TEntity : class,new()
+        public Task<List<TEntity>> FindListAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, Pagination pagination) where TEntity : class,new()
         {
             bool isAsc = pagination.sord.ToLower() == "asc" ? true : false;
             string[] _order = pagination.sidx.Split(',');
@@ -195,7 +196,7 @@ namespace Evolution.Repository
             tempData = tempData.Provider.CreateQuery<TEntity>(resultExp);
             pagination.records = tempData.Count();
             tempData = tempData.Skip<TEntity>(pagination.rows * (pagination.page - 1)).Take<TEntity>(pagination.rows).AsQueryable();
-            return tempData.ToList();
+            return tempData.ToListAsync();
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.Data;
 using Evolution.Domain.IRepository.SystemManage;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemManage
 {
@@ -23,15 +24,15 @@ namespace Evolution.Application.SystemManage
             this.service = service;
         }
 
-        public List<ItemsEntity> GetList()
+        public Task<List<ItemsEntity>> GetList()
         {
-            return service.GetAll();
+            return service.GetAllAsync();
         }
-        public ItemsEntity GetForm(string keyValue)
+        public Task<ItemsEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -39,20 +40,20 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                service.Delete(t => t.Id == keyValue);
+                return service.DeleteAsync(t => t.Id == keyValue);
             }
         }
-        public void Save(ItemsEntity itemsEntity, string keyValue,HttpContext context)
+        public Task<int> Save(ItemsEntity itemsEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 itemsEntity.AttachModifyInfo(keyValue, context);
-                service.Update(itemsEntity);
+                return service.UpdateAsync(itemsEntity);
             }
             else
             {
                 itemsEntity.AttachCreateInfo(context);
-                service.Insert(itemsEntity);
+                return service.InsertAsync(itemsEntity);
             }
         }
     }

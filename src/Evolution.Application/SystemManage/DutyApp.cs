@@ -10,6 +10,8 @@ using Evolution.Domain.Entity.SystemManage;
 using Evolution.Domain.IRepository.SystemManage;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemManage
 {
@@ -21,7 +23,7 @@ namespace Evolution.Application.SystemManage
             this.service = service;
         }
 
-        public List<RoleEntity> GetList(string keyword = "")
+        public Task<List<RoleEntity>> GetList(string keyword = "")
         {
             var expression = ExtLinq.True<RoleEntity>();
             if (!string.IsNullOrEmpty(keyword))
@@ -30,28 +32,28 @@ namespace Evolution.Application.SystemManage
                 expression = expression.Or(t => t.EnCode.Contains(keyword));
             }
             expression = expression.And(t => t.Category == 2);
-            return service.IQueryable(expression).OrderBy(t => t.SortCode).ToList();
+            return service.IQueryable(expression).OrderBy(t => t.SortCode).ToListAsync();
         }
-        public RoleEntity GetForm(string keyValue)
+        public Task<RoleEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
-            service.Delete(t => t.Id == keyValue);
+            return service.DeleteAsync(t => t.Id == keyValue);
         }
-        public void Save(RoleEntity roleEntity, string keyValue,HttpContext context)
+        public Task<int> Save(RoleEntity roleEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 //roleEntity.Modify(keyValue, context);
-                service.Update(roleEntity);
+                return service.UpdateAsync(roleEntity);
             }
             else
             {
                 //roleEntity.Create(context);
                 roleEntity.Category = 2;
-                service.Insert(roleEntity);
+                return service.InsertAsync(roleEntity);
             }
         }
     }

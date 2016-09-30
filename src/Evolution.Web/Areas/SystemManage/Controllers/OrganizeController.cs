@@ -11,6 +11,7 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.Framework;
 using Evolution;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -28,9 +29,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpGet]
         [HandlerAjaxOnly]
         [PermissionLevelDescrip("获取组织结构选项数据", "获取组织结构选项数据")]
-        public ActionResult GetTreeSelectJson()
+        public async Task<ActionResult> GetTreeSelectJson()
         {
-            var data = organizeApp.GetList();
+            var data = await organizeApp.GetList();
             var treeList = new List<TreeSelectModel>();
             foreach (OrganizeEntity item in data)
             {
@@ -46,9 +47,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpGet]
         [HandlerAjaxOnly]
         [PermissionLevelDescrip("获取组织结构数据树状列表", "获取组织结构数据树状列表")]
-        public ActionResult GetTreeJson()
+        public async Task<ActionResult> GetTreeJson()
         {
-            var data = organizeApp.GetList();
+            var data = await organizeApp.GetList();
             var treeList = new List<TreeViewModel>();
             foreach (OrganizeEntity item in data)
             {
@@ -68,9 +69,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpGet]
         [HandlerAjaxOnly]
         [PermissionLevelDescrip("获取组织结构数据列表", "获取组织结构数据列表")]
-        public ActionResult GetTreeGridJson(string keyword)
+        public async Task<ActionResult> GetTreeGridJson(string keyword)
         {
-            var data = organizeApp.GetList();
+            var data = await organizeApp.GetList();
             if (!string.IsNullOrEmpty(keyword))
             {
                 data = data.TreeWhere(t => t.FullName.Contains(keyword));
@@ -92,18 +93,18 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpGet]
         [HandlerAjaxOnly]
         [PermissionLevelDescrip("获取一个组织结构数据", "获取一个组织结构数据")]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = organizeApp.GetForm(keyValue);
+            var data = await organizeApp.GetForm(keyValue);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
         [PermissionLevelDescrip("保存组织结构数据", "保存组织结构数据")]
-        public ActionResult SubmitForm(OrganizeEntity organizeEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(OrganizeEntity organizeEntity, string keyValue)
         {
-            organizeApp.Save(organizeEntity, keyValue,HttpContext);
+            await organizeApp.Save(organizeEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -111,9 +112,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
         [PermissionLevelDescrip("删除组织结构数据", "删除组织结构数据")]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            organizeApp.Delete(keyValue);
+            await organizeApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

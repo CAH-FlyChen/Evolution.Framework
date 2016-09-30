@@ -6,12 +6,13 @@
 *********************************************************************************/
 using Evolution.IRepository;
 using Evolution.Domain.Entity.SystemSecurity;
+using System.Threading.Tasks;
 
 namespace Evolution.Domain.IRepository.SystemSecurity
 {
     public interface IDbBackupRepository : IRepositoryBase<DbBackupEntity>
     {
-        void Delete(string keyValue);
-        void ExecuteDbBackup(DbBackupEntity dbBackupEntity);
+        Task<int> Delete(string keyValue);
+        Task<int> ExecuteDbBackup(DbBackupEntity dbBackupEntity);
     }
 }

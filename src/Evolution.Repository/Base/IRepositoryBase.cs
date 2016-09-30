@@ -17,19 +17,19 @@ namespace Evolution.IRepository
     public interface IRepositoryBase : IDisposable
     {
         IRepositoryBase BeginTrans();
-        int Commit();
-        int Insert<TEntity>(TEntity entity) where TEntity : class;
-        int Insert<TEntity>(List<TEntity> entitys) where TEntity : class;
-        int Update<TEntity>(TEntity entity) where TEntity : class;
-        int Delete<TEntity>(TEntity entity) where TEntity : class;
-        int Delete<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
-        TEntity FindEntity<TEntity>(object keyValue) where TEntity : class;
+        Task<int> CommitAsync();
+        Task<int> InsertAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task<int> InsertAsync<TEntity>(List<TEntity> entitys) where TEntity : class;
+        Task<int> UpdateAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task<int> DeleteAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
+        Task<TEntity> FindEntityAsync<TEntity>(object keyValue) where TEntity : class;
         Task<TEntity> FindEntityASync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
         IQueryable<TEntity> IQueryable<TEntity>() where TEntity : class;
         IQueryable<TEntity> IQueryable<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class;
-        List<TEntity> FindList<TEntity>(string strSql) where TEntity : class;
-        List<TEntity> FindList<TEntity>(string strSql, DbParameter[] dbParameter) where TEntity : class;
-        List<TEntity> FindList<TEntity>(Pagination pagination) where TEntity : class,new();
-        List<TEntity> FindList<TEntity>(Expression<Func<TEntity, bool>> predicate, Pagination pagination) where TEntity : class,new();
+        Task<List<TEntity>> FindListAsync<TEntity>(string strSql) where TEntity : class;
+        Task<List<TEntity>> FindListAsync<TEntity>(string strSql, DbParameter[] dbParameter) where TEntity : class;
+        Task<List<TEntity>> FindListAsync<TEntity>(Pagination pagination) where TEntity : class,new();
+        Task<List<TEntity>> FindListAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, Pagination pagination) where TEntity : class,new();
     }
 }

@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemManage
 {
@@ -21,15 +23,15 @@ namespace Evolution.Application.SystemManage
         {
             this.service = service;
         }
-        public List<OrganizeEntity> GetList()
+        public Task<List<OrganizeEntity>> GetList()
         {
-            return service.IQueryable().OrderBy(t => t.CreatorTime).ToList();
+            return service.IQueryable().OrderBy(t => t.CreatorTime).ToListAsync();
         }
-        public OrganizeEntity GetForm(string keyValue)
+        public Task<OrganizeEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -37,20 +39,20 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                service.Delete(t => t.Id == keyValue);
+                return service.DeleteAsync(t => t.Id == keyValue);
             }
         }
-        public void Save(OrganizeEntity organizeEntity, string keyValue,HttpContext context)
+        public Task<int> Save(OrganizeEntity organizeEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 organizeEntity.AttachModifyInfo(keyValue, context);
-                service.Update(organizeEntity);
+                return service.UpdateAsync(organizeEntity);
             }
             else
             {
                 organizeEntity.AttachCreateInfo(context);
-                service.Insert(organizeEntity);
+                return service.InsertAsync(organizeEntity);
             }
         }
     }

@@ -11,6 +11,8 @@ using Evolution.Domain.IRepository.SystemSecurity;
 using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemSecurity
 {
@@ -21,34 +23,34 @@ namespace Evolution.Application.SystemSecurity
         {
             this.service = service;
         }
-        public List<FilterIPEntity> GetList(string keyword)
+        public Task<List<FilterIPEntity>> GetList(string keyword)
         {
             var expression = ExtLinq.True<FilterIPEntity>();
             if (!string.IsNullOrEmpty(keyword))
             {
                 expression = expression.And(t => t.StartIP.Contains(keyword));
             }
-            return service.IQueryable(expression).OrderByDescending(t => t.DeleteTime).ToList();
+            return service.IQueryable(expression).OrderByDescending(t => t.DeleteTime).ToListAsync();
         }
-        public FilterIPEntity GetForm(string keyValue)
+        public Task<FilterIPEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
-            service.Delete(t => t.Id == keyValue);
+            return service.DeleteAsync(t => t.Id == keyValue);
         }
-        public void Save(FilterIPEntity filterIPEntity, string keyValue,HttpContext context)
+        public Task<int> Save(FilterIPEntity filterIPEntity, string keyValue,HttpContext context)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 filterIPEntity.AttachModifyInfo(keyValue, context);
-                service.Update(filterIPEntity);
+                return service.UpdateAsync(filterIPEntity);
             }
             else
             {
                 filterIPEntity.AttachCreateInfo(context);
-                service.Insert(filterIPEntity);
+                return service.InsertAsync(filterIPEntity);
             }
         }
     }

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -26,9 +27,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeSelectJson()
+        public async Task<IActionResult> GetTreeSelectJson()
         {
-            var data = areaApp.GetList();
+            var data = await areaApp.GetList();
             var treeList = new List<TreeSelectModel>();
             foreach (AreaEntity item in data)
             {
@@ -42,9 +43,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string keyword)
+        public async Task<IActionResult> GetTreeGridJson(string keyword)
         {
-            var data = areaApp.GetList();
+            var data = await areaApp.GetList();
             var treeList = new List<TreeGridModel>();
             foreach (AreaEntity item in data)
             {
@@ -66,26 +67,26 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = areaApp.GetForm(keyValue);
+            var data = await areaApp.GetForm(keyValue);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(AreaEntity areaEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(AreaEntity areaEntity, string keyValue)
         {
-            areaApp.Save(areaEntity, keyValue,HttpContext);
+            await areaApp.Save(areaEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
         [HandlerAjaxOnly]
         //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            areaApp.Delete(keyValue);
+            await areaApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

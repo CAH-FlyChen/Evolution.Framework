@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Evolution.Data;
 using System;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemManage
 {
@@ -66,21 +67,21 @@ namespace Evolution.Application.SystemManage
             context.Authentication.SignOutAsync("CookieAuth");
         }
 
-        public UserLogOnEntity GetForm(string keyValue)
+        public Task<UserLogOnEntity> GetForm(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void UpdateForm(UserLogOnEntity userLogOnEntity)
+        public Task<int> UpdateForm(UserLogOnEntity userLogOnEntity)
         {
-            service.Update(userLogOnEntity);
+            return service.UpdateAsync(userLogOnEntity);
         }
-        public void RevisePassword(string userPassword,string keyValue)
+        public Task<int> RevisePassword(string userPassword,string keyValue)
         {
             UserLogOnEntity userLogOnEntity = new UserLogOnEntity();
             userLogOnEntity.Id = keyValue;
             userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();
             userLogOnEntity.UserPassword = Md5.md5(AESEncrypt.Encrypt(userPassword.ToLower(), userLogOnEntity.UserSecretkey).ToLower(), 32).ToLower();
-            service.Update(userLogOnEntity);
+            return service.UpdateAsync(userLogOnEntity);
         }
     }
 }

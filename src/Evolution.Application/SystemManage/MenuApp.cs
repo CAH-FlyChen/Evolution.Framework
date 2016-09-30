@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
 using Evolution.Framework;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemManage
 {
@@ -35,19 +37,19 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns></returns>
-        public List<MenuEntity> GetMenuListByRoleId(string roleId)
+        public async Task<List<MenuEntity>> GetMenuListByRoleId(string roleId)
         {
             var data = new List<MenuEntity>();
             var isSystem = context.User.Claims.FirstOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
             if (isSystem == null) return null;
             if (isSystem.ToBool())
             {
-                data = this.GetList();
+                data = await this.GetList();
             }
             else
             {
-                var menuData = this.GetList();
-                var authmenudata = roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 1).ToList();
+                var menuData = await this.GetList();
+                var authmenudata = await roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 1).ToListAsync();
                 foreach (var item in authmenudata)
                 {
                     MenuEntity moduleEntity = menuData.Find(t => t.Id == item.ItemId);
@@ -61,24 +63,24 @@ namespace Evolution.Application.SystemManage
         /// 获取所有菜单列表
         /// </summary>
         /// <returns></returns>
-        public List<MenuEntity> GetList()
+        public Task<List<MenuEntity>> GetList()
         {
-            return service.IQueryable().OrderBy(t => t.SortCode).ToList();
+            return service.IQueryable().OrderBy(t => t.SortCode).ToListAsync();
         }
         /// <summary>
         /// 通过菜单Id获取菜单
         /// </summary>
         /// <param name="keyValue">菜单Id</param>
         /// <returns></returns>
-        public MenuEntity GetMenuById(string keyValue)
+        public Task<MenuEntity> GetMenuById(string keyValue)
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
         /// <summary>
         /// 删除菜单，若有父菜单，则禁止删除
         /// </summary>
         /// <param name="keyValue">菜单Id</param>
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -86,7 +88,7 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                service.Delete(t => t.Id == keyValue);
+                return service.DeleteAsync(t => t.Id == keyValue);
             }
         }
         /// <summary>
@@ -94,17 +96,17 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="menuEntity">菜单实体</param>
         /// <param name="keyValue">菜单Id，有id则更新，无id则新建</param>
-        public void Save(MenuEntity menuEntity, string keyValue)
+        public Task<int> Save(MenuEntity menuEntity, string keyValue)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 menuEntity.AttachModifyInfo(keyValue, context);
-                service.Update(menuEntity);
+                return service.UpdateAsync(menuEntity);
             }
             else
             {
                 menuEntity.AttachCreateInfo(context);
-                service.Insert(menuEntity);
+                return service.InsertAsync(menuEntity);
             }
         }
     }

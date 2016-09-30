@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Evolution.Data.Extensions
 {
@@ -19,7 +20,7 @@ namespace Evolution.Data.Extensions
     /// </summary>
     public static class EntityInterfaceExtensions
     {
-        public static TEntity Find<TEntity>(this DbSet<TEntity> set, params object[] keyValues) where TEntity : class
+        public static Task<TEntity> FindAsync<TEntity>(this DbSet<TEntity> set, params object[] keyValues) where TEntity : class
         {
             var context = ((IInfrastructure<IServiceProvider>)set).GetService<ICurrentDbContext>().Context;
             
@@ -35,11 +36,11 @@ namespace Evolution.Data.Extensions
                 i++;
             }
 
-            var entry = entries.FirstOrDefault();
+            var entry = entries.AsQueryable().FirstOrDefault();
             if (entry != null)
             {
                 // Return the local object if it exists.
-                return entry.Entity;
+                return Task.FromResult(entry.Entity);
             }
 
             // TODO: Build the real LINQ Expression
@@ -53,7 +54,7 @@ namespace Evolution.Data.Extensions
                     parameter));
 
             // Look in the database
-            return query.FirstOrDefault();
+            return query.FirstOrDefaultAsync();
         }
     }
 }

@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Evolution.Data;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemSecurity
 {
@@ -21,7 +23,7 @@ namespace Evolution.Application.SystemSecurity
         {
             this.service = service;
         }
-        public List<DbBackupEntity> GetList(string queryJson)
+        public Task<List<DbBackupEntity>> GetList(string queryJson)
         {
             var expression = ExtLinq.True<DbBackupEntity>();
             var queryParam = queryJson.ToJObject();
@@ -39,22 +41,23 @@ namespace Evolution.Application.SystemSecurity
                         break;
                 }
             }
-            return service.IQueryable(expression).OrderByDescending(t => t.BackupTime).ToList();
+            return service.IQueryable(expression).OrderByDescending(t => t.BackupTime).ToListAsync();
         }
-        public DbBackupEntity GetForm(string keyValue)
+        public Task<DbBackupEntity> GetForm(string keyValue)
+
         {
-            return service.FindEntity(keyValue);
+            return service.FindEntityAsync(keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
-            service.Delete(keyValue);
+            return service.Delete(keyValue);
         }
-        public void Save(DbBackupEntity dbBackupEntity)
+        public Task<int> Save(DbBackupEntity dbBackupEntity)
         {
             dbBackupEntity.Id = Common.GuId();
             dbBackupEntity.EnabledMark = true;
             dbBackupEntity.BackupTime = DateTime.Now;
-            service.ExecuteDbBackup(dbBackupEntity);
+            return service.ExecuteDbBackup(dbBackupEntity);
         }
     }
 }

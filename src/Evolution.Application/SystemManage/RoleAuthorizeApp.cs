@@ -18,6 +18,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evolution.Application.SystemManage
 {
@@ -47,9 +49,9 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="ObjectId">权限所有者对象Id（OwnerId）</param>
         /// <returns>授权对象</returns>
-        public List<RoleAuthorizeEntity> GetListByObjectId(string ObjectId)
+        public Task<List<RoleAuthorizeEntity>> GetListByObjectId(string ObjectId)
         {
-            return service.IQueryable(t => t.ObjectId == ObjectId).ToList();
+            return service.IQueryable(t => t.ObjectId == ObjectId).ToListAsync();
         }
         /// <summary>
         /// 通过角色Id获取该角色的资源授权
@@ -57,7 +59,7 @@ namespace Evolution.Application.SystemManage
         /// <param name="roleId">角色Id</param>
         /// <param name="permissionIds">输出参数：逗号分隔的权限Id文本</param>
         /// <returns>角色对象</returns>
-        public RoleEntity GetResoucesByRoleId(string roleId,out string permissionIds)
+        public Task<RoleEntity> GetResoucesByRoleId(string roleId,out string permissionIds)
         {
             List<string> r = service.IQueryable(t => t.ItemType == 4 && t.ObjectType == 1 && t.ObjectId == roleId).Select(t=>t.ItemId).ToList();
             permissionIds = String.Join(",", r);
@@ -68,9 +70,9 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="resourceIds">资源Ids</param>
-        public void Save(string roleId,List<string> resourceIds)
+        public async Task<int> Save(string roleId,List<string> resourceIds)
         {
-            service.Delete(t => t.ObjectId == roleId && t.ObjectType == 1 && t.ItemType == 4);
+            await service.DeleteAsync(t => t.ObjectId == roleId && t.ObjectType == 1 && t.ItemType == 4);
             foreach(string resourceId in resourceIds)
             {
                 RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
@@ -79,8 +81,9 @@ namespace Evolution.Application.SystemManage
                 entity.ItemType = 4;
                 entity.ObjectId = roleId;
                 entity.ObjectType = 1;
-                service.Insert(entity);
+                await service.InsertAsync(entity);
             }
+            return await Task.FromResult(0);
         }
 
         //public bool ActionValidate(string roleId, string moduleId, string action)
@@ -130,7 +133,7 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns>资源权限列表</returns>
-        public List<string> GetResorucePermissionsByRoleId(string roleId)
+        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId)
         {
             return service.GetResorucePermissionsByRoleId(roleId);
         }

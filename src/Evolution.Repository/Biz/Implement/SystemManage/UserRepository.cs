@@ -10,6 +10,8 @@ using Evolution.Domain.Entity.SystemManage;
 using Evolution.Domain.IRepository.SystemManage;
 using Microsoft.AspNetCore.Http;
 using Evolution.IInfrastructure;
+using Evolution.Repository;
+using System.Threading.Tasks;
 
 namespace Evolution.Repository.SystemManage
 {
@@ -28,13 +30,13 @@ namespace Evolution.Repository.SystemManage
         /// 删除用户
         /// </summary>
         /// <param name="id">用户Id</param>
-        public void Delete(string id)
+        public Task<int> Delete(string id)
         {
             using (var db = new RepositoryBase(dbcontext).BeginTrans())
             {
-                db.Delete<UserEntity>(t => t.Id == id);
-                db.Delete<UserLogOnEntity>(t => t.UserId == id);
-                db.Commit();
+                db.DeleteAsync<UserEntity>(t => t.Id == id);
+                db.DeleteAsync<UserLogOnEntity>(t => t.UserId == id);
+                return db.CommitAsync();
             }
         }
 /// <summary>
@@ -43,13 +45,13 @@ namespace Evolution.Repository.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">用户登录实体</param>
         /// <param name="id">Id</param>
-        public void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
+        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
         {
             using (var repo = new RepositoryBase(dbcontext).BeginTrans())
             {
                 if (!string.IsNullOrEmpty(id))
                 {
-                    repo.Update(userEntity);
+                    repo.UpdateAsync(userEntity);
                 }
                 else
                 {
@@ -58,10 +60,10 @@ namespace Evolution.Repository.SystemManage
                     userLogOnEntity.UserId = userEntity.Id;
                     userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();
                     userLogOnEntity.UserPassword = Tools.CaculatePWD(userLogOnEntity.UserPassword.ToLower(), userLogOnEntity.UserSecretkey);
-                    repo.Insert(userEntity);
-                    repo.Insert(userLogOnEntity);
+                    repo.InsertAsync(userEntity);
+                    repo.InsertAsync(userLogOnEntity);
                 }
-                repo.Commit();
+                return repo.CommitAsync();
             }
         }
     }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -39,13 +40,13 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetResourceTree(string roleId)
+        public async Task<ActionResult> GetResourceTree(string roleId)
         {
-            var resourcedata = resourceApp.GetList();
+            var resourcedata = await resourceApp.GetList();
             var authorizedata = new List<RoleAuthorizeEntity>();
             if (!string.IsNullOrEmpty(roleId))
             {
-                authorizedata = roleAuthorizeApp.GetListByObjectId(roleId);
+                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId);
             }
             var treeList = new List<TreeViewModel>();
             foreach (ResourceEntity item in resourcedata)
@@ -75,7 +76,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitResourceForm(Dictionary<string,string> data,string keyValue)
+        public async Task<ActionResult> SubmitResourceForm(Dictionary<string,string> data,string keyValue)
         {
             List<string> keys = new List<string>();
             foreach(var d in data)
@@ -83,7 +84,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
                 if (d.Key == "FullName" || d.Key== "EnCode" || d.Key == "Id") continue;
                 keys.Add(d.Key);
             }
-            roleAuthorizeApp.Save(keyValue, keys);
+            await roleAuthorizeApp.Save(keyValue, keys);
             return Success("操作成功。");
         }
         /// <summary>
@@ -93,10 +94,10 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
             string permissionIds = "";
-            var data = roleAuthorizeApp.GetResoucesByRoleId(keyValue,out permissionIds);
+            var data = await roleAuthorizeApp.GetResoucesByRoleId(keyValue,out permissionIds);
             var rData = new
             {
                 Id = keyValue,

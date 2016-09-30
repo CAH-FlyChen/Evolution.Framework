@@ -8,6 +8,7 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -34,9 +35,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
+        public async Task<ActionResult> GetGridJson(string keyword)
         {
-            var data = roleApp.GetList(keyword);
+            var data = await roleApp.GetList(keyword);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -46,9 +47,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<ActionResult> GetFormJson(string keyValue)
         {
-            var data = roleApp.GetRoleById(keyValue);
+            var data = await roleApp.GetRoleById(keyValue);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -61,9 +62,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(RoleEntity roleEntity, string permissionIds, string keyValue)
+        public async Task<ActionResult> SubmitForm(RoleEntity roleEntity, string permissionIds, string keyValue)
         {
-            roleApp.Save(roleEntity, permissionIds.Split(','), keyValue);
+            await roleApp.Save(roleEntity, permissionIds.Split(','), keyValue);
             return Success("操作成功。");
         }
         /// <summary>
@@ -74,9 +75,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            roleApp.Delete(keyValue);
+            await roleApp.Delete(keyValue);
             return Success("删除成功。");
         }
         /// <summary>

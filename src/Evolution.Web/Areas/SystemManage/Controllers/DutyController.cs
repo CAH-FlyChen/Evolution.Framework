@@ -9,6 +9,7 @@ using Evolution.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -24,33 +25,33 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetGridJson(string keyword)
+        public async Task<IActionResult> GetGridJson(string keyword)
         {
-            var data = dutyApp.GetList(keyword);
+            var data = await dutyApp.GetList(keyword);
             return Content(data.ToJson());
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = dutyApp.GetForm(keyValue);
+            var data = await dutyApp.GetForm(keyValue);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(RoleEntity roleEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(RoleEntity roleEntity, string keyValue)
         {
-            dutyApp.Save(roleEntity, keyValue,HttpContext);
+            await dutyApp.Save(roleEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
         [HandlerAjaxOnly]
         //[HandlerAuthorize]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            dutyApp.Delete(keyValue);
+            await dutyApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

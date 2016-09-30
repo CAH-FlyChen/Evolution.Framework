@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Controllers
 {
@@ -43,25 +44,25 @@ namespace Evolution.Web.Controllers
         #endregion 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetClientsDataJson()
+        public async Task<IActionResult> GetClientsDataJson()
         {
             var data = new
             {
-                dataItems = this.GetDataItemList(),
-                organize = this.GetOrganizeList(),
-                role = this.GetRoleList(),
-                duty = this.GetDutyList(),
+                dataItems = await this.GetDataItemList(),
+                organize = await this.GetOrganizeList(),
+                role = await this.GetRoleList(),
+                duty = await this.GetDutyList(),
                 user = "",
-                authorizeMenu = this.GetMenuList(),
-                authorizeButton = this.GetMenuButtonList(),
+                authorizeMenu = await this.GetMenuList(),
+                authorizeButton = await this.GetMenuButtonList(),
             };
             return Content(data.ToJson());
         }
-        private object GetDataItemList()
+        private async Task<object> GetDataItemList()
         {
-            var itemdata = itemDetailApp.GetList();
+            var itemdata = await itemDetailApp.GetList();
             Dictionary<string, object> dictionaryItem = new Dictionary<string, object>();
-            foreach (var item in itemsApp.GetList())
+            foreach (var item in await itemsApp.GetList())
             {
                 var dataItemList = itemdata.FindAll(t => t.ItemId.Equals(item.Id));
                 Dictionary<string, string> dictionaryItemList = new Dictionary<string, string>();
@@ -73,9 +74,9 @@ namespace Evolution.Web.Controllers
             }
             return dictionaryItem;
         }
-        private object GetOrganizeList()
+        private async Task<object> GetOrganizeList()
         {
-            var data = this.organizeApp.GetList();
+            var data = await this.organizeApp.GetList();
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (OrganizeEntity item in data)
             {
@@ -88,9 +89,9 @@ namespace Evolution.Web.Controllers
             }
             return dictionary;
         }
-        private object GetRoleList()
+        private async Task<object> GetRoleList()
         {
-            var data = this.roleApp.GetList();
+            var data = await this.roleApp.GetList();
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (RoleEntity item in data)
             {
@@ -101,11 +102,11 @@ namespace Evolution.Web.Controllers
                 };
                 dictionary.Add(item.Id, fieldItem);
             }
-            return dictionary;
+            return Task.FromResult<object>(dictionary);
         }
-        private object GetDutyList()
+        private async Task<object> GetDutyList()
         {
-            var data = this.dutyApp.GetList();
+            var data = await this.dutyApp.GetList();
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (RoleEntity item in data)
             {
@@ -116,16 +117,16 @@ namespace Evolution.Web.Controllers
                 };
                 dictionary.Add(item.Id, fieldItem);
             }
-            return dictionary;
+            return Task.FromResult<object>(dictionary);
         }
-        private object GetMenuList()
+        private async Task<object> GetMenuList()
         {
             if(!HttpContext.User.HasClaim(t => t.Type == OperatorModelClaimNames.RoleId))
             {
                 return null;
             }
             string roleId = HttpContext.User.Claims.FirstOrDefault(t => t.Type== OperatorModelClaimNames.RoleId).Value;
-            return ToMenuJson(this.menuApp.GetMenuListByRoleId(roleId), "0");
+            return ToMenuJson(await this.menuApp.GetMenuListByRoleId(roleId), "0");
         }
         private string ToMenuJson(List<MenuEntity> data, string parentId)
         {
@@ -145,10 +146,10 @@ namespace Evolution.Web.Controllers
             sbJson.Append("]");
             return sbJson.ToString();
         }
-        private object GetMenuButtonList()
+        private async Task<object> GetMenuButtonList()
         {
             var roleId = User.Claims.First(t => t.Type == OperatorModelClaimNames.RoleId).Value;
-            var authedButtonList = menuButtonApp.GetButtonListByRoleId(roleId);
+            var authedButtonList = await menuButtonApp.GetButtonListByRoleId(roleId);
             var distinctAuthedMenuButtonList = authedButtonList.Distinct(new ExtList<MenuButtonEntity>("MenuId"));
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (MenuButtonEntity item in distinctAuthedMenuButtonList)

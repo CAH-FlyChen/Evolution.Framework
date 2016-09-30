@@ -109,8 +109,8 @@ namespace Evolution.Web.Controllers
                 if (verifyCodeInSession.IsEmpty() || Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
                     throw new Exception("验证码错误，请重新输入！");
                 //验证用户名密码
-                UserEntity userEntity = await userApp.CheckLogin(username, password);
-                var role = roleApp.GetRoleById(userEntity.RoleId);
+                var userEntity = await userApp.CheckLogin(username, password);
+                var role = await roleApp.GetRoleById(userEntity.RoleId);
                 //设置登录对象
                 LoginModel operatorModel = CreateLoginModel(userEntity, role);
                 //写入登录日志
@@ -118,7 +118,7 @@ namespace Evolution.Web.Controllers
                 logEntity.NickName = userEntity.RealName;
                 logEntity.Result = true;
                 logEntity.Description = "登录成功";
-                logApp.WriteDbLog(logEntity, HttpContext);
+                await logApp.WriteDbLog(logEntity, HttpContext);
                 //登录
                 logonApp.SignIn(operatorModel, HttpContext);
 
@@ -130,7 +130,7 @@ namespace Evolution.Web.Controllers
                 logEntity.NickName = username;
                 logEntity.Result = false;
                 logEntity.Description = "登录失败，" + ex.Message;
-                logApp.WriteDbLog(logEntity, HttpContext);
+                await logApp.WriteDbLog(logEntity, HttpContext);
                 return Content(new AjaxResult { state = ResultType.error.ToString(), message = ex.Message }.ToJson());
             }
         }

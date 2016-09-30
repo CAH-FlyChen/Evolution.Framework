@@ -35,25 +35,25 @@ namespace Evolution.Repository
             dbcontext = ctx;
         }
 
-        public List<TEntity> GetAll()
+        public Task<List<TEntity>> GetAllAsync()
         {
-            return dbcontext.Set<TEntity>().ToList();
+            return dbcontext.Set<TEntity>().ToListAsync();
         }
 
-        public int Insert(TEntity entity)
+        public Task<int> InsertAsync(TEntity entity)
         {
             dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
-            return dbcontext.SaveChanges();
+            return dbcontext.SaveChangesAsync();
         }
-        public int Insert(List<TEntity> entitys)
+        public Task<int> InsertAsync(List<TEntity> entitys)
         {
             foreach (var entity in entitys)
             {
                 dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
             }
-            return dbcontext.SaveChanges();
+            return dbcontext.SaveChangesAsync();
         }
-        public int Update(TEntity entity)
+        public Task<int> UpdateAsync(TEntity entity)
         {
             dbcontext.Set<TEntity>().Attach(entity);
             PropertyInfo[] props = entity.GetType().GetProperties();
@@ -67,23 +67,23 @@ namespace Evolution.Repository
                     dbcontext.Entry(entity).Property(prop.Name).IsModified = true;
                 }
             }
-            return dbcontext.SaveChanges();
+            return dbcontext.SaveChangesAsync();
         }
-        public int Delete(TEntity entity)
+        public Task<int> DeleteAsync(TEntity entity)
         {
             dbcontext.Set<TEntity>().Attach(entity);
             dbcontext.Entry<TEntity>(entity).State = EntityState.Deleted;
-            return dbcontext.SaveChanges();
+            return dbcontext.SaveChangesAsync();
         }
-        public int Delete(Expression<Func<TEntity, bool>> predicate)
+        public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var entitys = dbcontext.Set<TEntity>().Where(predicate).ToList();
             entitys.ForEach(m => dbcontext.Entry<TEntity>(m).State = EntityState.Deleted);
-            return dbcontext.SaveChanges();
+            return dbcontext.SaveChangesAsync();
         }
-        public TEntity FindEntity(object keyValue)
+        public Task<TEntity> FindEntityAsync(object keyValue)
         {
-            return dbcontext.Set<TEntity>().Find(keyValue);
+            return dbcontext.Set<TEntity>().FindAsync(keyValue);
         }
         public Task<TEntity> FindEntityASync(Expression<Func<TEntity, bool>> predicate)
         {
@@ -97,15 +97,15 @@ namespace Evolution.Repository
         {
             return dbcontext.Set<TEntity>().Where(predicate);
         }
-        public List<TEntity> FindList(string strSql)
+        public Task<List<TEntity>> FindListAsync(string strSql)
         {
-            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql).ToList < TEntity>();
+            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql).ToListAsync<TEntity>();
         }
-        public List<TEntity> FindList(string strSql, DbParameter[] dbParameter)
+        public Task<List<TEntity>> FindListAsync(string strSql, DbParameter[] dbParameter)
         {
-            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql,dbParameter).ToList<TEntity>();
+            return dbcontext.Set<TEntity>().FromSql<TEntity>(strSql,dbParameter).ToListAsync<TEntity>();
         }
-        public List<TEntity> FindList(Pagination pagination)
+        public Task<List<TEntity>> FindListAsync(Pagination pagination)
         {
             bool isAsc = pagination.sord.ToLower() == "asc" ? true : false;
             string[] _order = pagination.sidx.Split(',');
@@ -131,9 +131,9 @@ namespace Evolution.Repository
             tempData = tempData.Provider.CreateQuery<TEntity>(resultExp);
             pagination.records = tempData.Count();
             tempData = tempData.Skip<TEntity>(pagination.rows * (pagination.page - 1)).Take<TEntity>(pagination.rows).AsQueryable();
-            return tempData.ToList();
+            return tempData.ToListAsync();
         }
-        public List<TEntity> FindList(Expression<Func<TEntity, bool>> predicate, Pagination pagination)
+        public async Task<List<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate, Pagination pagination)
         {
             bool isAsc = pagination.sord.ToLower() == "asc" ? true : false;
             string[] _order = pagination.sidx.Split(',');
@@ -157,9 +157,9 @@ namespace Evolution.Repository
                 resultExp = Expression.Call(typeof(Queryable), isAsc ? "OrderBy" : "OrderByDescending", new Type[] { typeof(TEntity), property.PropertyType }, tempData.Expression, Expression.Quote(orderByExp));
             }
             tempData = tempData.Provider.CreateQuery<TEntity>(resultExp);
-            pagination.records = tempData.Count();
+            pagination.records = await tempData.CountAsync();
             tempData = tempData.Skip<TEntity>(pagination.rows * (pagination.page - 1)).Take<TEntity>(pagination.rows).AsQueryable();
-            return tempData.ToList();
+            return await tempData.ToListAsync();
         }
     }
 }

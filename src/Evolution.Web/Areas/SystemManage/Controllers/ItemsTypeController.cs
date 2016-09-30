@@ -10,7 +10,7 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -26,9 +26,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
 
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeSelectJson()
+        public async Task<IActionResult> GetTreeSelectJson()
         {
-            var data = itemsApp.GetList();
+            var data = await itemsApp.GetList();
             var treeList = new List<TreeSelectModel>();
             foreach (ItemsEntity item in data)
             {
@@ -42,9 +42,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeJson()
+        public async Task<IActionResult> GetTreeJson()
         {
-            var data = itemsApp.GetList();
+            var data = await itemsApp.GetList();
             var treeList = new List<TreeViewModel>();
             foreach (ItemsEntity item in data)
             {
@@ -63,9 +63,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson()
+        public async Task<IActionResult> GetTreeGridJson()
         {
-            var data = itemsApp.GetList();
+            var data = await itemsApp.GetList();
             var treeList = new List<TreeGridModel>();
             foreach (ItemsEntity item in data)
             {
@@ -82,25 +82,25 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         }
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = itemsApp.GetForm(keyValue);
+            var data = await itemsApp.GetForm(keyValue);
             return Content(data.ToJson());
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(ItemsEntity itemsEntity, string keyValue)
+        public async Task<IActionResult> SubmitForm(ItemsEntity itemsEntity, string keyValue)
         {
-            itemsApp.Save(itemsEntity, keyValue,HttpContext);
+            await itemsApp.Save(itemsEntity, keyValue,HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            itemsApp.Delete(keyValue);
+            await itemsApp.Delete(keyValue);
             return Success("删除成功。");
         }
     }

@@ -20,19 +20,19 @@ namespace Evolution.IRepository
     /// <typeparam name="TEntity">实体类型</typeparam>
     public interface IRepositoryBase<TEntity> where TEntity : class,new()
     {
-        List<TEntity> GetAll();
-        int Insert(TEntity entity);
-        int Insert(List<TEntity> entitys);
-        int Update(TEntity entity);
-        int Delete(TEntity entity);
-        int Delete(Expression<Func<TEntity, bool>> predicate);
-        TEntity FindEntity(object keyValue);
+        Task<List<TEntity>> GetAllAsync();
+        Task<int> InsertAsync(TEntity entity);
+        Task<int> InsertAsync(List<TEntity> entitys);
+        Task<int> UpdateAsync(TEntity entity);
+        Task<int> DeleteAsync(TEntity entity);
+        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> FindEntityAsync(object keyValue);
         Task<TEntity> FindEntityASync(Expression<Func<TEntity, bool>> predicate);
         IQueryable<TEntity> IQueryable();
         IQueryable<TEntity> IQueryable(Expression<Func<TEntity, bool>> predicate);
-        List<TEntity> FindList(string strSql);
-        List<TEntity> FindList(string strSql, DbParameter[] dbParameter);
-        List<TEntity> FindList(Pagination pagination);
-        List<TEntity> FindList(Expression<Func<TEntity, bool>> predicate, Pagination pagination);
+        Task<List<TEntity>> FindListAsync(string strSql);
+        Task<List<TEntity>> FindListAsync(string strSql, DbParameter[] dbParameter);
+        Task<List<TEntity>> FindListAsync(Pagination pagination);
+        Task<List<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate, Pagination pagination);
     }
 }

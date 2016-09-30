@@ -10,6 +10,7 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -34,9 +35,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeSelectJson(string menuId)
+        public async Task<ActionResult> GetTreeSelectJson(string menuId)
         {
-            var data = menuButtonApp.GetListByMenuId(menuId);
+            var data = await  menuButtonApp.GetListByMenuId(menuId);
             var treeList = new List<TreeSelectModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -55,9 +56,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson(string menuId)
+        public async Task<ActionResult> GetTreeGridJson(string menuId)
         {
-            var data = menuButtonApp.GetListByMenuId(menuId);
+            var data = await menuButtonApp.GetListByMenuId(menuId);
             var treeList = new List<TreeGridModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -79,9 +80,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetFormJson(string keyValue)
+        public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = menuButtonApp.GetMenuButtonById(keyValue);
+            var data = await menuButtonApp.GetMenuButtonById(keyValue);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -93,9 +94,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitForm(MenuButtonEntity entity, string keyValue)
+        public async Task<IActionResult> SubmitForm(MenuButtonEntity entity, string keyValue)
         {
-            menuButtonApp.Save(entity, keyValue);
+            await menuButtonApp.Save(entity, keyValue);
             return Success("操作成功。");
         }
         /// <summary>
@@ -106,9 +107,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [HttpPost]
         [HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteForm(string keyValue)
+        public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            menuButtonApp.Delete(keyValue);
+            await menuButtonApp.Delete(keyValue);
             return Success("删除成功。");
         }
         /// <summary>
@@ -116,7 +117,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult CloneButton()
+        public IActionResult CloneButton()
         {
             return View();
         }
@@ -126,10 +127,10 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetCloneButtonTreeJson()
+        public async Task<ActionResult> GetCloneButtonTreeJson()
         {
-            var menuData = menuApp.GetList();
-            var buttonData = menuButtonApp.GetList();
+            var menuData = await  menuApp.GetList();
+            var buttonData = await  menuButtonApp.GetList();
             var treeList = new List<TreeViewModel>();
             foreach (MenuEntity item in menuData)
             {
@@ -172,9 +173,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public ActionResult SubmitCloneButton(string menuId, string Ids)
+        public async Task<ActionResult> SubmitCloneButton(string menuId, string Ids)
         {
-            menuButtonApp.SaveCloneButton(menuId, Ids);
+            await menuButtonApp.SaveCloneButton(menuId, Ids);
             return Success("克隆成功。");
         }
     }

@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Evolution.Domain.IRepository.SystemManage;
+using System.Threading.Tasks;
 
 namespace Evolution.Application.SystemManage
 {
@@ -27,15 +28,15 @@ namespace Evolution.Application.SystemManage
             this.areaRepo = repo;
         }
 
-        public List<AreaEntity> GetList()
+        public Task<List<AreaEntity>> GetList()
         {
-            return areaRepo.GetAll();
+            return areaRepo.GetAllAsync();
         }
-        public AreaEntity GetForm(string keyValue)
+        public Task<AreaEntity> GetForm(string keyValue)
         {
-            return areaRepo.FindEntityASync(t=>t.Id==keyValue).Result;
+            return areaRepo.FindEntityASync(t=>t.Id==keyValue);
         }
-        public void Delete(string keyValue)
+        public Task<int> Delete(string keyValue)
         {
             if (areaRepo.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -43,20 +44,20 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                areaRepo.Delete(t => t.Id == keyValue);
+                return areaRepo.DeleteAsync(t => t.Id == keyValue);
             }
         }
-        public void Save(AreaEntity areaEntity, string keyValue,HttpContext httpContext)
+        public Task<int> Save(AreaEntity areaEntity, string keyValue,HttpContext httpContext)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
                 areaEntity.AttachModifyInfo(keyValue, httpContext);
-                areaRepo.Update(areaEntity);
+                return areaRepo.UpdateAsync(areaEntity);
             }
             else
             {
                 areaEntity.AttachCreateInfo(httpContext);
-                areaRepo.Insert(areaEntity);
+                return areaRepo.InsertAsync(areaEntity);
             }
         }
     }

@@ -10,6 +10,7 @@ using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Microsoft.AspNetCore.Mvc;
 using Evolution.Framework;
+using System.Threading.Tasks;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
@@ -31,9 +32,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         /// <returns></returns>
         [HttpGet]
         [HandlerAjaxOnly]
-        public ActionResult GetTreeGridJson()
+        public async Task<ActionResult> GetTreeGridJson()
         {
-            var data = resourceApp.GetList();
+            var data = await resourceApp.GetList();
             var treeList = new List<TreeGridModel>();
             foreach (ResourceEntity item in data)
             {

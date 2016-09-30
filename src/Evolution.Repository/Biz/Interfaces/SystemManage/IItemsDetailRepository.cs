@@ -7,11 +7,12 @@
 using Evolution.IRepository;
 using Evolution.Domain.Entity.SystemManage;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Evolution.Domain.IRepository.SystemManage
 {
     public interface IItemsDetailRepository : IRepositoryBase<ItemsDetailEntity>
     {
-        List<ItemsDetailEntity> GetItemList(string enCode);
+        Task<List<ItemsDetailEntity>> GetItemList(string enCode);
     }
 }

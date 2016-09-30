@@ -7,6 +7,7 @@
 using Evolution.IRepository;
 using Evolution.Domain.Entity.SystemManage;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Evolution.Domain.IRepository.SystemManage
 {
@@ -16,6 +17,6 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// 保存克隆的按钮
         /// </summary>
         /// <param name="entitys">按钮对象列表</param>
-        void SaveCloneButton(List<MenuButtonEntity> entitys);
+        Task<int> SaveCloneButton(List<MenuButtonEntity> entitys);
     }
 }

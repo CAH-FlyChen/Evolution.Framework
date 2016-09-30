@@ -25,7 +25,8 @@
     "System.Net.Security": "4.0.0",
     //"system.net.networkinformation": "4.0.10-beta-23123",
     "Newtonsoft.Json": "9.0.1",
-    "System.Net.NetworkInformation": "4.1.0"
+    "System.Net.NetworkInformation": "4.1.0",
+    "Microsoft.EntityFrameworkCore": "1.0.0"
   },
 
   "frameworks": {

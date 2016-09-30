@@ -49,7 +49,7 @@ namespace Evolution.Application.SystemManage
         /// <param name="pagination">分页信息</param>
         /// <param name="keyword">关键字，只允用户名，真实姓名，电话号码</param>
         /// <returns>用户实体列表</returns>
-        public List<UserEntity> GetList(Pagination pagination, string keyword)
+        public Task<List<UserEntity>> GetList(Pagination pagination, string keyword)
         {
             var expression = ExtLinq.True<UserEntity>();
             if (!string.IsNullOrEmpty(keyword))
@@ -59,24 +59,24 @@ namespace Evolution.Application.SystemManage
                 expression = expression.Or(t => t.MobilePhone.Contains(keyword));
             }
             expression = expression.And(t => t.Account != "admin");
-            return service.FindList(expression, pagination);
+            return service.FindListAsync(expression, pagination);
         }
         /// <summary>
         /// 通过id获取用户实体对象
         /// </summary>
         /// <param name="id">用户Id</param>
         /// <returns>用户实体对象</returns>
-        public UserEntity GetEntityById(string id)
+        public Task<UserEntity> GetEntityById(string id)
         {
-            return service.FindEntity(id);
+            return service.FindEntityAsync(id);
         }
         /// <summary>
         /// 删除用户实体对象
         /// </summary>
         /// <param name="id">用户id</param>
-        public void Delete(string id)
+        public Task<int> Delete(string id)
         {
-            service.Delete(id);
+            return service.Delete(id);
         }
         /// <summary>
         /// 保存用户对象
@@ -84,21 +84,21 @@ namespace Evolution.Application.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">登录实体</param>
         /// <param name="id">用户Id，为空则创建实体，否则更新实体</param>
-        public void Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
+        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
         {
             if (!string.IsNullOrEmpty(id))
                 userEntity.AttachModifyInfo(id, currentContext);
             else
                 userEntity.AttachCreateInfo(currentContext);
-            service.Save(userEntity, userLogOnEntity, id);
+            return service.Save(userEntity, userLogOnEntity, id);
         }
         /// <summary>
         /// 更新用户实体
         /// </summary>
         /// <param name="userEntity">用户实体</param>
-        public void Update(UserEntity userEntity)
+        public Task<int> Update(UserEntity userEntity)
         {
-            service.Update(userEntity);
+            return service.UpdateAsync(userEntity);
         }
 
         /// <summary>
@@ -114,13 +114,13 @@ namespace Evolution.Application.SystemManage
             if (userEntity == null) throw new Exception("账户不存在，请重新输入");
             if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
             //获取用户登录对象
-            UserLogOnEntity userLogOnEntity = userLogOnApp.GetForm(userEntity.Id);
+            UserLogOnEntity userLogOnEntity = await userLogOnApp.GetForm(userEntity.Id);
             //密码0000 MD5加密后 de54ef2d07c608096fddb77a27c5f126
             //验证密码
             string pwd = Tools.CaculatePWD(password, userLogOnEntity.UserSecretkey);
             if (pwd != userLogOnEntity.UserPassword) throw new Exception("密码不正确，请重新输入");
             //记录登录日志
-            WriteLoginLog(userLogOnEntity);
+            await WriteLoginLog(userLogOnEntity);
             return userEntity;
         }
 
@@ -129,7 +129,7 @@ namespace Evolution.Application.SystemManage
         /// 记录登录日志
         /// </summary>
         /// <param name="userLogOnEntity">用户登录对象</param>
-        private void WriteLoginLog(UserLogOnEntity userLogOnEntity)
+        private Task<int> WriteLoginLog(UserLogOnEntity userLogOnEntity)
         {
             DateTime lastVisitTime = DateTime.Now;
             int LogOnCount = (userLogOnEntity.LogOnCount).ToInt() + 1;
@@ -137,7 +137,7 @@ namespace Evolution.Application.SystemManage
                 userLogOnEntity.PreviousVisitTime = userLogOnEntity.LastVisitTime.ToDate();
             userLogOnEntity.LastVisitTime = lastVisitTime;
             userLogOnEntity.LogOnCount = LogOnCount;
-            userLogOnApp.UpdateForm(userLogOnEntity);
+            return userLogOnApp.UpdateForm(userLogOnEntity);
         }
         #endregion
     }
