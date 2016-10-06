@@ -14,14 +14,22 @@ using System.Data.Common;
 using System.Data;
 using System.Linq;
 using System;
+using System.Collections.Generic;
+using Evolution.Plugin.Core;
+using System.Reflection;
+using Evolution.Data.Entity;
+using JetBrains.Annotations;
 
 namespace Evolution.Data
 {
+
+
     public class EvolutionDbContext : DbContext
     {
         public EvolutionDbContext(DbContextOptions<EvolutionDbContext> options) 
             : base(options)
         {
+            
         }
 
         //public EvolutionDbContext()
@@ -54,6 +62,16 @@ namespace Evolution.Data
             modelBuilder.AddConfiguration(new LogEFConfiguration());
             modelBuilder.AddConfiguration(new MenuEFConfiguration());
 
+            //添加并配置第三方插件
+            List<Type> typeToRegisters = new List<Type>();
+            foreach (var plugin in GlobalConfiguration.Plugins)
+            {
+                typeToRegisters.AddRange(plugin.Assembly.DefinedTypes.Select(t => t.AsType()));
+            }
+            RegisterEntities(modelBuilder,typeToRegisters);
+            RegisterCustomMappings(modelBuilder, typeToRegisters);
+
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -73,10 +91,27 @@ namespace Evolution.Data
         public DbSet<FilterIPEntity> FilterIPs { get; set; }
         public DbSet<LogEntity> Logs { get; set; }
         public DbSet<MenuEntity> Menus { get; set; }
-
-
-
-
-
+        //not used
+        private static void RegisterCustomMappings(ModelBuilder modelBuilder, IEnumerable<Type> typeToRegisters)
+        {
+            var customModelBuilderTypes = typeToRegisters.Where(x => typeof(ICustomModelBuilder).IsAssignableFrom(x));
+            foreach (var builderType in customModelBuilderTypes)
+            {
+                if (builderType != null && builderType != typeof(ICustomModelBuilder))
+                {
+                    var builder = (ICustomModelBuilder)Activator.CreateInstance(builderType);
+                    builder.Build(modelBuilder);
+                }
+            }
+        }
+        //not used
+        private static void RegisterEntities(ModelBuilder modelBuilder, IEnumerable<Type> typeToRegisters)
+        {
+            var entityTypes = typeToRegisters.Where(x => x.GetTypeInfo().IsSubclassOf(typeof(EntityBase)) && !x.GetTypeInfo().IsAbstract);
+            foreach (var type in entityTypes)
+            {
+                modelBuilder.Entity(type);
+            }
+        }
     }
 }

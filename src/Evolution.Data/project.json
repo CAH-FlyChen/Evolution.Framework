@@ -4,6 +4,7 @@
   "dependencies": {
     "Dapper": "1.50.2",
     "Evolution.IInfrastructure": "1.0.0-*",
+    "Evolution.Plugin.Core": "1.0.0-*",
     "Microsoft.EntityFrameworkCore": "1.0.0",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
     "NETStandard.Library": "1.6.0",

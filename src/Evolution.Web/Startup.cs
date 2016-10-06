@@ -14,28 +14,31 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Text;
 using Evolution.Repository.SystemManage;
 using Evolution.Repository.SystemSecurity;
-using Evolution.Web;
 using Microsoft.AspNetCore.Authorization;
 using Evolution.Domain.Entity.SystemManage;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Evolution.Domain.Entity.SystemSecurity;
-using Evolution.Web.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Evolution.Plugin.Core;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Evolution.Data.DBContext;
 
 namespace Evolution.Web
 {
     public class Startup
     {
         private static string WebRootPath = "";
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private IList<IPluginInitializer> pluginInitializers;
+
         public Startup(IHostingEnvironment env)
         {
+            _hostingEnvironment = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -47,6 +50,7 @@ namespace Evolution.Web
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
+            
             Configuration = builder.Build();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
         }
@@ -60,11 +64,22 @@ namespace Evolution.Web
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddMvc(opts =>
+            //解析外部插件
+            services.LoadPluginAssessmblyToGlobalConfiguration(_hostingEnvironment);
+
+            var mvcBuilder = services.AddMvc(opts =>
             {
                 Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeApp.CheckPermission;
                 opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
             });
+
+            //自定义路径解析View
+            mvcBuilder.AddRazorOptions(opt =>
+            {
+                opt.ViewLocationExpanders.Add(new PluginViewLocationExpander());
+            });
+            //解析构造外部插件
+            mvcBuilder.RegisterPluginController(GlobalConfiguration.Plugins);
 
             services.AddMemoryCache();
             //services.AddDistributedMemoryCache();
@@ -73,7 +88,7 @@ namespace Evolution.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.CookieName = ".MyApplication";
             });
-            
+
             services.AddEntityFramework()
                     .AddDbContext<EvolutionDbContext>(options =>
                     {
@@ -81,7 +96,6 @@ namespace Evolution.Web
                             Configuration.GetConnectionString("MDatabase"),
                             b => b.UseRowNumberForPaging()
                                 );
-
                     });
 
             #region 注册Service
@@ -121,7 +135,10 @@ namespace Evolution.Web
             services.AddTransient<MenuApp>();
             services.AddTransient<ResourceApp>();
             #endregion
+
+            pluginInitializers = services.InitPlugins(Configuration);
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -129,6 +146,7 @@ namespace Evolution.Web
             App = app;
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
             app.UseApplicationInsightsRequestTelemetry();
             if (env.IsDevelopment())
             {
@@ -165,20 +183,37 @@ namespace Evolution.Web
 
             //***  Initialize the DB ***//
             //if (env.EnvironmentName == "Development")
-            //   InitializeDb(app.ApplicationServices).Wait();
+            //   InitializeBasicDb(app.ApplicationServices).Wait();
 
-            //InitializeDb(app.ApplicationServices).Wait();
+            InitializeBasicDb(app.ApplicationServices).Wait();
+
+            //合并数据库
+            foreach (var pluginInit in pluginInitializers)
+            {
+                pluginInit.DoMerage(app.ApplicationServices);
+            }
         }
 
-        private static async Task InitializeDb(IServiceProvider applicationServices)
+        private static async Task InitializeBasicDb(IServiceProvider applicationServices)
         {
             using (var dbContext =
               applicationServices.GetService<EvolutionDbContext>())
             {
                 var sqlServerDatabase = dbContext.Database;
+                try
+                {
+                    int r = sqlServerDatabase.ExecuteSqlCommand("select count(*) from Sys_Area");
+                    //如果正常，则表示数据库有表，不需要创建
+                    return;
+                }
+                catch(Exception ex)
+                {
+                }
+
                 await sqlServerDatabase.EnsureDeletedAsync();
                 if (await sqlServerDatabase.EnsureCreatedAsync())
                 {
+                    //sqlServerDatabase.Migrate();
                     ProcessFile("Sys_Area.csv",colums=> {
                         AreaEntity entity = new AreaEntity();
                         entity.Id = colums[0];
