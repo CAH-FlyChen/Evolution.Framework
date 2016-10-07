@@ -34,7 +34,8 @@
     "Evolution.Data": "1.0.0-*",
     "Newtonsoft.Json": "9.0.1",
     "Evolution.Plugin.Core": "1.0.0-*",
-    "Microsoft.AspNetCore.Mvc.Razor": "1.0.0"
+    "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
+    "MySql.Data.EntityFrameworkCore": "7.0.5-IR21"
   },
 
   "tools": {

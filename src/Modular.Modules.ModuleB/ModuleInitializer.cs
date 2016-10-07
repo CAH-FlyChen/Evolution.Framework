@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modular.Modules.ModuleB.Module;
 using Modular.Modules.ModuleB.Services;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,13 @@ namespace Modular.Modules.ModuleB
             services.AddEntityFramework()
             .AddDbContext<ModuleBContext>(options =>
             {
-                options.UseSqlServer(
-                    config.GetConnectionString("MDatabase"),
-                    b => b.UseRowNumberForPaging()
-                        );
+                //options.UseSqlServer(
+                //    config.GetConnectionString("MDatabase"),
+                //    b => b.UseRowNumberForPaging()
+                //        );
+                options.UseMySQL(
+                config.GetConnectionString("MMysqlDatabase")
+                    );
             });
 
             //services.AddTransient<DemoRepository>();

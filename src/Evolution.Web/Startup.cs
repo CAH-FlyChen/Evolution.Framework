@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Evolution.Data.DBContext;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace Evolution.Web
 {
@@ -89,14 +90,21 @@ namespace Evolution.Web
                 options.CookieName = ".MyApplication";
             });
 
+            //services.AddEntityFramework()
+            //        .AddDbContext<EvolutionDbContext>(options =>
+            //        {
+            //            options.UseSqlServer(
+            //                Configuration.GetConnectionString("MDatabase"),
+            //                b => b.UseRowNumberForPaging()
+            //                    );
+            //        });
             services.AddEntityFramework()
-                    .AddDbContext<EvolutionDbContext>(options =>
-                    {
-                        options.UseSqlServer(
-                            Configuration.GetConnectionString("MDatabase"),
-                            b => b.UseRowNumberForPaging()
-                                );
-                    });
+            .AddDbContext<EvolutionDbContext>(options =>
+            {
+                options.UseMySQL(
+                    Configuration.GetConnectionString("MMysqlDatabase")
+                        );
+             });
 
             #region 注册Service
             services.AddLogging();

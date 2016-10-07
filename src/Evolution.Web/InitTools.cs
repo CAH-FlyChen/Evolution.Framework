@@ -29,8 +29,8 @@ namespace Evolution.Web
                 {
                 }
 
-                await sqlServerDatabase.EnsureDeletedAsync();
-                if (await sqlServerDatabase.EnsureCreatedAsync())
+                sqlServerDatabase.EnsureDeleted();
+                if (sqlServerDatabase.EnsureCreated())
                 {
                     //sqlServerDatabase.Migrate();
                     ProcessFile("Sys_Area.csv", colums => {
