@@ -1,6 +1,13 @@
 # Evolution.Framework   
 ##基础信息
 本Framework基于NFine修改制作  
+基于 Asp.net MVC 6, EF Core 1.0, BootStrap制作
+##额外特性  
+1. 跨平台  
+2. EF底层，便于适配不同数据库（只需要替换数据库的Provider）  
+3. 支持插件化开发  
+4. 全异步操作
+5. 资源级别的权限控制方便Restful API调用
 ##测试信息
 已在 Ubuntu 14.4 + SqlServer 上测试通过  
 已在 Windows + SqlServer 上测试通过
