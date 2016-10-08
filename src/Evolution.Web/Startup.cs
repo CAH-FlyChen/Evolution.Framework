@@ -27,7 +27,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Evolution.Data.DBContext;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
+using SapientGuardian.MySql.Data.EntityFrameworkCore;
+using MySQL.Data.Entity.Extensions;
 
 namespace Evolution.Web
 {

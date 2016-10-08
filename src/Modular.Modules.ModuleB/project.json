@@ -15,7 +15,7 @@
       "type": "platform",
       "version": "1.0.0"
     },
-    "MySql.Data.EntityFrameworkCore": "7.0.5-IR21"
+    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9"
   },
 
   "frameworks": {
@@ -27,5 +27,6 @@
     "Microsoft.EntityFrameworkCore.Tools": {
       "version": "1.0.0-preview2-final"
     }
-  }
+  },
+  "scripts": { "postcompile": ["buildpost.cmd"] }
 }

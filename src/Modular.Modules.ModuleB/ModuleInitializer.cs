@@ -5,11 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modular.Modules.ModuleB.Module;
 using Modular.Modules.ModuleB.Services;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MySQL.Data.Entity.Extensions;
 
 namespace Modular.Modules.ModuleB
 {
