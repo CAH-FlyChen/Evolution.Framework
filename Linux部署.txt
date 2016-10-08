@@ -1,0 +1,38 @@
+1.安装.net core. 
+
+Ubutu 14.4 执行:
+sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'  
+sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893  
+sudo apt-get update  
+
+2.安装.net core sdk。
+sudo apt-get install dotnet-dev-1.0.0-preview2-003121 
+
+3.编译发布
+dotnet restore  
+dotnet publish -r ubuntu.14.04-x64
+
+4.将发布的publish目录下的文件上传到ubuntu服务器。可以用ssh secure file transfer或者ftp什么的上传。
+ 
+5.切换到项目目录下，执行
+dotnet Evolution.Web.dll  
+
+6.安装nginx
+sudo apt-get install nginx  
+nano /etc/nginx/sites-available/default  
+当然vi也可以。
+修改Server节点配置：
+server {  
+listen 80;  
+location / {  
+proxy_pass http://localhost:5000;  
+proxy_http_version 1.1;  
+proxy_set_header Upgrade $http_upgrade;  
+proxy_set_header Connection keep-alive;  
+proxy_set_header Host $host;  
+proxy_cache_bypass $http_upgrade;  
+}  
+}  
+ctrl+O Ctrl+X 保存，然后退出。
+重启Nginx
+sudo service nginx restart  
