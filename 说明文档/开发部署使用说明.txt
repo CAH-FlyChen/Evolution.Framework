@@ -1,7 +1,7 @@
 ##联系信息  
 QQ群：489791124
 
-需求：
+环境需求：
 
 Microsoft Visual Studio Enterprise 2015
 版本 14.0.25421.03 Update 3
@@ -9,4 +9,7 @@ Microsoft Visual Studio Enterprise 2015
 Microsoft .NET Core Tools (Preview 2)   14.1.20624.0
 
 nuget地址：https://api.nuget.org/v3/index.json
-打开代码后需要 还原包
+
+操作：
+1.打开工程,如果是第一次打开系统会自动还原包。
+2.如果是有错误或者非第一次打开，则在"引用"上点击右键"还原包"。

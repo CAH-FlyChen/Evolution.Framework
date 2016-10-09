@@ -49,14 +49,15 @@ namespace Evolution.Repository
         {
             try
             {
-                var returnValue = dbcontext.SaveChangesAsync();
+                //此处保存不能异步SaveChangesAsync。因为Commit是同步的，这样就会导致save没有执行就执行了commit方法。
+                var returnValue = dbcontext.SaveChanges();
                 if (dbTransaction != null)
                 {
                     dbTransaction.Commit();
                 }
-                return returnValue;
+                return Task.FromResult(0);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (dbTransaction != null)
                 {

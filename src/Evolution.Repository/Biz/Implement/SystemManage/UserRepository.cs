@@ -62,6 +62,7 @@ namespace Evolution.Repository.SystemManage
                     userLogOnEntity.UserPassword = Tools.CaculatePWD(userLogOnEntity.UserPassword.ToLower(), userLogOnEntity.UserSecretkey);
                     repo.InsertAsync(userEntity);
                     repo.InsertAsync(userLogOnEntity);
+                    
                 }
                 return repo.CommitAsync();
             }
