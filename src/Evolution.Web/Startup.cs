@@ -40,6 +40,7 @@ namespace Evolution.Web
         private readonly IHostingEnvironment _hostingEnvironment;
         private IList<IPluginInitializer> pluginInitializers;
         private readonly bool UseRedis = false;
+        private readonly string DataBase = null;
 
         public Startup(IHostingEnvironment env)
         {
@@ -58,6 +59,7 @@ namespace Evolution.Web
             
             Configuration = builder.Build();
             UseRedis = Configuration["Caching:UseRedis"].ToBool();
+            DataBase = Configuration["DataBase"];
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
         }
 
@@ -106,22 +108,27 @@ namespace Evolution.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.CookieName = ".MyApplication";
             });
-
-            services.AddEntityFramework()
-                    .AddDbContext<EvolutionDbContext>(options =>
-                    {
-                        options.UseSqlServer(
-                            Configuration.GetConnectionString("MDatabase"),
-                            b => b.UseRowNumberForPaging()
-                                );
-                    });
-            //services.AddEntityFramework()
-            //.AddDbContext<EvolutionDbContext>(options =>
-            //{
-            //    options.UseMySQL(
-            //        Configuration.GetConnectionString("MMysqlDatabase")
-            //            );
-            // });
+            if(DataBase.ToLower()=="sqlserver")
+            {
+                services.AddEntityFramework()
+                .AddDbContext<EvolutionDbContext>(options =>
+                {
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("MDatabase"),
+                        b => b.UseRowNumberForPaging()
+                            );
+                });
+            }
+            else if(DataBase.ToLower() == "mysql")
+            {
+                services.AddEntityFramework()
+                .AddDbContext<EvolutionDbContext>(options =>
+                {
+                    options.UseMySQL(
+                        Configuration.GetConnectionString("MMysqlDatabase")
+                            );
+                });
+            }
 
             #region 注册Service
             services.AddLogging();
