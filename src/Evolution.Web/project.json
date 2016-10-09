@@ -35,7 +35,8 @@
     "Newtonsoft.Json": "9.0.1",
     "Evolution.Plugin.Core": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
-    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9"
+    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9",
+    "Microsoft.Extensions.Caching.Redis.Core": "1.0.2"
   },
 
   "tools": {

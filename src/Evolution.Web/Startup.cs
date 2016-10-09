@@ -30,6 +30,7 @@ using Evolution.Data.DBContext;
 //using MySQL.Data.EntityFrameworkCore.Extensions;
 using SapientGuardian.MySql.Data.EntityFrameworkCore;
 using MySQL.Data.Entity.Extensions;
+using Evolution.Framework;
 
 namespace Evolution.Web
 {
@@ -38,6 +39,7 @@ namespace Evolution.Web
         private static string WebRootPath = "";
         private readonly IHostingEnvironment _hostingEnvironment;
         private IList<IPluginInitializer> pluginInitializers;
+        private readonly bool UseRedis = false;
 
         public Startup(IHostingEnvironment env)
         {
@@ -55,6 +57,7 @@ namespace Evolution.Web
             }
             
             Configuration = builder.Build();
+            UseRedis = Configuration["Caching:UseRedis"].ToBool();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
         }
 
@@ -84,7 +87,19 @@ namespace Evolution.Web
             //解析构造外部插件
             mvcBuilder.RegisterPluginController(GlobalConfiguration.Plugins);
 
-            services.AddMemoryCache();
+            if(UseRedis)
+            {
+                services.AddDistributedRedisCache(option => {
+                    option.Configuration = Configuration.GetConnectionString("RedisCache");
+                    option.InstanceName = "master";
+                });
+            }
+            else
+            {
+                services.AddMemoryCache();
+            }
+            
+
             //services.AddDistributedMemoryCache();
             services.AddSession((SessionOptions options) =>
             {
