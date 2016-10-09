@@ -1,0 +1,9 @@
+需求：
+
+Microsoft Visual Studio Enterprise 2015
+版本 14.0.25421.03 Update 3
+
+Microsoft .NET Core Tools (Preview 2)   14.1.20624.0
+
+nuget地址：https://api.nuget.org/v3/index.json
+打开代码后需要 还原包
