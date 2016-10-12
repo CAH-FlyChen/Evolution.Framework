@@ -1,0 +1,88 @@
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        initControl();
+        if (!!keyValue) {
+            $.ajax({
+                url: "/DemoArea/DemoAController/GetFormJson",
+                data: { keyValue: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                }
+            });
+        }
+    });
+    function initControl() {
+        //$("#OrganizeId").bindSelect({
+        //    url: "/SystemManage/Organize/GetTreeSelectJson",
+        //});
+    }
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        $.submitForm({
+            url: "/DemoArea/DemoAController/SubmitForm?keyValue=" + keyValue,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+			
+			<tr>
+                <th class="formTitle">Account</th>
+                <td class="formValue">
+                    <input id="Account" name="Account" type="text" class="form-control required" placeholder="请输入Account" />
+                </td>
+            </tr>
+
+			<tr>
+                <th class="formTitle">RealName</th>
+                <td class="formValue">
+                    <input id="RealName" name="RealName" type="text" class="form-control required" placeholder="请输入RealName" />
+                </td>
+            </tr>
+
+			<tr>
+                <th class="formTitle">NickName</th>
+                <td class="formValue">
+                    <input id="NickName" name="NickName" type="text" class="form-control required" placeholder="请输入NickName" />
+                </td>
+            </tr>
+
+			<tr>
+                <th class="formTitle">HeadIcon</th>
+                <td class="formValue">
+                    <input id="HeadIcon" name="HeadIcon" type="text" class="form-control required" placeholder="请输入HeadIcon" />
+                </td>
+            </tr>
+
+			<tr>
+                <th class="formTitle">Gender</th>
+                <td class="formValue">
+                    <input id="Gender" name="Gender" type="text" class="form-control required" placeholder="请输入Gender" />
+                </td>
+            </tr>
+
+			<tr>
+                <th class="formTitle">Birthday</th>
+                <td class="formValue">
+                    <input id="Birthday" name="Birthday" type="text" class="form-control required" placeholder="请输入Birthday" />
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</form>
