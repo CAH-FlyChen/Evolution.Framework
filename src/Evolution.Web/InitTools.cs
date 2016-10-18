@@ -16,7 +16,7 @@ namespace Evolution.Web
         public static async Task InitializeBasicDb(IServiceProvider applicationServices,string webRootPath)
         {
             WebRootPath = webRootPath;
-            using (EvolutionDbContext dbContext = applicationServices.GetService<EvolutionDbContext>())
+            using (EvolutionDBContext dbContext = applicationServices.GetService<EvolutionDBContext>())
             {
                 var sqlServerDatabase = dbContext.Database;
                 try

@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemSecurity
 {
     public class LogRepository : RepositoryBase<LogEntity>, ILogRepository
     {
-        public LogRepository(EvolutionDbContext ctx) : base(ctx)
+        public LogRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

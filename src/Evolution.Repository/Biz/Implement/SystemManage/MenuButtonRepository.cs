@@ -16,7 +16,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class MenuButtonRepository : RepositoryBase<MenuButtonEntity>, IMenuButtonRepository
     {
-        public MenuButtonRepository(EvolutionDbContext ctx) : base(ctx)
+        public MenuButtonRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

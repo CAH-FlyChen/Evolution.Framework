@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class OrganizeRepository : RepositoryBase<OrganizeEntity>, IOrganizeRepository
     {
-        public OrganizeRepository(EvolutionDbContext ctx) : base(ctx)
+        public OrganizeRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

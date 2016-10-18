@@ -19,8 +19,8 @@ namespace Evolution.Web
                 {
                     var moduleViewLocations = new string[]
                     {
-                    "/Plugins/Modular.Modules." + module + "/Views/{1}/{0}.cshtml",
-                    "/Plugins/Modular.Modules." + module + "/Views/Shared/{0}.cshtml"
+                    "/Plugins/Evolution.Plugins." + module + "/Views/{1}/{0}.cshtml",
+                    "/Plugins/Evolution.Plugins." + module + "/Views/Shared/{0}.cshtml"
                     };
 
                     viewLocations = moduleViewLocations.Concat(viewLocations);

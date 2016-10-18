@@ -15,7 +15,7 @@ namespace Evolution.Repository.SystemSecurity
 {
     public class DbBackupRepository : RepositoryBase<DbBackupEntity>, IDbBackupRepository
     {
-        public DbBackupRepository(EvolutionDbContext ctx) : base(ctx)
+        public DbBackupRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

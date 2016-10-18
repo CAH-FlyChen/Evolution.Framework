@@ -13,7 +13,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class MenuRepository : RepositoryBase<MenuEntity>, IMenuRepository
     {
-        public MenuRepository(EvolutionDbContext ctx) : base(ctx)
+        public MenuRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

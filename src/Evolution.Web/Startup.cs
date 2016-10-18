@@ -111,7 +111,7 @@ namespace Evolution.Web
             if(DataBase.ToLower()=="sqlserver")
             {
                 services.AddEntityFramework()
-                .AddDbContext<EvolutionDbContext>(options =>
+                .AddDbContext<EvolutionDBContext>(options =>
                 {
                     options.UseSqlServer(
                         Configuration.GetConnectionString("MDatabase"),
@@ -122,7 +122,7 @@ namespace Evolution.Web
             else if(DataBase.ToLower() == "mysql")
             {
                 services.AddEntityFramework()
-                .AddDbContext<EvolutionDbContext>(options =>
+                .AddDbContext<EvolutionDBContext>(options =>
                 {
                     options.UseMySQL(
                         Configuration.GetConnectionString("MMysqlDatabase")

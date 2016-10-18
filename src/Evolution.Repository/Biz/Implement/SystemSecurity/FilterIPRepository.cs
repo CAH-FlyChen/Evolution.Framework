@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemSecurity
 {
     public class FilterIPRepository : RepositoryBase<FilterIPEntity>, IFilterIPRepository
     {
-        public FilterIPRepository(EvolutionDbContext ctx) : base(ctx)
+        public FilterIPRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

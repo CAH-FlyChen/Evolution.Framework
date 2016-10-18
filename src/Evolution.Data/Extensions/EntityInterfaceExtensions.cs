@@ -43,7 +43,7 @@ namespace Evolution.Data.Extensions
                 return Task.FromResult(entry.Entity);
             }
 
-            // TODO: Build the real LINQ Expression
+            //  Build the real LINQ Expression
             // set.Where(x => x.Id == keyValues[0]);
             var parameter = Expression.Parameter(typeof(TEntity), "x");
             var query = set.Where((Expression<Func<TEntity, bool>>)

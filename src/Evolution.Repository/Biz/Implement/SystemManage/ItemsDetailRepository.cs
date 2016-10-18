@@ -21,8 +21,8 @@ namespace Evolution.Repository.SystemManage
 {
     public class ItemsDetailRepository : RepositoryBase<ItemsDetailEntity>, IItemsDetailRepository
     {
-        private EvolutionDbContext ctx = null;
-        public ItemsDetailRepository(EvolutionDbContext ctx) : base(ctx)
+        private EvolutionDBContext ctx = null;
+        public ItemsDetailRepository(EvolutionDBContext ctx) : base(ctx)
         {
             this.ctx = ctx;
         }

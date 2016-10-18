@@ -19,7 +19,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class RoleAuthorizeRepository : RepositoryBase<RoleAuthorizeEntity>, IRoleAuthorizeRepository
     {
-        public RoleAuthorizeRepository(EvolutionDbContext ctx) : base(ctx)
+        public RoleAuthorizeRepository(EvolutionDBContext ctx) : base(ctx)
         {
             
         }
@@ -30,7 +30,7 @@ namespace Evolution.Repository.SystemManage
         /// <returns>被授权的ItemId</returns>
         public Task<List<string>> GetResorucePermissionsByRoleId(string roleId)
         {
-            var hasPermissionPathres = dbcontext.RoleAuthorize.Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4)
+            var hasPermissionPathres =  dbcontext.Set<RoleAuthorizeEntity>().Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4)
                 .Select(t => t.ItemId)
                 .ToListAsync();
             return hasPermissionPathres;

@@ -5,6 +5,7 @@
     "Dapper": "1.50.2",
     "Evolution.Data": "1.0.0-*",
     "Evolution.Framework": "1.0.0-*",
+    "Evolution.RepositoryBase": "1.0.0-*",
     "Microsoft.EntityFrameworkCore": "1.0.0",
     "NETStandard.Library": "1.6.0",
     "System.Interactive.Async": "3.0.0"

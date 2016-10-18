@@ -1,0 +1,5 @@
+##联系信息  
+QQ群：489791124
+
+此模板是VSTemplate。可以安装到VS2012中。
+在VS2012就可以创建Evolution项目和EvolutionController Item。

@@ -11,6 +11,8 @@ sudo apt-get update
 2.安装.net core sdk。
 sudo apt-get install dotnet-dev-1.0.0-preview2-003121 
 
+2.1 安装sudo apt-get install libgdiplus
+
 3.编译发布
 dotnet restore  
 dotnet publish -r ubuntu.14.04-x64

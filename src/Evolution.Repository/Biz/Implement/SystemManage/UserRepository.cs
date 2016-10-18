@@ -21,7 +21,7 @@ namespace Evolution.Repository.SystemManage
         private HttpContext context = null;
         #endregion
         #region 构造函数
-        public UserRepository(EvolutionDbContext ctx, IHttpContextAccessor contextAccessor) : base(ctx)
+        public UserRepository(EvolutionDBContext ctx, IHttpContextAccessor contextAccessor) : base(ctx)
         {
             context = contextAccessor.HttpContext;
         }

@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class AreaRepository : RepositoryBase<AreaEntity>, IAreaRepository
     {
-        public AreaRepository(EvolutionDbContext ctx) : base(ctx)
+        public AreaRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

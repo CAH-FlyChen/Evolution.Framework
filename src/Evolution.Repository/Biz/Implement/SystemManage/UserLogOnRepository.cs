@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class UserLogOnRepository : RepositoryBase<UserLogOnEntity>, IUserLogOnRepository
     {
-        public UserLogOnRepository(EvolutionDbContext ctx) : base(ctx)
+        public UserLogOnRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }

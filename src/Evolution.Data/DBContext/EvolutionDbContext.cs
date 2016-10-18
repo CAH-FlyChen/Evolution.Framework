@@ -22,11 +22,9 @@ using JetBrains.Annotations;
 
 namespace Evolution.Data
 {
-
-
-    public class EvolutionDbContext : DbContext
+    public class EvolutionDBContext : DbContext
     {
-        public EvolutionDbContext(DbContextOptions<EvolutionDbContext> options) 
+        public EvolutionDBContext(DbContextOptions<EvolutionDBContext> options) 
             : base(options)
         {
             

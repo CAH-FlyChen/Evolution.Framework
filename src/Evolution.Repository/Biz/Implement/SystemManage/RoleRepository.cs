@@ -16,7 +16,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class RoleRepository : RepositoryBase<RoleEntity>, IRoleRepository
     {
-        public RoleRepository(EvolutionDbContext ctx) : base(ctx){}
+        public RoleRepository(EvolutionDBContext ctx) : base(ctx){}
         /// <summary>
         /// 删除角色对象及相关授权
         /// </summary>

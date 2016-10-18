@@ -14,7 +14,7 @@ namespace Evolution.Repository.SystemManage
 {
     public class ItemsRepository : RepositoryBase<ItemsEntity>, IItemsRepository
     {
-        public ItemsRepository(EvolutionDbContext ctx) : base(ctx)
+        public ItemsRepository(EvolutionDBContext ctx) : base(ctx)
         {
 
         }
