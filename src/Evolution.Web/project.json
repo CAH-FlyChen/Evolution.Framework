@@ -36,7 +36,10 @@
     "Evolution.Plugin.Core": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
     "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9",
-    "Microsoft.Extensions.Caching.Redis.Core": "1.0.2"
+    "Microsoft.Extensions.Caching.Redis.Core": "1.0.2",
+    "CoreProfiler": "1.0.3",
+    "CoreProfiler.Web": "1.0.3",
+    "Evolution.Web.Attributes": "1.0.0-*"
   },
 
   "tools": {

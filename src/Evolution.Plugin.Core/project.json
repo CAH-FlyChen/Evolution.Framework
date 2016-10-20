@@ -13,5 +13,9 @@
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "scripts": {
+    //"postcompile": [ "buildpost.cmd" ] 
+
   }
 }

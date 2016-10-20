@@ -1,0 +1,1 @@
+﻿delete /y bin\debug\*.nupkg

@@ -31,6 +31,12 @@ using Evolution.Data.DBContext;
 using SapientGuardian.MySql.Data.EntityFrameworkCore;
 using MySQL.Data.Entity.Extensions;
 using Evolution.Framework;
+using CoreProfiler.Web;
+using System.Data.Common;
+using CoreProfiler.Data;
+using MySql.Data.MySqlClient;
+using CoreProfiler;
+using System.Data.SqlClient;
 
 namespace Evolution.Web
 {
@@ -114,7 +120,7 @@ namespace Evolution.Web
                 .AddDbContext<EvolutionDBContext>(options =>
                 {
                     options.UseSqlServer(
-                        Configuration.GetConnectionString("MDatabase"),
+                        this.GetDbConnection(),
                         b => b.UseRowNumberForPaging()
                             );
                 });
@@ -125,7 +131,7 @@ namespace Evolution.Web
                 .AddDbContext<EvolutionDBContext>(options =>
                 {
                     options.UseMySQL(
-                        Configuration.GetConnectionString("MMysqlDatabase")
+                        this.GetDbConnection()
                             );
                 });
             }
@@ -201,6 +207,7 @@ namespace Evolution.Web
                 AutomaticChallenge = true
 
             });
+            app.UseCoreProfiler(true);
             app.UseMvc(routes =>
             {
                 // Areas support
@@ -226,7 +233,30 @@ namespace Evolution.Web
             }
         }
 
-        
+        public DbConnection GetDbConnection()
+        {
+            if (DataBase.ToLower() == "sqlserver")
+            {
+                return new ProfiledDbConnection(new SqlConnection(Configuration.GetConnectionString("MDatabase")), () => {
+                    if (ProfilingSession.Current == null)
+                        return null;
+                    return new DbProfiler(ProfilingSession.Current.Profiler);
+                });
+
+            }
+            else if (DataBase.ToLower() == "mysql")
+            {
+                return new ProfiledDbConnection(new MySqlConnection(Configuration.GetConnectionString("MMysqlDatabase")), () => {
+                    if (ProfilingSession.Current == null)
+                        return null;
+                    return new DbProfiler(ProfilingSession.Current.Profiler);
+                });
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }

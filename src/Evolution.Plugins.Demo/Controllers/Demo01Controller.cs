@@ -16,7 +16,6 @@ namespace Evolution.Plugins.Demo.Controllers
         {
             this.service = s;
         }
-
         public IActionResult Index()
         {
             this.service.GetStr();   

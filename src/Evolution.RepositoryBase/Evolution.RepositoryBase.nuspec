@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Evolution.RepositoryBase</id>
+    <version>1.0.0-beta003</version>
+    <title>Evolution.RepositoryBase</title>
+    <authors>GilChen</authors>
+    <owners>GilChen</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/CAH-FlyChen/Evolution.Framework</projectUrl>
+    <iconUrl>http://ico.ooopic.com/ajax/iconpng/?id=172483.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>此项目用于Evolution插件开发所引用</description>
+    <releaseNotes>此项目用于Evolution插件开发所引用</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Evolution NFine</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard1.6">
+        <dependency id="Evolution.Data" version="1.0.0-beta001" />
+        <dependency id="Evolution.Framework" version="1.0.0-beta001" />
+        <dependency id="Evolution.Plugin.Core" version="1.0.0" />
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
+      <group targetFramework=".NETCoreApp1.0">
+        <dependency id="Evolution.Data" version="1.0.0-beta001" />
+        <dependency id="Evolution.Framework" version="1.0.0-beta001" />
+        <dependency id="Evolution.Plugin.Core" version="1.0.0" />
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
+    </dependencies>
+
+  </metadata>
+</package>

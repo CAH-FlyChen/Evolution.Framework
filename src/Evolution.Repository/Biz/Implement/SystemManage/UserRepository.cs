@@ -59,7 +59,7 @@ namespace Evolution.Repository.SystemManage
                     userLogOnEntity.Id = userEntity.Id;
                     userLogOnEntity.UserId = userEntity.Id;
                     userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();
-                    userLogOnEntity.UserPassword = Tools.CaculatePWD(userLogOnEntity.UserPassword.ToLower(), userLogOnEntity.UserSecretkey);
+                    userLogOnEntity.UserPassword = Encryptor.EncryptPWD(userLogOnEntity.UserPassword.ToLower(), userLogOnEntity.UserSecretkey);
                     repo.InsertAsync(userEntity);
                     repo.InsertAsync(userLogOnEntity);
                     

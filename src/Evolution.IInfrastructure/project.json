@@ -1,8 +1,9 @@
 {
-  "version": "1.0.0-*",
-
+  "version": "1.0.4-*",
+  "title": "Evolution.IInfrastructure",
+  "authors": [ "GilChen" ],
+  "description": "Evolution Framework Infrastructure Interface",
   "dependencies": {
-    "Evolution.Framework": "1.0.0-*",
     "NETStandard.Library": "1.6.0"
   },
 
@@ -10,5 +11,8 @@
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "scripts": {
+    "postcompile": [ "buildpost.cmd" ]
   }
 }
