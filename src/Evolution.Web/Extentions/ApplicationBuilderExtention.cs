@@ -7,15 +7,14 @@ using Evolution.Domain.Entity.SystemManage;
 using System.Threading.Tasks;
 using System.IO;
 using Evolution.Domain.Entity.SystemSecurity;
+using Microsoft.AspNetCore.Builder;
 
-namespace Evolution.Web
+namespace Evolution.Web.Extentions
 {
-    public class InitTools
+    public static class ApplicationBuilderExtention
     {
-        public static string WebRootPath = null;
-        public static async Task InitializeBasicDb(IServiceProvider applicationServices,string webRootPath)
+        public static void InitDbData(this IApplicationBuilder app,IServiceProvider applicationServices, string webRootPath)
         {
-            WebRootPath = webRootPath;
             using (EvolutionDBContext dbContext = applicationServices.GetService<EvolutionDBContext>())
             {
                 var sqlServerDatabase = dbContext.Database;
@@ -25,15 +24,16 @@ namespace Evolution.Web
                     //如果正常，则表示数据库有表，不需要创建
                     return;
                 }
-                catch (Exception ex)
+                catch
                 {
+                    //这个ex是可预期的。
                 }
 
                 sqlServerDatabase.EnsureDeleted();
                 if (sqlServerDatabase.EnsureCreated())
                 {
                     //sqlServerDatabase.Migrate();
-                    ProcessFile("Sys_Area.csv", colums => {
+                    ProcessFile("Sys_Area.csv", webRootPath, colums => {
                         AreaEntity entity = new AreaEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -46,7 +46,7 @@ namespace Evolution.Web
                         entity.CreatorTime = DateTime.MinValue;
                         dbContext.Areas.Add(entity);
                     });
-                    ProcessFile("Sys_DbBackup.csv", colums => {
+                    ProcessFile("Sys_DbBackup.csv", webRootPath, colums => {
                         DbBackupEntity entity = new DbBackupEntity();
                         entity.Id = colums[0];
                         entity.BackupType = colums[1];
@@ -59,7 +59,7 @@ namespace Evolution.Web
                         entity.CreatorTime = DateTime.MinValue;
                         dbContext.DbBackups.Add(entity);
                     });
-                    ProcessFile("Sys_FilterIP.csv", colums => {
+                    ProcessFile("Sys_FilterIP.csv", webRootPath, colums => {
                         FilterIPEntity entity = new FilterIPEntity();
                         entity.Id = colums[0];
                         entity.Type = bool.Parse(colums[1]);
@@ -70,7 +70,7 @@ namespace Evolution.Web
                         entity.CreatorTime = DateTime.Parse(colums[8]);
                         dbContext.FilterIPs.Add(entity);
                     });
-                    ProcessFile("Sys_Items.csv", colums => {
+                    ProcessFile("Sys_Items.csv", webRootPath, colums => {
                         ItemsEntity entity = new ItemsEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -84,7 +84,7 @@ namespace Evolution.Web
                         entity.CreatorTime = DateTime.MinValue;
                         dbContext.Items.Add(entity);
                     });
-                    ProcessFile("Sys_ItemsDetail.csv", colums => {
+                    ProcessFile("Sys_ItemsDetail.csv", webRootPath, colums => {
                         ItemsDetailEntity entity = new ItemsDetailEntity();
                         entity.Id = colums[0];
                         entity.ItemId = colums[1];
@@ -97,7 +97,7 @@ namespace Evolution.Web
                         entity.EnabledMark = GetDefaultBool(colums[10], true);
                         dbContext.ItemsDetails.Add(entity);
                     });
-                    ProcessFile("Sys_Log.csv", colums => {
+                    ProcessFile("Sys_Log.csv", webRootPath, colums => {
                         LogEntity entity = new LogEntity();
                         entity.Id = colums[0];
                         entity.Date = DateTime.Parse(colums[1]);
@@ -113,7 +113,7 @@ namespace Evolution.Web
                         entity.CreatorUserId = colums[12];
                         dbContext.Logs.Add(entity);
                     });
-                    ProcessFile("Sys_Menu.csv", colums => {
+                    ProcessFile("Sys_Menu.csv", webRootPath, colums => {
                         MenuEntity entity = new MenuEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -136,7 +136,7 @@ namespace Evolution.Web
                         entity.LastModifyUserId = colums[20];
                         dbContext.Menus.Add(entity);
                     });
-                    ProcessFile("Sys_MenuButton.csv", colums => {
+                    ProcessFile("Sys_MenuButton.csv", webRootPath, colums => {
                         MenuButtonEntity entity = new MenuButtonEntity();
                         entity.Id = colums[0];
                         entity.MenuId = colums[1];
@@ -168,7 +168,7 @@ namespace Evolution.Web
                         entity.LastModifyUserId = colums[20];
                         dbContext.ModuleButtons.Add(entity);
                     });
-                    ProcessFile("Sys_Organize.csv", colums => {
+                    ProcessFile("Sys_Organize.csv", webRootPath, colums => {
                         OrganizeEntity entity = new OrganizeEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -186,7 +186,7 @@ namespace Evolution.Web
                         dbContext.Organizes.Add(entity);
 
                     });
-                    ProcessFile("Sys_Role.csv", colums => {
+                    ProcessFile("Sys_Role.csv", webRootPath, colums => {
                         RoleEntity entity = new RoleEntity();
                         entity.Id = colums[0];
                         entity.OrganizeId = colums[1];
@@ -205,7 +205,7 @@ namespace Evolution.Web
                         entity.LastModifyUserId = colums[15];
                         dbContext.Roles.Add(entity);
                     });
-                    ProcessFile("Sys_RoleAuthorize.csv", colums => {
+                    ProcessFile("Sys_RoleAuthorize.csv", webRootPath, colums => {
                         RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
                         entity.Id = colums[0];
                         entity.ItemType = int.Parse(colums[1]);
@@ -217,7 +217,7 @@ namespace Evolution.Web
                         entity.CreatorUserId = colums[7];
                         dbContext.RoleAuthorize.Add(entity);
                     });
-                    ProcessFile("Sys_User.csv", colums => {
+                    ProcessFile("Sys_User.csv", webRootPath, colums => {
                         UserEntity entity = new UserEntity();
                         entity.Id = colums[0];
                         entity.Account = colums[1];
@@ -238,7 +238,7 @@ namespace Evolution.Web
                         entity.LastModifyUserId = colums[25];
                         dbContext.Users.Add(entity);
                     });
-                    ProcessFile("Sys_UserLogOn.csv", colums => {
+                    ProcessFile("Sys_UserLogOn.csv", webRootPath, colums => {
                         UserLogOnEntity entityt = new UserLogOnEntity();
                         entityt.Id = colums[0];
                         entityt.UserId = colums[1];
@@ -256,9 +256,9 @@ namespace Evolution.Web
                 }
             }
         }
-        public static void ProcessFile(string fileName, Action<string[]> processCode)
+        private static void ProcessFile(string fileName, string webRootPath, Action<string[]> processCode)
         {
-            var pathToFile = WebRootPath
+            var pathToFile = webRootPath
                             + Path.DirectorySeparatorChar.ToString()
                             + "Data_Init"
                             + Path.DirectorySeparatorChar.ToString()
@@ -274,7 +274,7 @@ namespace Evolution.Web
                 }
             }
         }
-        public static bool GetDefaultBool(string s, bool defaultV)
+        private static bool GetDefaultBool(string s, bool defaultV)
         {
             if (string.IsNullOrEmpty(s))
             {
