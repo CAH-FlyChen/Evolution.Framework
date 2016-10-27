@@ -70,11 +70,14 @@ namespace Evolution.Application.SystemManage
                             ae.Url = string.Format($"/{controllerName}/{ae.Name}");
                         if (attr1 != null) ae.ActionType += "| HttpGet";
                         if (attr2 != null) ae.ActionType += "| HttpPost";
-                        ae.ActionType = ae.ActionType.Length > 0 ? ae.ActionType.Substring(1) : "";
+                        ae.ActionType = ae.ActionType.Length > 0 ? ae.ActionType.Substring(1).Trim() : "";
                         loadableAssemblies.Add(ae);
                     }
                 }
             }
+            loadableAssemblies.Sort((x,y)=> {
+                return x.Name.CompareTo(y.Name);
+            });
             return Task.FromResult(loadableAssemblies);
         }
     }
