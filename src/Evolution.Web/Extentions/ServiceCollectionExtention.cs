@@ -168,9 +168,8 @@ namespace Evolution.Web.Extentions
                 mvcBuilder.AddApplicationPart(module.Assembly);
             }
         }
-        public static IList<IPluginInitializer> InitPlugins(this IServiceCollection services, IConfigurationRoot Configuration)
+        public static void InitPlugins(this IServiceCollection services, IConfigurationRoot Configuration)
         {
-            List<IPluginInitializer> pluginInitializers = new List<IPluginInitializer>();
             var moduleInitializerInterface = typeof(IPluginInitializer);
             foreach (var module in GlobalConfiguration.Plugins)
             {
@@ -180,11 +179,10 @@ namespace Evolution.Web.Extentions
                 if (moduleInitializerType != null && moduleInitializerType != typeof(IPluginInitializer))
                 {
                     var moduleInitializer = (IPluginInitializer)Activator.CreateInstance(moduleInitializerType);
-                    pluginInitializers.Add(moduleInitializer);
+                    module.Initializer = moduleInitializer;
                     moduleInitializer.Init(services, Configuration);
                 }
             }
-            return pluginInitializers;
         }
         public static DbConnection GetDbConnection(IConfigurationRoot Configuration,string DataBase)
         {

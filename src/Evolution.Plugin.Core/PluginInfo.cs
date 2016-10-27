@@ -8,6 +8,7 @@ namespace Evolution.Plugin.Core
 {
     public class PluginInfo
     {
+        public IPluginInitializer Initializer { get; set; }
         public string Name { get; set; }
         public Assembly Assembly { get; set; }
         public string SortName

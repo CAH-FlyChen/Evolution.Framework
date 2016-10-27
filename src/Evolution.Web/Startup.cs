@@ -4,12 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-using Evolution.Application.SystemManage;
-
 using System.Text;
-
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Evolution.Plugin.Core;
 using System.Collections.Generic;
@@ -21,11 +16,7 @@ namespace Evolution.Web
     public class Startup
     {
         #region 私有变量
-        private static string WebRootPath = "";
         private readonly IHostingEnvironment _hostingEnvironment;
-        private IList<IPluginInitializer> pluginInitializers;
-        private readonly bool UseRedis = false;
-        private readonly string DataBase = null;
         #endregion
         public IConfigurationRoot Configuration { get; }
         public IApplicationBuilder App { get; set; }
@@ -38,14 +29,13 @@ namespace Evolution.Web
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-            WebRootPath = env.WebRootPath;
             if (env.IsDevelopment())
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
             Configuration = builder.Build();
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -68,7 +58,7 @@ namespace Evolution.Web
             //inject 
             services.InjectEvolutionDependency(); 
 
-            pluginInitializers = services.InitPlugins(Configuration);
+            services.InitPlugins(Configuration);
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -112,11 +102,11 @@ namespace Evolution.Web
             //***  Initialize the DB ***//
             //if (env.EnvironmentName == "Development")
             //   InitializeBasicDb(app.ApplicationServices).Wait();
-            app.InitDbData(app.ApplicationServices, WebRootPath);
+            app.InitDbData(app.ApplicationServices, env.WebRootPath);
             //合并数据库
-            foreach (var pluginInit in pluginInitializers)
+            foreach (var plugin in GlobalConfiguration.Plugins)
             {
-                pluginInit.DoMerage(app.ApplicationServices);
+                plugin.Initializer.DoMerage(app.ApplicationServices);
             }
         }
 
