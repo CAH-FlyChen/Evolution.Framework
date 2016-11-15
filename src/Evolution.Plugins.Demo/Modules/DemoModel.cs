@@ -1,10 +1,11 @@
 ﻿using Evolution.Data.Entity;
-using Evolution.Plugin.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Evolution.Data;
+using Evolution.Plugins.Abstract;
 
 namespace Evolution.Plugins.Demo.Modules
 {

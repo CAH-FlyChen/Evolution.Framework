@@ -15,7 +15,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemSecurity.Controllers
 {
     [Area("SystemSecurity")]
-    public class DbBackupController : ControllerBase
+    public class DbBackupController : EvolutionControllerBase
     {
         private DbBackupApp dbBackupApp = null;
         private readonly IHostingEnvironment wwwPath;

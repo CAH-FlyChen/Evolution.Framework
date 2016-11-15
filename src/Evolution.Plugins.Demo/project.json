@@ -6,7 +6,8 @@
 
   "dependencies": {
     "Evolution.Data": "1.0.0-*",
-    "Evolution.Plugin.Core": "1.0.0-*",
+    "Evolution.Data.EntityBase": "1.0.0-*",
+    "Evolution.Plugins.Abstract": "1.0.0-*",
     "Evolution.RepositoryBase": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0",
     "Microsoft.EntityFrameworkCore": "1.0.0",

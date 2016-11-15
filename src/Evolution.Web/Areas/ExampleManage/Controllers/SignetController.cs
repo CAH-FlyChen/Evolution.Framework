@@ -12,7 +12,7 @@ using System.Linq;
 namespace Evolution.Web.Areas.ExampleManage.Controllers
 {
     [Area("ExampleManage")]
-    public class SignetController : ControllerBase
+    public class SignetController : EvolutionControllerBase
     {
        
     }

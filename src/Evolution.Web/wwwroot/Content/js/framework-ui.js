@@ -393,6 +393,7 @@ $.fn.bindSelect = function (options) {
     }
 }
 $.fn.authorizeButton = function () {
+    debugger;
     var moduleId = top.$(".Evolution_iframe:visible").attr("id").substr(6);
     var dataJson = top.clients.authorizeButton[moduleId];
     var $element = $(this);

@@ -14,7 +14,7 @@
 //namespace Evolution.Web.Areas.SystemManage.Controllers
 //{
 //    [Area("SystemManage")]
-//    public class ModuleController : ControllerBase
+//    public class ModuleController : EvolutionControllerBase
 //    {
 //        private ModuleApp moduleApp = null;
 

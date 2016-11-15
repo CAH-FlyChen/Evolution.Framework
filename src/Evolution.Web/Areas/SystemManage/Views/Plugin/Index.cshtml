@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/SystemManage/Plugin/GetGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'Id', hidden: true },
+                { label: '名称', name: 'Name', width: 180, align: 'left' },
+                { label: '程序集名称', name: 'AssessmblyName', width: 480, align: 'left' },
+                { label: '状态', name: 'Activated', width: 80, align: 'left' },
+                { label: '备注', name: 'Description', width: 100, align: 'left' }
+            ],
+            pager: "#gridPager",
+            sortname: 'DepartmentId asc,CreateTime desc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_activate_plugin() {
+        $.ajax({
+            url: "/SystemManage/Plugin/Activate",
+            data: { pluginId: $("#gridList").jqGridRowValue().Id },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                $.currentWindow().$("#gridList").resetSelection();
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        });
+
+        //$.modalOpen({
+        //    id: "Form",
+        //    title: "新增菜单",
+        //    url: "/SystemManage/Menu/Form",
+        //    width: "700px",
+        //    height: "440px",
+        //    callBack: function (iframeId) {
+        //        top.frames[iframeId].submitForm();
+        //    }
+        //});
+    }
+
+
+    
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>新建用户</a>
+        </div>
+        <div class="operate">
+            <ul class="nav nav-pills">
+                <li class="first">已选中<span>1</span>项</li>
+                <li><a id="NF-Activate" onclick="btn_activate_plugin()"><i class="fa fa-gavel"></i>激活</a></li>
+            </ul>
+            <a href="javascript:;" class="close"></a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="账户/姓名/手机" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

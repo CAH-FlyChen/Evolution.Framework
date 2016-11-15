@@ -16,7 +16,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    public class RoleAuthorizeController : ControllerBase
+    public class RoleAuthorizeController : EvolutionControllerBase
     {
         #region 私有变量
         private RoleAuthorizeApp roleAuthorizeApp = null;

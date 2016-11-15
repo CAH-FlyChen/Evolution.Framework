@@ -5,9 +5,10 @@
  * Website：
 *********************************************************************************/
 using Evolution.Data.Entity;
+using Evolution.Domain;
 using System;
 
-namespace Evolution.Domain.Entity.SystemManage
+namespace Evolution.Data.Entity.SystemManage
 {
     public class OrganizeEntity : EntityBase, ICreationAudited, IDeleteAudited, IModificationAudited
     {

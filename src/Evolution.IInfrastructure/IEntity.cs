@@ -21,7 +21,7 @@
 //            var userClaim = httpContext.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.UserId);
 //            if(userClaim!=null)
 //            entityCreatorUserId = userClaim.Value;
-//            entityCreatorTime = DateTime.Now;
+//            entityCreateTime = DateTime.Now;
 //        }
 //        public void Modify(string keyValue, HttpContext httpContext)
 //        {

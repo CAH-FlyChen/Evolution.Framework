@@ -14,6 +14,7 @@ using System.Text;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Evolution.Web.Attributes;
+using Evolution.Data.Entity.SystemManage;
 
 namespace Evolution.Web.Controllers
 {
@@ -23,7 +24,7 @@ namespace Evolution.Web.Controllers
         #region 私有变量
         private ItemsDetailApp itemDetailApp = null;
         private ItemsApp itemsApp = null;
-        private OrganizeApp organizeApp = null;
+        private OrganizeService organizeApp = null;
         private RoleApp roleApp = null;
         private DutyApp dutyApp = null;
         private RoleAuthorizeApp roleAuthorizeApp = null;
@@ -31,7 +32,7 @@ namespace Evolution.Web.Controllers
         private MenuButtonApp menuButtonApp = null;
         #endregion
         #region 构造函数
-        public ClientsDataController(ItemsDetailApp itemDetailApp, ItemsApp itemsApp,OrganizeApp organizeApp, RoleApp roleApp, DutyApp dutyApp, RoleAuthorizeApp roleAuthorizeApp,MenuApp menuApp,MenuButtonApp menuButtonApp)
+        public ClientsDataController(DutyApp dutyApp, OrganizeService organizeApp, ItemsDetailApp itemDetailApp, ItemsApp itemsApp, RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp,MenuApp menuApp,MenuButtonApp menuButtonApp)
         {
             this.itemDetailApp = itemDetailApp;
             this.itemsApp = itemsApp;

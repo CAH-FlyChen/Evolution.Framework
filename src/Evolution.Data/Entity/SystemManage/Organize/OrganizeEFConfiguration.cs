@@ -6,10 +6,10 @@
 *********************************************************************************/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Evolution.Domain.Entity.SystemManage;
 using Evolution.Data.Entity;
+using Evolution.Data.Entity.SystemManage;
 
-namespace Evolution.EFConfiguration.SystemManage
+namespace Evolution.EFConfiguration
 {
     public class OrganizeEFConfiguration : EFConfigurationBase<OrganizeEntity>
     {

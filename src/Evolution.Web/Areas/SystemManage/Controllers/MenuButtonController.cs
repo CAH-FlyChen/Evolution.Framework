@@ -16,7 +16,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    public class MenuButtonController : ControllerBase
+    public class MenuButtonController : EvolutionControllerBase
     {
         #region 私有变量
         private MenuApp menuApp = null;

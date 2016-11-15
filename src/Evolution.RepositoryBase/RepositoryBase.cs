@@ -25,6 +25,7 @@ namespace Evolution.Repository
     /// <summary>
     /// 仓储实现
     /// </summary>
+    #pragma warning disable 0168
     public class RepositoryBase : IRepositoryBase, IDisposable
     {
         private DbContext dbcontext = null;

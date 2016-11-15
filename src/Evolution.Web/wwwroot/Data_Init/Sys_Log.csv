@@ -1,4 +1,4 @@
-﻿F_Id,F_Date,F_Account,F_NickName,F_Type,F_IPAddress,F_IPAddressName,F_ModuleId,F_ModuleName,F_Result,F_Description,F_CreatorTime,F_CreatorUserId
+﻿F_Id,F_Date,F_Account,F_NickName,F_Type,F_IPAddress,F_IPAddressName,F_ModuleId,F_ModuleName,F_Result,F_Description,F_CreateTime,F_CreatorUserId
 8d506220-3694-4877-ba40-2fcb108883f2,2016/7/26 9:40,admin,超级管理员,Login,117.81.192.182,江苏省苏州市 电信,,系统登录,TRUE,登录成功,2016/7/26 9:40,9f2ec079-7d0f-4fe2-90ab-8b09a8302aba
 daa0254e-381a-4d15-a051-788a9d31f5f1,2016/7/26 11:44,admin,超级管理员,Exit,117.81.192.182,江苏省苏州市 电信,,系统登录,TRUE,安全退出系统,2016/7/26 11:44,9f2ec079-7d0f-4fe2-90ab-8b09a8302aba
 1af7414a-5ce3-4a3a-b937-db4fd45349e4,2016/7/26 11:44,1010,白玉芬,Login,117.81.192.182,江苏省苏州市 电信,,系统登录,TRUE,登录成功,2016/7/26 11:44,6903ab9d-20cd-44c4-a380-09f229366e1f

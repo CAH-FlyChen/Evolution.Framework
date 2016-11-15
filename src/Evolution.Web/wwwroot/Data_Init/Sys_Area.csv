@@ -1,4 +1,4 @@
-﻿F_Id,F_ParentId,F_Layers,F_EnCode,F_FullName,F_SimpleSpelling,F_SortCode,F_DeleteMark,F_EnabledMark,F_Description,F_CreatorTime,F_CreatorUserId,F_LastModifyTime,F_LastModifyUserId,F_DeleteTime,F_DeleteUserId
+﻿F_Id,F_ParentId,F_Layers,F_EnCode,F_FullName,F_SimpleSpelling,F_SortCode,F_DeleteMark,F_EnabledMark,F_Description,F_CreateTime,F_CreatorUserId,F_LastModifyTime,F_LastModifyUserId,F_DeleteTime,F_DeleteUserId
 120100,120000,2,120100,天津市,tjs,120100,,TRUE,,2016/7/20 0:00,,,,,
 130100,130000,2,130100,石家庄市,sjzs,130100,,TRUE,,2016/7/20 0:00,,,,,
 130200,130000,2,130200,唐山市,tss,130200,,TRUE,,2016/7/20 0:00,,,,,

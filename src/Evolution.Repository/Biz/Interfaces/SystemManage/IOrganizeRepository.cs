@@ -4,8 +4,8 @@
  * Description: Evolution快速开发平台
  * Website：
 *********************************************************************************/
+using Evolution.Data.Entity.SystemManage;
 using Evolution.IRepository;
-using Evolution.Domain.Entity.SystemManage;
 
 namespace Evolution.Domain.IRepository.SystemManage
 {

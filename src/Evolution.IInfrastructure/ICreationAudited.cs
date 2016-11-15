@@ -11,6 +11,6 @@ namespace Evolution.Domain
     public interface ICreationAudited
     {
         string CreatorUserId { get; set; }
-        DateTime? CreatorTime { get; set; }
+        DateTime? CreateTime { get; set; }
     }
 }

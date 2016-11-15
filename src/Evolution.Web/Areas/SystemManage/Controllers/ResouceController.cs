@@ -16,7 +16,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    public class ResourceController : ControllerBase
+    public class ResourceController : EvolutionControllerBase
     {
         #region 私有变量
         private ResourceApp resourceApp = null;

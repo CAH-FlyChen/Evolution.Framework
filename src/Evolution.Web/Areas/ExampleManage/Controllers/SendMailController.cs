@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Evolution.Web.Areas.ExampleManage.Controllers
 {
     [Area("ExampleManage")]
-    public class SendMailController : ControllerBase
+    public class SendMailController : EvolutionControllerBase
     {
         private readonly ILogger<SendMailController> _logger;
 

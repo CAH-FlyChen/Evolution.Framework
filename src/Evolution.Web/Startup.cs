@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Evolution.Plugin.Core;
 using System.Collections.Generic;
 using CoreProfiler.Web;
 using Evolution.Web.Extentions;
+using Evolution.Domain.Entity.SystemManage;
+using Evolution.Data;
+using Microsoft.EntityFrameworkCore;
+using Evolution.Plugins.Abstract;
+using Evolution.Framework;
 
 namespace Evolution.Web
 {
@@ -20,6 +24,8 @@ namespace Evolution.Web
         #endregion
         public IConfigurationRoot Configuration { get; }
         public IApplicationBuilder App { get; set; }
+
+        EvolutionPluginManager pluginManager = null;
 
         public Startup(IHostingEnvironment env)
         {
@@ -40,13 +46,15 @@ namespace Evolution.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            pluginManager = new EvolutionPluginManager(_hostingEnvironment, services);
+
             services.AddApplicationInsightsTelemetry(Configuration);
-            //解析外部插件
-            services.LoadPluginAssessmblyToGlobalConfiguration(_hostingEnvironment);
             //mvc
-            services.AddEvolutionMVC();
+            var mvcBuilder = services.AddEvolutionMVCService();
+            //加载插件
+            GloableConfiguration.PluginAssemblies =  pluginManager.LoadPluginAssembly(mvcBuilder);
             //cache
-            services.AddEvolutionCache(Configuration);
+            services.AddEvolutionCacheService(Configuration);
             //session
             services.AddSession((SessionOptions options) =>
             {
@@ -54,11 +62,12 @@ namespace Evolution.Web
                 options.CookieName = ".MyApplication";
             });
             //database
-            services.AddEvolutionDBService(Configuration);
+            services.AddEvolutionDBService(pluginManager,Configuration);
+            //plugins injection entityframework and service dependency
+            pluginManager.AddPluginEFService(Configuration);
             //inject 
-            services.InjectEvolutionDependency(); 
-
-            services.InitPlugins(Configuration);
+            services.InjectEvolutionDependency();
+            pluginManager.InjectEvolutionDependency();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -67,6 +76,7 @@ namespace Evolution.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             app.UseApplicationInsightsRequestTelemetry();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -93,21 +103,43 @@ namespace Evolution.Web
                 // Areas support
                 routes.MapRoute(
                     name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    template: "{area}/{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
             //***  Initialize the DB ***//
             //if (env.EnvironmentName == "Development")
             //   InitializeBasicDb(app.ApplicationServices).Wait();
-            app.InitDbData(app.ApplicationServices, env.WebRootPath);
-            //合并数据库
-            foreach (var plugin in GlobalConfiguration.Plugins)
+            //将插件数据写入数据库
+            using (EvolutionDBContext dbContext = app.ApplicationServices.GetService<EvolutionDBContext>())
             {
-                plugin.Initializer.DoMerage(app.ApplicationServices);
+                app.InitFreameworkDbData(app.ApplicationServices, env.WebRootPath, dbContext);
+                //add plugin info to MainDb
+                foreach (var p in pluginManager.PluginAssemblies)
+                {
+                    try
+                    {
+                        var exist = dbContext.Plugins.CountAsync(t => t.Id == p.Id).Result;
+                        if (exist == 0)
+                        {
+                            dbContext.Add(p);
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                //exec db
+                pluginManager.MeragePluginDBStruct(app.ApplicationServices);
+                pluginManager.InitPluginData(dbContext, app.ApplicationServices,env.WebRootPath);
+                dbContext.SaveChanges();
             }
+                   
         }
 
     }

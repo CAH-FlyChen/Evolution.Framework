@@ -16,7 +16,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    public class ItemsDataController : ControllerBase
+    public class ItemsDataController : EvolutionControllerBase
     {
         private ItemsDetailApp itemsDetailApp = null;
 

@@ -14,7 +14,7 @@ namespace Evolution.Data.Entity
         {
             entity.HasKey(t => t.Id);
             entity.Property(t => t.Id).HasColumnName("F_Id");
-            entity.Property(t => t.CreatorTime).HasColumnName("F_CreatorTime");
+            entity.Property(t => t.CreateTime).HasColumnName("F_CreateTime");
             entity.Property(t => t.CreatorUserId).HasColumnName("F_CreatorUserId");
             entity.Property(t => t.DeleteMark).HasColumnName("F_DeleteMark");
             entity.Property(t => t.DeleteTime).HasColumnName("F_DeleteTime");

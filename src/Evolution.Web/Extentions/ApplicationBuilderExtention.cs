@@ -8,45 +8,38 @@ using System.Threading.Tasks;
 using System.IO;
 using Evolution.Domain.Entity.SystemSecurity;
 using Microsoft.AspNetCore.Builder;
+using System.Collections.Generic;
+using Evolution.Data.Entity.SystemManage;
+using Evolution.Framework.Data;
 
 namespace Evolution.Web.Extentions
 {
     public static class ApplicationBuilderExtention
     {
-        public static void InitDbData(this IApplicationBuilder app,IServiceProvider applicationServices, string webRootPath)
+        public static void InitFreameworkDbData(this IApplicationBuilder app,IServiceProvider applicationServices, string webRootPath, EvolutionDBContext dbContext)
         {
-            using (EvolutionDBContext dbContext = applicationServices.GetService<EvolutionDBContext>())
+            var sqlServerDatabase = dbContext.Database;
+            //try
+            //{
+            //    int r = sqlServerDatabase.ExecuteSqlCommand("select count(*) from Sys_User");
+            //    return;
+            //}
+            //catch(Exception ex)
+            //{
+            //    //这个ex是可预期的。
+                    
+            //}
+            try
             {
-                var sqlServerDatabase = dbContext.Database;
-                try
-                {
-                    int r = sqlServerDatabase.ExecuteSqlCommand("select count(*) from Sys_Area");
-                    //如果正常，则表示数据库有表，不需要创建
-                    return;
-                }
-                catch
-                {
-                    //这个ex是可预期的。
-                }
-
                 sqlServerDatabase.EnsureDeleted();
+            }
+            catch { }
+                
                 if (sqlServerDatabase.EnsureCreated())
                 {
-                    //sqlServerDatabase.Migrate();
-                    ProcessFile("Sys_Area.csv", webRootPath, colums => {
-                        AreaEntity entity = new AreaEntity();
-                        entity.Id = colums[0];
-                        entity.ParentId = colums[1];
-                        entity.Layers = int.Parse(colums[2]);
-                        entity.EnCode = colums[3];
-                        entity.FullName = colums[4];
-                        entity.SimpleSpelling = colums[5];
-                        entity.SortCode = int.Parse(colums[6]);
-                        entity.EnabledMark = bool.Parse(colums[8]);
-                        entity.CreatorTime = DateTime.MinValue;
-                        dbContext.Areas.Add(entity);
-                    });
-                    ProcessFile("Sys_DbBackup.csv", webRootPath, colums => {
+                //sqlServerDatabase.Migrate();
+
+                DataInitTool.ProcessFile("Sys_DbBackup.csv", webRootPath, colums => {
                         DbBackupEntity entity = new DbBackupEntity();
                         entity.Id = colums[0];
                         entity.BackupType = colums[1];
@@ -56,10 +49,10 @@ namespace Evolution.Web.Extentions
                         entity.FilePath = colums[5];
                         entity.BackupTime = DateTime.Parse(colums[6]);
                         entity.EnabledMark = bool.Parse(colums[9]);
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         dbContext.DbBackups.Add(entity);
                     });
-                    ProcessFile("Sys_FilterIP.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_FilterIP.csv", webRootPath, colums => {
                         FilterIPEntity entity = new FilterIPEntity();
                         entity.Id = colums[0];
                         entity.Type = bool.Parse(colums[1]);
@@ -67,10 +60,10 @@ namespace Evolution.Web.Extentions
                         entity.EndIP = colums[3];
                         entity.EnabledMark = bool.Parse(colums[6]);
                         entity.Description = colums[7];
-                        entity.CreatorTime = DateTime.Parse(colums[8]);
+                        entity.CreateTime = DateTime.Parse(colums[8]);
                         dbContext.FilterIPs.Add(entity);
                     });
-                    ProcessFile("Sys_Items.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_Items.csv", webRootPath, colums => {
                         ItemsEntity entity = new ItemsEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -81,10 +74,10 @@ namespace Evolution.Web.Extentions
                         entity.SortCode = int.Parse(colums[6]);
                         entity.DeleteMark = GetDefaultBool(colums[7], false);
                         entity.EnabledMark = GetDefaultBool(colums[8], true);
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         dbContext.Items.Add(entity);
                     });
-                    ProcessFile("Sys_ItemsDetail.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_ItemsDetail.csv", webRootPath, colums => {
                         ItemsDetailEntity entity = new ItemsDetailEntity();
                         entity.Id = colums[0];
                         entity.ItemId = colums[1];
@@ -97,7 +90,7 @@ namespace Evolution.Web.Extentions
                         entity.EnabledMark = GetDefaultBool(colums[10], true);
                         dbContext.ItemsDetails.Add(entity);
                     });
-                    ProcessFile("Sys_Log.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_Log.csv", webRootPath, colums => {
                         LogEntity entity = new LogEntity();
                         entity.Id = colums[0];
                         entity.Date = DateTime.Parse(colums[1]);
@@ -109,11 +102,11 @@ namespace Evolution.Web.Extentions
                         entity.ModuleName = colums[8];
                         entity.Result = bool.Parse(colums[9]);
                         entity.Description = colums[10];
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.CreatorUserId = colums[12];
                         dbContext.Logs.Add(entity);
                     });
-                    ProcessFile("Sys_Menu.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_Menu.csv", webRootPath, colums => {
                         MenuEntity entity = new MenuEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -131,12 +124,12 @@ namespace Evolution.Web.Extentions
                         entity.DeleteMark = bool.Parse(colums[14]);
                         entity.EnabledMark = bool.Parse(colums[15]);
                         entity.Description = colums[16];
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[20];
                         dbContext.Menus.Add(entity);
                     });
-                    ProcessFile("Sys_MenuButton.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_MenuButton.csv", webRootPath, colums => {
                         MenuButtonEntity entity = new MenuButtonEntity();
                         entity.Id = colums[0];
                         entity.MenuId = colums[1];
@@ -163,12 +156,13 @@ namespace Evolution.Web.Extentions
                             entity.DeleteMark = bool.Parse(colums[15]);
                         if (!string.IsNullOrEmpty(colums[16]))
                             entity.EnabledMark = bool.Parse(colums[16]);
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[20];
                         dbContext.ModuleButtons.Add(entity);
                     });
-                    ProcessFile("Sys_Organize.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_Organize.csv", webRootPath, colums =>
+                    {
                         OrganizeEntity entity = new OrganizeEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -182,11 +176,11 @@ namespace Evolution.Web.Extentions
                         entity.SortCode = int.Parse(colums[17]);
                         entity.DeleteMark = bool.Parse(colums[18]);
                         entity.EnabledMark = bool.Parse(colums[19]);
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         dbContext.Organizes.Add(entity);
 
                     });
-                    ProcessFile("Sys_Role.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_Role.csv", webRootPath, colums => {
                         RoleEntity entity = new RoleEntity();
                         entity.Id = colums[0];
                         entity.OrganizeId = colums[1];
@@ -200,12 +194,12 @@ namespace Evolution.Web.Extentions
                         entity.DeleteMark = bool.Parse(colums[9]);
                         entity.EnabledMark = bool.Parse(colums[10]);
 
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[15];
                         dbContext.Roles.Add(entity);
                     });
-                    ProcessFile("Sys_RoleAuthorize.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_RoleAuthorize.csv", webRootPath, colums => {
                         RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
                         entity.Id = colums[0];
                         entity.ItemType = int.Parse(colums[1]);
@@ -213,11 +207,11 @@ namespace Evolution.Web.Extentions
                         entity.ObjectType = int.Parse(colums[3]);
                         entity.ObjectId = colums[4];
                         //entity.SortCode = int.Parse(colums[5]);
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.CreatorUserId = colums[7];
                         dbContext.RoleAuthorize.Add(entity);
                     });
-                    ProcessFile("Sys_User.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_User.csv", webRootPath, colums => {
                         UserEntity entity = new UserEntity();
                         entity.Id = colums[0];
                         entity.Account = colums[1];
@@ -233,12 +227,12 @@ namespace Evolution.Web.Extentions
                         entity.DeleteMark = bool.Parse(colums[19]);
                         entity.EnabledMark = bool.Parse(colums[20]);
                         entity.Description = colums[21];
-                        entity.CreatorTime = DateTime.MinValue;
+                        entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[25];
                         dbContext.Users.Add(entity);
                     });
-                    ProcessFile("Sys_UserLogOn.csv", webRootPath, colums => {
+                DataInitTool.ProcessFile("Sys_UserLogOn.csv", webRootPath, colums => {
                         UserLogOnEntity entityt = new UserLogOnEntity();
                         entityt.Id = colums[0];
                         entityt.UserId = colums[1];
@@ -254,26 +248,8 @@ namespace Evolution.Web.Extentions
                     });
                     dbContext.SaveChanges();
                 }
-            }
         }
-        private static void ProcessFile(string fileName, string webRootPath, Action<string[]> processCode)
-        {
-            var pathToFile = webRootPath
-                            + Path.DirectorySeparatorChar.ToString()
-                            + "Data_Init"
-                            + Path.DirectorySeparatorChar.ToString()
-                            + fileName;
-            using (StreamReader sr = File.OpenText(pathToFile))
-            {
-                string firstLine = sr.ReadLine();
-                while (!sr.EndOfStream)
-                {
-                    string dataLine = sr.ReadLine();
-                    string[] dataColum = dataLine.Split(',');
-                    processCode(dataColum);
-                }
-            }
-        }
+
         private static bool GetDefaultBool(string s, bool defaultV)
         {
             if (string.IsNullOrEmpty(s))
@@ -285,5 +261,6 @@ namespace Evolution.Web.Extentions
                 return bool.Parse(s);
             }
         }
+
     }
 }

@@ -1,0 +1,15 @@
+﻿{
+  "circularBufferSize": 200,
+  "filters": [
+    {
+      "key": "/coreprofiler",
+      "value": "/coreprofiler",
+      "type": "CoreProfiler.ProfilingFilters.NameContainsProfilingFilter, CoreProfiler"
+    },
+    {
+      "key": "static files",
+      "value": "ico,jpg,js,css",
+      "type": "CoreProfiler.ProfilingFilters.FileExtensionProfilingFilter, CoreProfiler"
+    }
+  ]
+}

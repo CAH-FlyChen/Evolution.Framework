@@ -1,0 +1,63 @@
+﻿@model Evolution.Plugins.ScrumKanBan.Models.UserStoryViewModel
+@if (Model.StatusCode == "Unstarted")
+{
+    @Html.ActionLink(Model.ButtonDisplayName, "StatusButton",
+    new { itemID = @Model.ID, result = "", scode = Model.StatusCode },
+    new
+    {
+        @class = "btn btn-default btn-xs item_status_button",
+        @Name = "changeItemStatus",
+        @ItemID = @Model.ID,
+        @BtnType = "StatusBtn"
+    })
+}
+else if (Model.StatusCode == "Started")
+{
+@Html.ActionLink(Model.ButtonDisplayName, "StatusButton",
+    new { itemID = @Model.ID, result = "", scode = Model.StatusCode },
+    new
+    {
+        @class = "btn btn-info btn-xs item_status_button",
+        @Name = "changeItemStatus",
+        @ItemID = @Model.ID,
+        @BtnType = "StatusBtn"
+    })
+}
+else if (Model.StatusCode == "Finished")
+{
+    @Html.ActionLink(Model.ButtonDisplayName, "StatusButton",
+    new { itemID = @Model.ID, result = "", scode = Model.StatusCode },
+    new
+    {
+        @class = "btn btn-primary btn-xs item_status_button",
+        @Name = "changeItemStatus",
+        @ItemID = @Model.ID,
+        @BtnType = "StatusBtn"
+    })
+}
+else if (Model.StatusCode == "Accepted")
+{
+    <h6 style="color:green">通过</h6>
+}
+else if (Model.StatusCode == "Rejected")
+{
+    <h6 style="color:red">拒绝</h6>
+}
+else if (Model.StatusCode != "Delivered")
+{
+    @Html.ActionLink(Model.ButtonDisplayName, "StatusButton",
+    new { itemID = @Model.ID, result = "", scode = Model.StatusCode },
+    new {
+        @class = "btn btn-info btn-xs item_status_button",
+        @Name = "changeItemStatus",
+        @ItemID = @Model.ID,
+        @BtnType = "StatusBtn"
+    })
+    
+}
+else
+{
+    @Html.ActionLink("通过", "StatusButton", new { itemID = @Model.ID, result = "Y", scode = Model.StatusCode }, new { @class = "btn btn-success btn-xs", @Name = "changeItemStatus", @ItemID = @Model.ID, @BtnType = "StatusBtn" })
+    <sapn>&nbsp;</sapn>
+    @Html.ActionLink("拒绝", "StatusButton", new { itemID = @Model.ID, result = "N", scode = Model.StatusCode }, new { @class = "btn btn-danger btn-xs", @Name = "changeItemStatus", @ItemID = @Model.ID, @BtnType = "StatusBtn" })
+}

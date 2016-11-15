@@ -16,7 +16,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemSecurity.Controllers
 {
     [Area("SystemSecurity")]
-    public class LogController : ControllerBase
+    public class LogController : EvolutionControllerBase
     {
         private LogApp logApp = null;
 

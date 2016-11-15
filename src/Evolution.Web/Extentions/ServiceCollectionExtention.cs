@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using MySQL.Data.Entity.Extensions;
 using System.Data.Common;
-using System.Data.SqlClient;
 using Evolution.Application.SystemSecurity;
 using Evolution.Domain.IRepository.SystemManage;
 using Evolution.Domain.IRepository.SystemSecurity;
@@ -17,7 +16,6 @@ using Evolution.Repository.SystemManage;
 using Evolution.Repository.SystemSecurity;
 using Evolution.Application.SystemManage;
 using Microsoft.AspNetCore.Authorization;
-using Evolution.Plugin.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,28 +23,64 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using System.Runtime.InteropServices;
+using Evolution.Plugins.Abstract;
 
 namespace Evolution.Web.Extentions
 {
     public static class ServiceCollectionExtention
     {
-        public static void AddEvolutionMVC(this IServiceCollection services)
+        /// <summary>
+        /// 添加Mvc服务
+        /// </summary>
+        /// <param name="services"></param>
+        public static IMvcBuilder AddEvolutionMVCService(this IServiceCollection services)
         {
+            //services.AddSingleton<IActionDescriptorCollectionProvider, EvolutionActionDescriptorCollectionProvider>();
+            //services.TryAddSingleton<IActionSelectorDecisionTreeProvider, EvolutionActionSelectorDecisionTreeProvider>();
             var mvcBuilder = services.AddMvc(opts =>
             {
                 Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeApp.CheckPermission;
                 opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
             });
 
+            //int serviceToRemove = -1;
+            //for(int i=0;i<services.Count;i++)
+            //{
+            //    var serviceName = services[i].ServiceType.FullName;
+            //    if (serviceName == "Microsoft.AspNetCore.Mvc.Abstractions.IActionDescriptorProvider"
+            //        &&services[i].ImplementationType.FullName== "Microsoft.AspNetCore.Mvc.Internal.ControllerActionDescriptorProvider"
+            //        )
+            //    {
+            //        serviceToRemove = i;
+            //        break;
+            //    }
+            //}
+            //if(serviceToRemove != -1)
+            //{
+            //    services.Remove(services[serviceToRemove]);
+            //    services.AddSingleton<IActionDescriptorCollectionProvider, EvolutionActionDescriptorCollectionProvider>();
+            //}
+
             //自定义路径解析View
             mvcBuilder.AddRazorOptions(opt =>
             {
                 opt.ViewLocationExpanders.Add(new PluginViewLocationExpander());
             });
-            //解析构造外部插件
-            mvcBuilder.RegisterPluginController(GlobalConfiguration.Plugins);
+            return mvcBuilder;
+            ////解析构造外部插件
+            //foreach (var module in GlobalConfiguration.Plugins)
+            //{
+            //    // Register controller from modules
+            //    mvcBuilder.AddApplicationPart(module.Assembly);
+            //}
         }
-        public static void AddEvolutionCache(this IServiceCollection services, IConfigurationRoot Configuration)
+        /// <summary>
+        /// 添加缓存服务
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="Configuration"></param>
+        public static void AddEvolutionCacheService(this IServiceCollection services, IConfigurationRoot Configuration)
         {
             bool useRedis = Configuration["Caching:UseRedis"].ToBool();
             if (useRedis)
@@ -61,7 +95,12 @@ namespace Evolution.Web.Extentions
                 services.AddMemoryCache();
             }
         }
-        public static void AddEvolutionDBService(this IServiceCollection services, IConfigurationRoot Configuration)
+        /// <summary>
+        /// 添加数据库服务
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="Configuration"></param>
+        public static void AddEvolutionDBService(this IServiceCollection services, EvolutionPluginManager manager, IConfigurationRoot Configuration)
         {
             string DataBase = Configuration["DataBase"];
             if (DataBase.ToLower() == "sqlserver")
@@ -86,17 +125,19 @@ namespace Evolution.Web.Extentions
                 });
             }
         }
+        /// <summary>
+        /// 依赖注入
+        /// </summary>
+        /// <param name="services"></param>
         public static void InjectEvolutionDependency(this IServiceCollection services)
         {
             #region 注册Service
             services.AddLogging();
             services.AddScoped<IAuthorizationHandler, PermissionHandler>();
             //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IAreaRepository, AreaRepository>();
             services.AddTransient<IItemsDetailRepository, ItemsDetailRepository>();
             services.AddTransient<IItemsRepository, ItemsRepository>();
             services.AddTransient<IMenuButtonRepository, MenuButtonRepository>();
-            services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IRoleAuthorizeRepository, RoleAuthorizeRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<ILogRepository, LogRepository>();
@@ -107,7 +148,9 @@ namespace Evolution.Web.Extentions
             services.AddTransient<IFilterIPRepository, FilterIPRepository>();
             //services.AddTransient<IPermissionRepository, PermissionRepository>();
             services.AddTransient<IMenuRepository, MenuRepository>();
-            services.AddTransient<AreaApp>();
+            services.AddTransient<IOrganizeRepository, OrganizeRepository>();
+            services.AddTransient<IPluginRepository, PluginRepository>();
+
             services.AddTransient<MenuButtonApp>();
             services.AddTransient<RoleAuthorizeApp>();
             services.AddTransient<UserLogOnApp>();
@@ -115,7 +158,6 @@ namespace Evolution.Web.Extentions
             services.AddTransient<LogApp>();
             services.AddTransient<ItemsDetailApp>();
             services.AddTransient<ItemsApp>();
-            services.AddTransient<OrganizeApp>();
             services.AddTransient<RoleApp>();
             services.AddTransient<DutyApp>();
             services.AddTransient<RoleAuthorizeApp>();
@@ -124,71 +166,23 @@ namespace Evolution.Web.Extentions
             //services.AddTransient<PermissionApp>();
             services.AddTransient<MenuApp>();
             services.AddTransient<ResourceApp>();
+            services.AddTransient<OrganizeService>();
+            services.AddTransient<PluginService>();
             #endregion
         }
-        public static void LoadPluginAssessmblyToGlobalConfiguration(this IServiceCollection services, IHostingEnvironment hostingEnvironment)
-        {
-            IList<PluginInfo> plugins = new List<PluginInfo>();
-            var moduleRootFolder = hostingEnvironment.ContentRootFileProvider.GetDirectoryContents("/Plugins");
-            foreach (var moduleFolder in moduleRootFolder.Where(x => x.IsDirectory))
-            {
-                var binFolder = new DirectoryInfo(Path.Combine(moduleFolder.PhysicalPath, "bin"));
-                if (!binFolder.Exists)
-                {
-                    continue;
-                }
-                foreach (var file in binFolder.GetFileSystemInfos("*.dll", SearchOption.AllDirectories))
-                {
-                    Assembly assembly;
-                    try
-                    {
-                        assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(file.FullName);
-                    }
-                    catch (FileLoadException ex)
-                    {
-                        if (ex.Message == "Assembly with same name is already loaded")
-                        {
-                            continue;
-                        }
-                        throw;
-                    }
-                    if (assembly.FullName.Contains(moduleFolder.Name))
-                    {
-                        plugins.Add(new PluginInfo { Name = moduleFolder.Name, Assembly = assembly, Path = moduleFolder.PhysicalPath });
-                    }
-                }
-            }
-            GlobalConfiguration.Plugins = plugins;
-        }
-        public static void RegisterPluginController(this IMvcBuilder mvcBuilder, IList<PluginInfo> plugins)
-        {
-            foreach (var module in plugins)
-            {
-                // Register controller from modules
-                mvcBuilder.AddApplicationPart(module.Assembly);
-            }
-        }
-        public static void InitPlugins(this IServiceCollection services, IConfigurationRoot Configuration)
-        {
-            var moduleInitializerInterface = typeof(IPluginInitializer);
-            foreach (var module in GlobalConfiguration.Plugins)
-            {
-                // Register dependency in modules
-                var assTypes = module.Assembly.GetTypes();
-                var moduleInitializerType = assTypes.Where(x => typeof(IPluginInitializer).IsAssignableFrom(x)).FirstOrDefault();
-                if (moduleInitializerType != null && moduleInitializerType != typeof(IPluginInitializer))
-                {
-                    var moduleInitializer = (IPluginInitializer)Activator.CreateInstance(moduleInitializerType);
-                    module.Initializer = moduleInitializer;
-                    moduleInitializer.Init(services, Configuration);
-                }
-            }
-        }
+
+        /*
+        /// <summary>
+        /// 获取数据库连接
+        /// </summary>
+        /// <param name="Configuration"></param>
+        /// <param name="DataBase"></param>
+        /// <returns></returns>
         public static DbConnection GetDbConnection(IConfigurationRoot Configuration,string DataBase)
         {
             if (DataBase.ToLower() == "sqlserver")
             {
-                return new ProfiledDbConnection(new SqlConnection(Configuration.GetConnectionString("MDatabase")), () => {
+                return new ProfiledDbConnection(new System.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("MDatabase")), () => {
                     if (ProfilingSession.Current == null)
                         return null;
                     return new DbProfiler(ProfilingSession.Current.Profiler);
@@ -202,6 +196,23 @@ namespace Evolution.Web.Extentions
                         return null;
                     return new DbProfiler(ProfilingSession.Current.Profiler);
                 });
+            }
+            else
+            {
+                return null;
+            }
+        }
+        */
+        public static DbConnection GetDbConnection(IConfigurationRoot Configuration, string DataBase)
+        {
+            if (DataBase.ToLower() == "sqlserver")
+            {
+                return new System.Data.SqlClient.SqlConnection(Configuration.GetConnectionString("MDatabase"));
+
+            }
+            else if (DataBase.ToLower() == "mysql")
+            {
+                return new MySqlConnection(Configuration.GetConnectionString("MMysqlDatabase"));
             }
             else
             {

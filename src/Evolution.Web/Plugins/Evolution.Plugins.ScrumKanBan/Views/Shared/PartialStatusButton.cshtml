@@ -1,0 +1,15 @@
+﻿@model ScrumBasic.ViewModels.Sprint.UserStoryViewModel
+
+
+@if (Model.StatusCode != "Delivered")
+{
+    @Html.ActionLink(Model.ButtonDisplayName, "ChangeStatus", new { itemID = @Model.ID, result = "", scode = Model.StatusCode }, new { @class = "btn btn-info btn-xs", @Name = "changeItemStatus", @ItemID = @Model.ID, @BtnType = "StatusBtn" })
+}
+else
+{
+    @Html.ActionLink("通过", "ChangeStatus", new { itemID = @Model.ID, result = "Y", scode = Model.StatusCode }, new { @class = "btn btn-info btn-xs", @Name = "changeItemStatus", @ItemID = @Model.ID, @BtnType = "StatusBtn" })
+    <sapn>&nbsp;</sapn>
+    @Html.ActionLink("拒绝", "ChangeStatus", new { itemID = @Model.ID, result = "N", scode = Model.StatusCode }, new { @class = "btn btn-info btn-xs", @Name = "changeItemStatus", @ItemID = @Model.ID, @BtnType = "StatusBtn" })
+
+}
+

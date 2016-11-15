@@ -7,22 +7,24 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using Evolution.Application.SystemManage;
 using Evolution.Domain.Entity.SystemManage;
 using Evolution.Framework;
 using Evolution;
 using System.Threading.Tasks;
 using Evolution.Web.Attributes;
+using Evolution.Web;
+using Evolution.Data;
+using Evolution.Data.Entity.SystemManage;
+using Evolution.Application.SystemManage;
 
 namespace Evolution.Web.Areas.SystemManage.Controllers
 {
     [Area("SystemManage")]
-    [PermissionLevelDescrip("组织结构数据","")]
-    public class OrganizeController : ControllerBase
+    [PermissionLevelDescrip("组织结构数据", "")]
+    public class OrganizeController : EvolutionControllerBase
     {
-        private OrganizeApp organizeApp = null;
-
-        public OrganizeController(OrganizeApp organizeApp)
+        private OrganizeService organizeApp = null;
+        public OrganizeController(OrganizeService organizeApp)
         {
             this.organizeApp = organizeApp;
         }
@@ -73,6 +75,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         public async Task<ActionResult> GetTreeGridJson(string keyword)
         {
             var data = await organizeApp.GetList();
+
             if (!string.IsNullOrEmpty(keyword))
             {
                 data = data.TreeWhere(t => t.FullName.Contains(keyword));
@@ -105,7 +108,7 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("保存组织结构数据", "保存组织结构数据")]
         public async Task<IActionResult> SubmitForm(OrganizeEntity organizeEntity, string keyValue)
         {
-            await organizeApp.Save(organizeEntity, keyValue,HttpContext);
+            await organizeApp.Save(organizeEntity, keyValue, HttpContext);
             return Success("操作成功。");
         }
         [HttpPost]

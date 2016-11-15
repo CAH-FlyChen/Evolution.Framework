@@ -1,4 +1,4 @@
-﻿F_Id,F_ItemId,F_ParentId,F_ItemCode,F_ItemName,F_SimpleSpelling,F_IsDefault,F_Layers,F_SortCode,F_DeleteMark,F_EnabledMark,F_Description,F_CreatorTime,F_CreatorUserId,F_LastModifyTime,F_LastModifyUserId,F_DeleteTime,F_DeleteUserId
+﻿F_Id,F_ItemId,F_ParentId,F_ItemCode,F_ItemName,F_SimpleSpelling,F_IsDefault,F_Layers,F_SortCode,F_DeleteMark,F_EnabledMark,F_Description,F_CreateTime,F_CreatorUserId,F_LastModifyTime,F_LastModifyUserId,F_DeleteTime,F_DeleteUserId
 B97BD7F5-B212-40C1-A1F7-DD9A2E63EEF2,9EB4602B-BF9A-4710-9D80-C73CE89BEC5D,,Group,集团,,FALSE,,1,FALSE,TRUE,,,,,,,
 2C3715AC-16F7-48FC-AB40-B0931DB1E729,9EB4602B-BF9A-4710-9D80-C73CE89BEC5D,,Area,区域,,FALSE,,2,FALSE,TRUE,,,,,,,
 D082BDB9-5C34-49BF-BD51-4E85D7BFF646,9EB4602B-BF9A-4710-9D80-C73CE89BEC5D,,Company,公司,,FALSE,,3,FALSE,TRUE,,,,,,,

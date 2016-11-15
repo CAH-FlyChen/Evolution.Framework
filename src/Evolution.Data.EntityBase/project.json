@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Evolution.Framework": "1.0.5-*",
+    "Evolution.IInfrastructure": "1.0.5-*",
+    "Microsoft.AspNetCore.Http": "1.0.0",
+    "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
+    "NETStandard.Library": "1.6.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

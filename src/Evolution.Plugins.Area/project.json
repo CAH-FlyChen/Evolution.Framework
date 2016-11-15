@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Evolution.Data": "1.0.5-*",
+    "Evolution.RepositoryBase": "1.0.5-*",
+    "Evolution.Web.Abstract": "1.0.0-*",
+    "Evolution.Web.Attributes": "1.0.5-*",
+    "Microsoft.AspNetCore.Mvc": "1.0.0",
+    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.1"
+    },
+    "Evolution.Plugins.Abstract": "1.0.0-*",
+    "Evolution.Data.EntityBase": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
+  },
+  "scripts": { "postcompile": [ "buildpost.cmd" ] }
+}

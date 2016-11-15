@@ -33,13 +33,20 @@
     "Evolution.Application": "1.0.0-*",
     "Evolution.Data": "1.0.0-*",
     "Newtonsoft.Json": "9.0.1",
-    "Evolution.Plugin.Core": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
     "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9",
     "Microsoft.Extensions.Caching.Redis.Core": "1.0.2",
     "CoreProfiler": "1.0.3",
     "CoreProfiler.Web": "1.0.3",
-    "Evolution.Web.Attributes": "1.0.0-*"
+    "System.ServiceModel.Primitives": "4.0.0",
+    "System.ServiceModel.Http": "4.0.0",
+    "Evolution.Web.Attributes": "1.0.0-*",
+    "Evolution.Web.Abstract": "1.0.0-*",
+    "Evolution.Plugins.Abstract": "1.0.0-*",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "AutoMapper": "5.0.2",
+    "AutoMapper.Extensions.Microsoft.DependencyInjection": "1.1.2",
+    "Evolution.Data.EntityBase": "1.0.0-*"
   },
 
   "tools": {
@@ -77,7 +84,8 @@
       "Views",
       "Areas/**/*.cshtml",
       "appsettings.json",
-      "web.config"
+      "web.config",
+      "coreprofiler.json"
     ]
   },
 

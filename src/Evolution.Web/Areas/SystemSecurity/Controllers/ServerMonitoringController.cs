@@ -12,7 +12,7 @@ using System.Linq;
 namespace Evolution.Web.Areas.SystemSecurity.Controllers
 {
     [Area("SystemSecurity")]
-    public class ServerMonitoringController : ControllerBase
+    public class ServerMonitoringController : EvolutionControllerBase
     {
        
     }

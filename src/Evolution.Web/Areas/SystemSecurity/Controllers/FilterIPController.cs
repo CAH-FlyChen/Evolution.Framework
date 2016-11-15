@@ -14,7 +14,7 @@ using Evolution.Web.Attributes;
 namespace Evolution.Web.Areas.SystemSecurity.Controllers
 {
     [Area("SystemSecurity")]
-    public class FilterIPController : ControllerBase
+    public class FilterIPController : EvolutionControllerBase
     {
         private FilterIPApp filterIPApp = null;
 

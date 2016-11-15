@@ -4,6 +4,7 @@
  * Description: Evolution快速开发平台
  * Website：
 *********************************************************************************/
+using Evolution.Data;
 using Evolution.Data.Entity;
 using Evolution.Framework;
 using System;
