@@ -21,6 +21,7 @@
             }
         },
         refreshTab: function () {
+            debugger;
             var currentId = $('.page-tabs-content').find('.active').attr('data-id');
             var target = $('.Evolution_iframe[data-id="' + currentId + '"]');
             var url = target.attr('src');
