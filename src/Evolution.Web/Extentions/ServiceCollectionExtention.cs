@@ -36,31 +36,11 @@ namespace Evolution.Web.Extentions
         /// <param name="services"></param>
         public static IMvcBuilder AddEvolutionMVCService(this IServiceCollection services)
         {
-            //services.AddSingleton<IActionDescriptorCollectionProvider, EvolutionActionDescriptorCollectionProvider>();
-            //services.TryAddSingleton<IActionSelectorDecisionTreeProvider, EvolutionActionSelectorDecisionTreeProvider>();
             var mvcBuilder = services.AddMvc(opts =>
             {
                 Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeApp.CheckPermission;
                 opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
             });
-
-            //int serviceToRemove = -1;
-            //for(int i=0;i<services.Count;i++)
-            //{
-            //    var serviceName = services[i].ServiceType.FullName;
-            //    if (serviceName == "Microsoft.AspNetCore.Mvc.Abstractions.IActionDescriptorProvider"
-            //        &&services[i].ImplementationType.FullName== "Microsoft.AspNetCore.Mvc.Internal.ControllerActionDescriptorProvider"
-            //        )
-            //    {
-            //        serviceToRemove = i;
-            //        break;
-            //    }
-            //}
-            //if(serviceToRemove != -1)
-            //{
-            //    services.Remove(services[serviceToRemove]);
-            //    services.AddSingleton<IActionDescriptorCollectionProvider, EvolutionActionDescriptorCollectionProvider>();
-            //}
 
             //自定义路径解析View
             mvcBuilder.AddRazorOptions(opt =>
@@ -68,12 +48,6 @@ namespace Evolution.Web.Extentions
                 opt.ViewLocationExpanders.Add(new PluginViewLocationExpander());
             });
             return mvcBuilder;
-            ////解析构造外部插件
-            //foreach (var module in GlobalConfiguration.Plugins)
-            //{
-            //    // Register controller from modules
-            //    mvcBuilder.AddApplicationPart(module.Assembly);
-            //}
         }
         /// <summary>
         /// 添加缓存服务

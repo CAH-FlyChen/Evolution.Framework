@@ -46,7 +46,9 @@
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
     "AutoMapper": "5.0.2",
     "AutoMapper.Extensions.Microsoft.DependencyInjection": "1.1.2",
-    "Evolution.Data.EntityBase": "1.0.0-*"
+    "Evolution.Data.EntityBase": "1.0.0-*",
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
+    "Microsoft.AspNetCore.Mvc.Core": "1.0.0"
   },
 
   "tools": {

@@ -67,7 +67,10 @@ a:hover,a:focus{color:#475059;}
 #col-left a{color:#e1e1e1}
 #col-left a:hover,#col-left .nav-active a.nav-link,#col-left a.active{color:#fff}
 #col-left *{outline:none}
-#nav-col{padding:0;z-index:100;position:absolute;background:#2c3e50;width:220px;}
+#nav-col{
+    padding:0;z-index:100;position:absolute;background:#2c3e50;width:220px;
+    height:100%;overflow-y:auto;margin-top:-50px;z-index:0;padding-top:50px;/*add*/
+}
 @media (max-width:767px){#nav-col{position:relative;width:auto;}}
 #sidebar-nav{max-height:100%;padding-left:0;padding-right:0;}
 #sidebar-nav .nav>li{margin:0}

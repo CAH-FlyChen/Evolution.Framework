@@ -70,6 +70,16 @@ namespace Evolution.Application.SystemManage
         {
             return service.FindEntityAsync(id);
         }
+
+        public Task<UserEntity> GetEntityByName(string userName)
+        {
+            if (string.IsNullOrEmpty(userName)) return null;
+            //获取用户对象
+            UserEntity userEntity = service.FindEntityASync(t => t.Account == userName).Result;
+            if (userEntity == null) throw new Exception("账户不存在，请重新输入");
+            if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
+            return Task.FromResult(userEntity);
+        }
         /// <summary>
         /// 删除用户实体对象
         /// </summary>
@@ -118,7 +128,7 @@ namespace Evolution.Application.SystemManage
             //密码0000 MD5加密后 de54ef2d07c608096fddb77a27c5f126
             //验证密码
             string pwd = Encryptor.EncryptPWD(password, userLogOnEntity.UserSecretkey);
-            if (pwd != userLogOnEntity.UserPassword) throw new Exception("密码不正确，请重新输入");
+            if (pwd != userLogOnEntity.UserPassword) return null;
             //记录登录日志
             await WriteLoginLog(userLogOnEntity);
             return userEntity;

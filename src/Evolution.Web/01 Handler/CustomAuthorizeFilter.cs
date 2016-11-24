@@ -89,12 +89,7 @@ namespace Evolution.Web
             {
                 return Task.FromResult<int>(0);
             }
-
             
-
-
-
-
             return base.OnAuthorizationAsync(context);
         }
 

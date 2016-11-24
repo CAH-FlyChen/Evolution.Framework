@@ -14,6 +14,8 @@ using Evolution.Data;
 using Microsoft.EntityFrameworkCore;
 using Evolution.Plugins.Abstract;
 using Evolution.Framework;
+using static Evolution.Framework.Jwt.SimpleTokenProvider;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Evolution.Web
 {
@@ -61,6 +63,7 @@ namespace Evolution.Web
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.CookieName = ".MyApplication";
             });
+
             //database
             services.AddEvolutionDBService(pluginManager,Configuration);
             //plugins injection entityframework and service dependency
@@ -89,6 +92,11 @@ namespace Evolution.Web
             app.UseApplicationInsightsExceptionTelemetry();
             app.UseStaticFiles();
             app.UseSession();
+
+
+            //app.GenJWTEndpoint(Configuration);
+            //app.ConfigureJwtAuth(Configuration);
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 AuthenticationScheme = "CookieAuth",
@@ -97,6 +105,8 @@ namespace Evolution.Web
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true
             });
+
+
             app.UseCoreProfiler(true);
             app.UseMvc(routes =>
             {

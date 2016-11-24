@@ -81,8 +81,8 @@ $(function ($) {
                 var _height2 = $item.find('ul.submenu').height() + 10;
                 var _height3 = _height2 > _height1 ? _height1 : _height2;
                 $item.find('ul.submenu').css({
-                    overflow: "auto",
-                    height: _height3
+                    overflow: "none",
+                    height: "100%"
                 })
             });
         }

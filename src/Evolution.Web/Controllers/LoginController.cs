@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Evolution.Web.Attributes;
+using System.Net.Http;
+using System.Collections.Generic;
+using JWT.Common;
 
 namespace Evolution.Web.Controllers
 {
@@ -111,6 +114,8 @@ namespace Evolution.Web.Controllers
                     throw new Exception("验证码错误，请重新输入！");
                 //验证用户名密码
                 var userEntity = await userApp.CheckLogin(username, password);
+                if (userEntity == null)
+                    throw new Exception("密码不正确，请重新输入");
                 var role = await roleApp.GetRoleById(userEntity.RoleId);
                 //设置登录对象
                 LoginModel operatorModel = CreateLoginModel(userEntity, role);
@@ -123,6 +128,70 @@ namespace Evolution.Web.Controllers
                 //登录
                 logonApp.SignIn(operatorModel, HttpContext);
 
+                return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
+            }
+            catch (Exception ex)
+            {
+                logEntity.Account = username;
+                logEntity.NickName = username;
+                logEntity.Result = false;
+                logEntity.Description = "登录失败，" + ex.Message;
+                await logApp.WriteDbLog(logEntity, HttpContext);
+                return Content(new AjaxResult { state = ResultType.error.ToString(), message = ex.Message }.ToJson());
+            }
+        }
+        /// <summary>
+        /// 用jwt校验并写入cookie
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [HandlerAjaxOnly]
+        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code)
+        {
+            //初始化登录日志
+            LogEntity logEntity = new LogEntity();
+            logEntity.ModuleName = "系统登录";
+            logEntity.Type = DbLogType.Login.ToString();
+            try
+            {
+                //验证用户名密码
+                HttpClient _client = new HttpClient();
+                //arrange
+                var data = new Dictionary<string, string>();
+                data.Add("username", username);
+                data.Add("password", password);
+                HttpContent ct = new FormUrlEncodedContent(data);
+                HttpResponseMessage message_token = _client.PostAsync("http://localhost:5000/auth/token", ct).Result;
+                string res = message_token.Content.ReadAsStringAsync().Result;
+                Token token = Newtonsoft.Json.JsonConvert.DeserializeObject<Token>(res);
+                UserEntity userEntity = null;
+                if (token!=null)
+                {
+                    userEntity = userApp.GetEntityByName(username).Result;
+                }
+
+                //_client.DefaultRequestHeaders.Add("Authorization", "Bearer " + t.access_token);
+                //HttpResponseMessage message = _client.GetAsync("http://localhost:63324/api/values/1").Result;
+                //string result = message.Content.ReadAsStringAsync().Result;
+
+                //var userEntity = await userApp.CheckLogin(username, password);
+                if (userEntity == null)
+                    throw new Exception("密码不正确，请重新输入");
+                var role = await roleApp.GetRoleById(userEntity.RoleId);
+                //设置登录对象
+                LoginModel operatorModel = CreateLoginModel(userEntity, role);
+                //写入登录日志
+                logEntity.Account = userEntity.Account;
+                logEntity.NickName = userEntity.RealName;
+                logEntity.Result = true;
+                logEntity.Description = "登录成功";
+                await logApp.WriteDbLog(logEntity, HttpContext);
+                //登录
+                logonApp.SignIn(operatorModel, HttpContext);
+                HttpContext.Response.Cookies.Append("access_token", token.access_token);
                 return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
             }
             catch (Exception ex)

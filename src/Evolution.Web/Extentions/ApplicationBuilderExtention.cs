@@ -11,6 +11,13 @@ using Microsoft.AspNetCore.Builder;
 using System.Collections.Generic;
 using Evolution.Data.Entity.SystemManage;
 using Evolution.Framework.Data;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using static Evolution.Framework.Jwt.SimpleTokenProvider;
+using JWT.Common.Middlewares.TokenProvider;
+using Microsoft.Extensions.Options;
 
 namespace Evolution.Web.Extentions
 {
@@ -260,6 +267,67 @@ namespace Evolution.Web.Extentions
             {
                 return bool.Parse(s);
             }
+        }
+
+        public static void ConfigureJwtAuth(this IApplicationBuilder app,IConfigurationRoot configuration)
+        {
+            var audienceConfig = configuration.GetSection("Audience");
+            var symmetricKeyAsBase64 = audienceConfig["Secret"];
+            var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
+            var signingKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(keyByteArray);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                // The signing key must match!
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                // Validate the JWT Issuer (iss) claim
+                ValidateIssuer = true,
+                ValidIssuer = "http://catcher1994.cnblogs.com/",
+
+                // Validate the JWT Audience (aud) claim
+                ValidateAudience = true,
+                ValidAudience = "Catcher Wong",
+
+                // Validate the token expiry
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            //{
+            //    AuthenticationScheme = "CookieAuth",
+            //    LoginPath = new PathString("/Login/"),
+            //    AccessDeniedPath = new PathString("/error.html"),
+            //    AutomaticAuthenticate = true,
+            //    AutomaticChallenge = true,
+            //    TicketDataFormat = new CustomJwtDataFormat(
+            //    SecurityAlgorithms.HmacSha256,
+            //    tokenValidationParameters)
+            //});
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = tokenValidationParameters,
+            });
+        }
+        public static void GenJWTEndpoint(this IApplicationBuilder app, IConfigurationRoot configuration)
+        {
+            var audienceConfig = configuration.GetSection("Audience");
+            var symmetricKeyAsBase64 = audienceConfig["Secret"];
+            var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);
+            var signingKey = new SymmetricSecurityKey(keyByteArray);
+            var options = new TokenProviderOptions
+            {
+                Audience = "http://catcher1994.cnblogs.com/",
+                Issuer = "Catcher Wong",
+                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+            };
+            app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
         }
 
     }
