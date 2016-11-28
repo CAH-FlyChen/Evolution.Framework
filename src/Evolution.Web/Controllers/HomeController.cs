@@ -35,5 +35,11 @@ namespace Evolution.Web.Controllers
         {
             return View();
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult SDK()
+        {
+            return View();
+        }
     }
 }

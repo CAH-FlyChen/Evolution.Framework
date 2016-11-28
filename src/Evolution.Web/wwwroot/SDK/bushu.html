@@ -1,0 +1,89 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href ="sdk.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="panel-heading">
+        3.部署过程
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li>
+                <h4><a name="windows">Windows部署(IIS,OWIN)</a></h4>
+                <ul>
+                    <li>
+                        编译 :在解决方案目录下执行<br />
+                        dotnet dotnet restore<br />
+                        dotnet publish -r win10-x64<br />
+                        Evolution.Framework\src\Evolution.Web\bin\Debug\netcoreapp1.0\win10-x64即为编译后可部署代码<br />
+                    </li>
+                    <li>
+                        配置数据库<br />
+                        打开数据库配置文件：Evolution.Framework\src\Evolution.Web\appsettings.json<br />
+                        "DataBase"节点为所要用的数据库，“MDatabase”为SqlServer连接字符串。“MMysqlDatabase”为MySQL连接字符串。<br />
+                        打开访问地址配置 Evolution.Framework\src\Evolution.Web\hosting.json可以修改网站的OWIN方式的访问端口<br />
+                    </li>
+                    <li>
+                        执行程序<br />
+                        执行Evolution.Framework\src\Evolution.Web\bin\Debug\netcoreapp1.0\win10-x64\Evolution.Web.exe
+                    </li>
+
+                </ul>
+            </li>
+
+            <li>
+                <h4><a name="ubuntu">Ubuntu部署 14.0.4</a></h4>
+                <ul>
+                    <li>
+                        1.安装.net core.<br />
+                        sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'<br />
+                        sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893<br />
+                        sudo apt-get update  <br />
+                    </li>
+                    <li>
+                        2.安装.net core sdk。<br />
+                        sudo apt-get install dotnet-dev-1.0.0-preview2-003121 <br />
+                        2.1 安装libgdiplus <br />
+                        sudo apt-get install libgdiplus <br />
+                    </li>
+                    <li>
+                        3.编译 :在解决方案目录下执行<br />
+                        dotnet dotnet restore<br />
+                        dotnet publish -r ubuntu.14.04-x64<br />
+                    </li>
+                    <li>
+                        4.将发布的publish目录下的文件上传到ubuntu服务器。推荐使用WinSCP上传
+                    </li>
+                    <li>
+                        5.切换到项目目录下，执行<br />
+                        dotnet Evolution.Web.dll  <br />
+                    </li>
+                    <li>
+                        6.安装nginx<br />
+                        sudo apt-get install nginx<br />
+                        nano /etc/nginx/sites-available/default<br />
+                        修改Server节点配置：<br />
+                        server {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listen 80;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;location / {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://localhost:5000;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_http_version 1.1;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Upgrade $http_upgrade;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Connection keep-alive;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_cache_bypass $http_upgrade;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                        }<br />
+                        ctrl+O Ctrl+X 保存，然后退出。<br />
+                        重启Nginx<br />
+                        sudo service nginx restart  <br />
+                    </li>
+
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</body>
+</html>
