@@ -8,7 +8,6 @@ import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent }  from './app.component';
 import { HomeComponent } from './components/home.component';
-import { OrganizeComponent } from './components/organize.component';
 import { TabBarComponent } from './core/common/tab-bar.component';
 import { AboutComponent } from './components/about.component'; 
 import { routing } from './routes';
@@ -40,7 +39,7 @@ class AppBaseRequestOptions extends BaseRequestOptions {
         routing
     ],
     declarations: [AppComponent, KeysPipe, HomeComponent, AboutComponent,
-        HighlightDirective, OrganizeComponent, TabBarComponent, OrganizeAddComponent],
+        HighlightDirective, TabBarComponent, OrganizeAddComponent],
     providers: [NgbActiveModal,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: RequestOptions, useClass: AppBaseRequestOptions }],
