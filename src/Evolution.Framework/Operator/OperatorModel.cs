@@ -17,10 +17,10 @@ namespace Evolution.Framework
         {
             get { return "EF:UserId"; }
         }
-        public static string UserCode
-        {
-            get { return "EF:UserCode"; }
-        }
+        //public static string UserCode
+        //{
+        //    get { return "EF:UserCode"; }
+        //}
         public static string UserName
         {
             get { return "EF:UserName"; }
@@ -45,10 +45,10 @@ namespace Evolution.Framework
         {
             get { return "EF:LoginIPAddressName"; }
         }
-        public static string LoginToken
-        {
-            get { return "EF:LoginToken"; }
-        }
+        //public static string LoginToken
+        //{
+        //    get { return "EF:LoginToken"; }
+        //}
         public static string LoginTime
         {
             get { return "EF:LoginTime"; }

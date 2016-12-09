@@ -1,0 +1,13 @@
+﻿/*此处配置会被theme替代*/
+.btn{
+    font-size:12px;
+}
+
+#content-main{
+        height:100%;
+    margin-top:-50px;
+}
+
+.ui-jqgrid {
+    width:100%;
+}

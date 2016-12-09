@@ -1,0 +1,11 @@
+{
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {
+    "jquery": "2.2.0",
+    "jquery-ui": "1.10.4",
+    "jquery.cookie": "1.4.0",
+    "bootstrap": "3.3.4",
+    "jqGrid": "5.1.0"
+  }
+}

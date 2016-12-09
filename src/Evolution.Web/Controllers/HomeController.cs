@@ -10,8 +10,6 @@ using Evolution.Web;
 
 namespace Evolution.Web.Controllers
 {
-    [Authorize]
-
     public class HomeController : Controller
     {
         [HttpGet]

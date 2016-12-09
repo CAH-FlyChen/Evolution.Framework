@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/e05e1f6f83c6ac84e9d7ff8284e8089d53a788a6/compression/compression.d.ts",
+    "raw": "registry:dt/compression#0.0.0+20160501162003",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/e05e1f6f83c6ac84e9d7ff8284e8089d53a788a6/compression/compression.d.ts"
+  }
+}

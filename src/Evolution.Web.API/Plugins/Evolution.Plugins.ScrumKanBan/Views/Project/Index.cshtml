@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/kanban/project/GetGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'Id', hidden: true },
+                { label: '项目名称', name: 'Name', width: 80, align: 'left' },
+                { label: '序号', name: 'SortCode', width: 80, align: 'left' },
+                {
+                    label: '最后更新日期', name: 'LastModifyTime', width: 80, align: 'left',
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                }
+            ],
+            pager: "#gridPager",
+            sortname: 'DepartmentId asc,CreateTime desc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        $.modalOpen({
+            id: "Form",
+            title: "新增项目",
+            url: "/SystemManage/User/Form",
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_edit() {
+        var keyValue = $("#gridList").jqGridRowValue().Id;
+        $.modalOpen({
+            id: "Form",
+            title: "修改项目",
+            url: "/SystemManage/User/Form?keyValue=" + keyValue,
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/SystemManage/User/DeleteForm",
+            param: { keyValue: $("#gridList").jqGridRowValue().Id },
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().Id;
+        $.modalOpen({
+            id: "Details",
+            title: "查看项目",
+            url: "/SystemManage/User/Details?keyValue=" + keyValue,
+            width: "700px",
+            height: "550px",
+            btn: null,
+        });
+    }
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>新建用户</a>
+        </div>
+        <div class="operate">
+            <ul class="nav nav-pills">
+                <li class="first">已选中<span>1</span>项</li>
+                <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>修改项目</a></li>
+                <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>删除项目</a></li>
+                <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>查看项目</a></li>
+                <li class="split"></li>
+                <li><a id="NF-revisepassword" authorize="yes" onclick=""><i class="fa fa-key"></i>项目看板</a></li>
+            </ul>
+            <a href="javascript:;" class="close"></a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="项目名称" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

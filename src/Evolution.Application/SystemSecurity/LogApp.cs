@@ -78,8 +78,8 @@ namespace Evolution.Application.SystemSecurity
         }
         public Task<int> WriteDbLog(bool result, string resultLog,HttpContext context)
         {
-            var userCode = context.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserCode).Value;
-            var userName = context.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserName).Value;
+            var userCode = context.User.Claims.First(t => t.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            var userName = context.User.Claims.First(t => t.Type == System.Security.Claims.ClaimTypes.Name).Value;
 
             LogEntity logEntity = new LogEntity();
             logEntity.Id = Common.GuId();

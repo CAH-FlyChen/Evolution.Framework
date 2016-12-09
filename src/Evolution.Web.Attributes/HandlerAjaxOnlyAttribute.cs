@@ -30,7 +30,16 @@ namespace Evolution.Web.Attributes
             {
                 throw new ArgumentNullException("request");
             }
-            return request.Headers != null && request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            bool r = request.Headers != null && request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            if(r)
+            {
+                return true;
+            }
+            else
+            {
+                throw (new InvalidOperationException("此Url请求必须为X-Requested-With：XMLHttpRequest"));
+            }
+
         }
     }
 }

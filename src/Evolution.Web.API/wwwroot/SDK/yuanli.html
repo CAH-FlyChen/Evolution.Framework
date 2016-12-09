@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="sdk.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="panel-heading">
+        2.工作原理介绍
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li>
+                1：基础框架及其运行数据。<br />
+                基础框架即：业务上最小的可运行程序。包括：系统管理模块，系统安全模块，系统报表，常用示例。<br />
+                程序启动后会判断数据库中的表是否存在（数据库需要自建），若执行建表及数据初始化操作。<br />
+            </li>
+            <li>
+                2：插件及其运行数据<br />
+                程序其他功能均以插件的形式提供。一般是业务组件。<br />
+                系统提供的插件如下：<br />
+                <ul>
+                    <li>区域（Area）插件。</li>
+                </ul>
+            </li>
+            <li>
+                3：基础说明<br />
+                程序是基于Controller Mvc方式创建，<br />
+                数据库使用EntityFramewrok，可以自创建初始化数据。<br />
+                客户端采用Html5+JQuery的方式。Jquery用WebApi的方式访问后台数据<br />
+                具体内容参考其他章节
+            </li>
+            <li>
+                3：鉴权<br />
+                程序采用Cookie+Session鉴权。<br />
+                客户端Post用户名密码 =》查询数据库 =》生成Claim =》生成Cookie
+            </li>
+            <li>
+                4：授权<br />
+                程序采用角色的形式进行授权。<br />
+                用户=》角色=》权限级别<br />
+                所谓“权限级别”即最小权限单位。目前在“资源（ResourceAPI）”级别。
+            </li>
+            <li>
+                5：API访问路线<br />
+                客户端提交API =》 API是否允许匿名访问=》Cookie验证用户是否已经登录 =》从Claim中提取角色信息=》服务器判断要访问的服务端API地址是否允许该角色访问
+            </li>
+        </ul>
+    </div>
+    </body>
+</html>

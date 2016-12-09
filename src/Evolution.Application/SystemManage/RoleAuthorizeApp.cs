@@ -152,6 +152,9 @@ namespace Evolution.Application.SystemManage
             if (isSystemClaim == null) return false;
             if (Convert.ToBoolean(isSystemClaim.Value)) return true;
             Claim permissionClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.Permission);
+
+
+
             if (permissionClaim == null) return false;
             List<string> permissionIds = JsonConvert.DeserializeObject<List<string>>(permissionClaim.Value);
             if (permissionIds.Contains(Md5.md5(url, 16)))

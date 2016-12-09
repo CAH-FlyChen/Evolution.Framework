@@ -21,29 +21,6 @@ namespace Evolution.Web.Controllers
     //[HandlerLogin]
     public class ClientsDataController : Controller
     {
-        #region 私有变量
-        private ItemsDetailApp itemDetailApp = null;
-        private ItemsApp itemsApp = null;
-        private OrganizeService organizeApp = null;
-        private RoleApp roleApp = null;
-        private DutyApp dutyApp = null;
-        private RoleAuthorizeApp roleAuthorizeApp = null;
-        private MenuApp menuApp = null;
-        private MenuButtonApp menuButtonApp = null;
-        #endregion
-        #region 构造函数
-        public ClientsDataController(DutyApp dutyApp, OrganizeService organizeApp, ItemsDetailApp itemDetailApp, ItemsApp itemsApp, RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp,MenuApp menuApp,MenuButtonApp menuButtonApp)
-        {
-            this.itemDetailApp = itemDetailApp;
-            this.itemsApp = itemsApp;
-            this.organizeApp = organizeApp;
-            this.roleApp = roleApp;
-            this.dutyApp = dutyApp;
-            this.roleAuthorizeApp = roleAuthorizeApp;
-            this.menuApp = menuApp;
-            this.menuButtonApp = menuButtonApp;
-        }
-        #endregion 
         [HttpGet]
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetClientsDataJson()

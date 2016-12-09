@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "EvolutionFramework";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <base href="/">
+    <link href="~/lib/css/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/lib/css/alertify.core.css" rel="stylesheet" />
+    <link href="~/lib/css/alertify.bootstrap.css" rel="stylesheet" />
+    <link href="~/js/wdtree/tree.css" rel="stylesheet" />
+    <link href="~/css/jqgrid.css" rel="stylesheet" />
+
+    <link href="~/lib/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-fix.css" rel="stylesheet" />
+
+    <link href="~/lib/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/framework-font.css" rel="stylesheet" />
+    <link href="~/css/framework-ui.css" rel="stylesheet" />
+    <link href="~/css/framework-theme.css" rel="stylesheet" />
+    
+
+    @*Solve IE 11 issues *@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.33.3/es6-shim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.20/system-polyfills.js"></script>
+        <script src="https://npmcdn.com/angular2/es6/dev/src/testing/shims_for_IE.js"></script>*@
+    <!-- 1. Load libraries -->
+    <!-- Polyfill(s) for older browsers -->
+    <script src="~/lib/core-js/client/shim.js"></script>
+    <script src="~/lib/zone.js/dist/zone.js"></script>
+    <script src="~/lib/reflect-metadata/Reflect.js"></script>
+    <script src="~/lib/systemjs/dist/system.src.js"></script>
+
+
+    @*<script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>*@
+
+    <!-- 2. Configure SystemJS -->
+    <script src="~/lib/js/systemjs.config.js"></script>
+
+
+
+    <script src="~/lib/js/jquery.js"></script>
+    <script src="~/lib/js/bootstrap.js"></script>
+    <script src="~/lib/js/jquery-ui.js"></script>
+    <script src="~/js/jqgrid/jqgrid.min.js"></script>
+    <script src="~/js/layout/jquery.layout.js"></script>
+    <script src="~/js/jqgrid/grid.locale-cn.js"></script>
+    <script src="~/js/charts/Chart.js"></script>
+    <script src="~/js/wdtree/tree.js"></script>
+    <script src="~/js/dialog/dialog.js"></script>
+    <script src="~/js/cookie/jquery.cookie.js"></script>
+    <script src="~/lib/js/alertify.min.js"></script>
+    <script src="~/js/web.config.js"></script>
+    <script src="~/js/index.js"></script>
+    <script src="~/js/framework-clientdata.js"></script>
+    <script src="~/js/framework-ui.js"></script>
+
+    <script src="~/js/indextab.js"></script>
+    <script src="~/js/loading/pace.min.js"></script>
+
+
+    <script>
+        if(window.sessionStorage)
+        {
+            if(!sessionStorage["token"])
+            {
+                window.location.href = "/login.html";
+            }
+        }
+        System.import('app').catch(function (err) { console.error(err); });
+    </script>
+</head>
+<body style="overflow: hidden;">
+    <my-app>
+        <div id="ajax-loader" style="cursor: progress; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: #fff; z-index: 10000; overflow: hidden;">
+            <img src="~/images/ajax-loader.gif" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto;" />
+        </div>
+    </my-app>
+</body>
+</html>

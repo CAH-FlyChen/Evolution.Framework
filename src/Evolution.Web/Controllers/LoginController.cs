@@ -29,22 +29,6 @@ namespace Evolution.Web.Controllers
     [AllowAnonymous]
     public class LoginController : Controller
     {
-        #region 私有变量
-        UserApp userApp = null;
-        LogApp logApp = null;
-        UserLogOnApp logonApp = null;
-        RoleApp roleApp = null;
-        #endregion
-        #region 构造函数
-        public LoginController(UserApp userapp, LogApp logApp, UserLogOnApp logonApp,RoleApp roleApp)
-        {
-            this.userApp = userapp;
-            this.logApp = logApp;
-            this.logonApp = logonApp;
-            this.roleApp = roleApp;
-        }
-        #endregion
-
         /// <summary>
         /// 首页
         /// </summary>
@@ -77,18 +61,18 @@ namespace Evolution.Web.Controllers
             var userCode = HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserCode).Value;
             var userName = HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserName).Value;
 
-            logApp.WriteDbLog(new LogEntity
-            {
-                ModuleName = "系统登录",
-                Type = DbLogType.Exit.ToString(),
-                Account = userCode,
-                NickName = userName,
-                Result = true,
-                Description = "安全退出系统",
-            }, HttpContext);
+            //logApp.WriteDbLog(new LogEntity
+            //{
+            //    ModuleName = "系统登录",
+            //    Type = DbLogType.Exit.ToString(),
+            //    Account = userCode,
+            //    NickName = userName,
+            //    Result = true,
+            //    Description = "安全退出系统",
+            //}, HttpContext);
             //Session.Abandon();
             HttpContext.Session.Clear();
-            logonApp.SignOut(HttpContext);
+            //logonApp.SignOut(HttpContext);
             return RedirectToAction("Index", "Login");
         }
         /// <summary>

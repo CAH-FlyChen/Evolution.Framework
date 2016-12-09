@@ -29,11 +29,11 @@ namespace Evolution.Data.Extensions
             var pk = key.Properties[0].Name;
             var entries = context.ChangeTracker.Entries<TEntity>();
 
-            var i = 0;
+            var i = -1;
             foreach (var property in key.Properties)
             {
-                entries = entries.Where(e => e.Property(property.Name).CurrentValue == keyValues[i]);
                 i++;
+                entries = entries.Where(e => e.Property(property.Name).CurrentValue == keyValues[i]);
             }
 
             var entry = entries.AsQueryable().FirstOrDefault();
