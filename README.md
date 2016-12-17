@@ -1,6 +1,6 @@
 # Evolution.Framework   
 ##基础信息  
-本Framework基于NFine修改制作  
+本Framework的UI部分基于NFine制作后端已经基本重写    
 基于 Asp.net MVC 6, EF Core 1.0, BootStrap制作  
 ##额外特性  
 1. 跨平台  

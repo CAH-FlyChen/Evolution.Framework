@@ -37,5 +37,11 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult ResourcePermission(string keyValue)
+        {
+            return View();
+        }
     }
 }

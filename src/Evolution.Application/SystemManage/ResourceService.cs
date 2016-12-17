@@ -35,7 +35,7 @@ namespace Evolution.Application.SystemManage
             var deps = DependencyContext.Default;
             foreach (var compilationLibrary in deps.CompileLibraries)
             {
-                if (compilationLibrary.Name != "Evolution.Web") continue;
+                if (compilationLibrary.Name != "Evolution.Web.API") continue;
                 var assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
                 foreach(var typ in assembly.GetTypes())
                 {

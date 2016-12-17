@@ -76,6 +76,7 @@ namespace Evolution.Web.Middlewares
                 if (DateTime.Now > expTime)
                 {
                     //已经过期无法申请
+                    context.Response.Redirect("/login");
                     throw new UnauthorizedAccessException("Api token is expiration,you need to login again");
                 }
                 else if (DateTime.Now > expTime.AddMinutes(-5))
