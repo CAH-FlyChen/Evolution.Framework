@@ -28,8 +28,10 @@ namespace Evolution.Web.Middlewares
         public async Task Invoke(HttpContext context)
         {
             _logger.LogInformation("Handling request: " + context.Request.Path);
-            //判断访问是否是ajax
-            if(context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            //判断访问是否是ajax,是否是非页面请求(是否有此controller)
+            var reqCode = context.Request.Headers["X-Requested-With"].FirstOrDefault();
+            if (reqCode == "XMLHttpRequest" && 
+                !context.Request.Path.ToString().Contains("CheckLoginJwt"))
             {
                 //如果访问的不是页面，则穿透访问
                 HttpHelper httpHelper = new HttpHelper(config);

@@ -22,8 +22,10 @@
 1. 实现插件机制........................................................<font color="green">[已完成]</font>   
 1. 实现Mysql数据库测试，将MySQL作为默认数据库.<font color="green">[已完成]</font> 
 1. 增加Redis缓存（在config文件中进行配置是否使用，默认不使用）.....<font color="green">[已完成]</font>  
-2. 支持模板工具创建  [已完成V1.0]
-2. 修改验证为JWT方便Restful API调用    
+2. 支持模板工具创建  [已完成V1.0]  
+3. 分离Html和API.......................... <font color="green">[已完成]</font>  
+2. 修改验证为JWT方便Restful API调用..............    <font color="green">[已完成]</font>  
+3. 客户端改为AngularJs2 SinglePage工程.................... <font color="red">[已完成]</font>
 3. 修改日志数据库为MongoDB  
 
 ##官方插件

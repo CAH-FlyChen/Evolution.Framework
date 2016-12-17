@@ -43,16 +43,16 @@ namespace Evolution.Application.SystemManage
             //custom
             //identity.AddClaim(new Claim(OperatorModelClaimNames.CompanyId, om.CompanyId));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.DepartmentId, om.DepartmentId));
-            //identity.AddClaim(new Claim(OperatorModelClaimNames.IsSystem, om.IsSystem.ToString()));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.IsSystem, om.IsSystem.ToString()));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.LoginIPAddress, om.LoginIPAddress));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.LoginIPAddressName, om.LoginIPAddressName));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.LoginTime, om.LoginTime.ToString("yyyy-MM-dd HH:mm:ss")));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.LoginToken, om.LoginToken));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.RoleId, om.RoleId));
             //identity.AddClaim(new Claim(OperatorModelClaimNames.UserCode, om.UserCode));
-            //identity.AddClaim(new Claim(OperatorModelClaimNames.UserId, om.UserId));
-            //identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, om.UserName));
-            //identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.UserId, om.UserId));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, om.UserName));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
 
             identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId))));
 

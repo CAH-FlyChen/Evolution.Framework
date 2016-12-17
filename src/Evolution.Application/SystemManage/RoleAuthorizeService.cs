@@ -152,12 +152,9 @@ namespace Evolution.Application.SystemManage
             AuthorizationFilterContext res = (AuthorizationFilterContext)ctx.Resource;
             string url = res.HttpContext.Request.Path.Value;
             Claim isSystemClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem);
-            if (isSystemClaim == null) return false;
-            if (Convert.ToBoolean(isSystemClaim.Value)) return true;
+            if (isSystemClaim != null && Convert.ToBoolean(isSystemClaim.Value)) return true;
             Claim permissionClaim = ctx.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.Permission);
-
-
-
+            
             if (permissionClaim == null) return false;
             List<string> permissionIds = JsonConvert.DeserializeObject<List<string>>(permissionClaim.Value);
             if (permissionIds.Contains(Md5.md5(url, 16)))
@@ -169,8 +166,9 @@ namespace Evolution.Application.SystemManage
         {
             AuthorizationFilterContext res = (AuthorizationFilterContext)ctx.Resource;
             var context = res.HttpContext;
-
-            ILogger _logger = (ILogger)context.RequestServices.GetService(typeof(ILogger));
+            
+            var loggerFactory = (ILoggerFactory)context.RequestServices.GetService(typeof(ILoggerFactory));
+            ILogger _logger = loggerFactory.CreateLogger("Permission Check");
             IDistributedCache dCache = (IDistributedCache)context.RequestServices.GetService(typeof(IDistributedCache));
             bool r = false;
             _logger.LogInformation("Resource Filter request: " + context.Request.Path);
