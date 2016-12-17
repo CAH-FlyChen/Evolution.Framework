@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using JWT.Common;
+using Newtonsoft.Json;
 
 namespace Evolution.IInfrastructure
 {
@@ -84,10 +86,14 @@ namespace Evolution.IInfrastructure
             }
             return responseStr;
         }
-        public async Task<string> GetResponseFromNewRequest(HttpRequest oldRequest)
+        /// <summary>
+        /// 用于js穿透访问后端API服务
+        /// </summary>
+        /// <param name="oldRequest"></param>
+        /// <returns></returns>
+        public async Task<string> GetResponseFromNewRequest(HttpRequest oldRequest,string tokenStr)
         {
-            string token = oldRequest.Cookies["access_token"];
-
+            string token = tokenStr;
             string url = UriHelper.GetDisplayUrl(oldRequest);
             var x = url.IndexOf("/", 7);
             var start = url.Substring(x);
@@ -100,17 +106,10 @@ namespace Evolution.IInfrastructure
                 //copy header
                 client.DefaultRequestHeaders.Add("Authorization","Bearer " + token);
                 client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-                //foreach (var t in oldRequest.Headers)
-                //{
-                //    if (!t.Key.Contains("xxx"))
-                //        client.DefaultRequestHeaders.Add(t.Key, oldRequest.Headers[t.Key].First());
-                //}
-
                 switch (oldRequest.Method)
                 {
                     case "POST": {
                             //copy content
-                            //HttpContent ct = new FormUrlEncodedContent(data);
                             string data = GetDocumentContents(oldRequest);
                             HttpContent postContent = new StringContent(data,Encoding.UTF8, "application/x-www-form-urlencoded");
                             response = await client.PostAsync(url, postContent);

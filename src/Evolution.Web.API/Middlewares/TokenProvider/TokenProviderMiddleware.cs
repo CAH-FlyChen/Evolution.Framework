@@ -65,7 +65,7 @@ namespace JWT.Common.Middlewares.TokenProvider
             else if(context.Request.Path.Equals(_options.RefreshTokenPath, StringComparison.Ordinal))
             {
                 //refresh token
-                if (!context.Request.Method.Equals("POST") || !context.Request.HasFormContentType)
+                if (!context.Request.Method.Equals("POST"))
                 {
                     await ReturnBadRequest(context);
                 }
@@ -111,7 +111,7 @@ namespace JWT.Common.Middlewares.TokenProvider
 
                 // if more than 14 days old, force login
                 DateTime dtNow = DateTime.Now;
-                TimeSpan ts = validJwt.ValidTo - dtNow;
+                TimeSpan ts = validJwt.ValidTo.ToLocalTime() - dtNow;
                 //提前10分钟可以刷新，给予延期
                 if ( ts.TotalMinutes < 10)
                 {

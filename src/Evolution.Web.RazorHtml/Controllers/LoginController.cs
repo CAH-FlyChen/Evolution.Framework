@@ -114,6 +114,7 @@ namespace Evolution.Web.Controllers
                 //"Cookies",CookieAuthenticationDefaults.AuthenticationScheme
                 await HttpContext.Authentication.SignInAsync("CookieAuth", cp);
                 HttpContext.Response.Cookies.Append("access_token", token.access_token);
+                HttpContext.Response.Cookies.Append("token_refresh_time", token.expires_dt.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
             }
