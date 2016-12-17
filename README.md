@@ -33,4 +33,21 @@
 2. 微信插件【未完成】  
   
 ##联系信息  
-QQ群：489791124
+QQ群：489791124   
+  
+  
+  
+  
+  
+![](https://github.com/CAH-FlyChen/Evolution.Framework/blob/master/%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3/%E5%B9%B3%E5%8F%B0%E4%BB%8B%E7%BB%8D.png)  
+
+
+![](https://github.com/CAH-FlyChen/Evolution.Framework/blob/master/%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3/%E6%9C%BA%E6%9E%84%E7%AE%A1%E7%90%86.png)  
+
+![](https://github.com/CAH-FlyChen/Evolution.Framework/blob/master/%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3/%E8%A7%92%E8%89%B2%E6%8E%88%E6%9D%83.png)
+
+
+
+
+
+
