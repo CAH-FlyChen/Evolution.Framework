@@ -16,9 +16,9 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
     [Area("SystemSecurity")]
     public class FilterIPController : EvolutionControllerBase
     {
-        private FilterIPApp filterIPApp = null;
+        private FilterIPService filterIPApp = null;
 
-        public FilterIPController(FilterIPApp filterIPApp)
+        public FilterIPController(FilterIPService filterIPApp)
         {
             this.filterIPApp = filterIPApp;
         }

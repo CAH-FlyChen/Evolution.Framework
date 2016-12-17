@@ -93,9 +93,7 @@ namespace Evolution.Web
             app.UseStaticFiles();
             app.UseSession();
 
-
-            //app.GenJWTEndpoint(Configuration);
-            //app.ConfigureJwtAuth(Configuration);
+          
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {

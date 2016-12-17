@@ -37,7 +37,12 @@ namespace Evolution.Web.API.Extentions
         /// <param name="services"></param>
         public static IMvcBuilder AddEvolutionMVCService(this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc(opts =>
+            {
+                Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeService.CheckPermissionNew;
+                opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
+            });
+
             //自定义路径解析View
             mvcBuilder.AddRazorOptions(opt =>
             {
@@ -104,7 +109,7 @@ namespace Evolution.Web.API.Extentions
             #region 注册Service
             services.AddLogging();
 
-            services.AddSingleton<ClaimListProvider, ClaimListProvider>();
+            //services.AddSingleton<ClaimListProvider, ClaimListProvider>();
 
             services.AddScoped<IAuthorizationHandler, PermissionHandler>();
             //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
@@ -124,21 +129,21 @@ namespace Evolution.Web.API.Extentions
             services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IPluginRepository, PluginRepository>();
 
-            services.AddTransient<MenuButtonApp>();
-            services.AddTransient<RoleAuthorizeApp>();
-            services.AddTransient<UserLogOnApp>();
-            services.AddTransient<UserApp>();
-            services.AddTransient<LogApp>();
-            services.AddTransient<ItemsDetailApp>();
-            services.AddTransient<ItemsApp>();
-            services.AddTransient<RoleApp>();
-            services.AddTransient<DutyApp>();
-            services.AddTransient<RoleAuthorizeApp>();
-            services.AddTransient<DbBackupApp>();
-            services.AddTransient<FilterIPApp>();
+            services.AddTransient<MenuButtonService>();
+            services.AddTransient<RoleAuthorizeService>();
+            services.AddTransient<UserLogOnService>();
+            services.AddTransient<UserService>();
+            services.AddTransient<LogService>();
+            services.AddTransient<ItemsDetailService>();
+            services.AddTransient<ItemsService>();
+            services.AddTransient<RoleService>();
+            services.AddTransient<DutyService>();
+            services.AddTransient<RoleAuthorizeService>();
+            services.AddTransient<DbBackupService>();
+            services.AddTransient<FilterIPService>();
             //services.AddTransient<PermissionApp>();
-            services.AddTransient<MenuApp>();
-            services.AddTransient<ResourceApp>();
+            services.AddTransient<MenuService>();
+            services.AddTransient<ResourceService>();
             services.AddTransient<OrganizeService>();
             services.AddTransient<PluginService>();
             #endregion

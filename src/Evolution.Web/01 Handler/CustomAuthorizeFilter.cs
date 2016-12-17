@@ -25,9 +25,9 @@ namespace Evolution.Web
 
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
-        private readonly RoleAuthorizeApp roleAuth;
+        private readonly RoleAuthorizeService roleAuth;
 
-        public PermissionHandler(RoleAuthorizeApp roleAuth)
+        public PermissionHandler(RoleAuthorizeService roleAuth)
         {
             if (roleAuth == null)
                 throw new ArgumentNullException(nameof(roleAuth));

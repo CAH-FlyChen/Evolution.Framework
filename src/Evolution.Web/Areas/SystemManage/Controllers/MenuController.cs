@@ -20,13 +20,13 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
     public class MenuController : EvolutionControllerBase
     {
         #region 私有变量
-        private MenuApp menuApp = null;
-        private MenuButtonApp menuButtonApp = null;
-        private RoleAuthorizeApp roleAuthorizeApp = null;
-        private RoleApp roleApp = null;
+        private MenuService menuApp = null;
+        private MenuButtonService menuButtonApp = null;
+        private RoleAuthorizeService roleAuthorizeApp = null;
+        private RoleService roleApp = null;
         #endregion
         #region 构造函数
-        public MenuController(MenuApp menuApp,MenuButtonApp menuButtonApp, RoleAuthorizeApp roleAuthorizeApp,RoleApp roleApp)
+        public MenuController(MenuService menuApp,MenuButtonService menuButtonApp, RoleAuthorizeService roleAuthorizeApp,RoleService roleApp)
         {
             this.menuApp = menuApp;
             this.menuButtonApp = menuButtonApp;

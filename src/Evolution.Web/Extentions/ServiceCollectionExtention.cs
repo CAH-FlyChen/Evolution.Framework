@@ -38,7 +38,7 @@ namespace Evolution.Web.Extentions
         {
             var mvcBuilder = services.AddMvc(opts =>
             {
-                Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeApp.CheckPermission;
+                Func<AuthorizationHandlerContext, bool> handler = RoleAuthorizeService.CheckPermission;
                 opts.Filters.Add(new CustomAuthorizeFilter(new AuthorizationPolicyBuilder().RequireAssertion(handler).Build()));
             });
 
@@ -125,21 +125,21 @@ namespace Evolution.Web.Extentions
             services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IPluginRepository, PluginRepository>();
 
-            services.AddTransient<MenuButtonApp>();
-            services.AddTransient<RoleAuthorizeApp>();
-            services.AddTransient<UserLogOnApp>();
-            services.AddTransient<UserApp>();
-            services.AddTransient<LogApp>();
-            services.AddTransient<ItemsDetailApp>();
-            services.AddTransient<ItemsApp>();
-            services.AddTransient<RoleApp>();
-            services.AddTransient<DutyApp>();
-            services.AddTransient<RoleAuthorizeApp>();
-            services.AddTransient<DbBackupApp>();
-            services.AddTransient<FilterIPApp>();
+            services.AddTransient<MenuButtonService>();
+            services.AddTransient<RoleAuthorizeService>();
+            services.AddTransient<UserLogOnService>();
+            services.AddTransient<UserService>();
+            services.AddTransient<LogService>();
+            services.AddTransient<ItemsDetailService>();
+            services.AddTransient<ItemsService>();
+            services.AddTransient<RoleService>();
+            services.AddTransient<DutyService>();
+            services.AddTransient<RoleAuthorizeService>();
+            services.AddTransient<DbBackupService>();
+            services.AddTransient<FilterIPService>();
             //services.AddTransient<PermissionApp>();
-            services.AddTransient<MenuApp>();
-            services.AddTransient<ResourceApp>();
+            services.AddTransient<MenuService>();
+            services.AddTransient<ResourceService>();
             services.AddTransient<OrganizeService>();
             services.AddTransient<PluginService>();
             #endregion

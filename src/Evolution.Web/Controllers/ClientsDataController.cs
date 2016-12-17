@@ -22,17 +22,17 @@ namespace Evolution.Web.Controllers
     public class ClientsDataController : Controller
     {
         #region 私有变量
-        private ItemsDetailApp itemDetailApp = null;
-        private ItemsApp itemsApp = null;
+        private ItemsDetailService itemDetailApp = null;
+        private ItemsService itemsApp = null;
         private OrganizeService organizeApp = null;
-        private RoleApp roleApp = null;
-        private DutyApp dutyApp = null;
-        private RoleAuthorizeApp roleAuthorizeApp = null;
-        private MenuApp menuApp = null;
-        private MenuButtonApp menuButtonApp = null;
+        private RoleService roleApp = null;
+        private DutyService dutyApp = null;
+        private RoleAuthorizeService roleAuthorizeApp = null;
+        private MenuService menuApp = null;
+        private MenuButtonService menuButtonApp = null;
         #endregion
         #region 构造函数
-        public ClientsDataController(DutyApp dutyApp, OrganizeService organizeApp, ItemsDetailApp itemDetailApp, ItemsApp itemsApp, RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp,MenuApp menuApp,MenuButtonApp menuButtonApp)
+        public ClientsDataController(DutyService dutyApp, OrganizeService organizeApp, ItemsDetailService itemDetailApp, ItemsService itemsApp, RoleService roleApp, RoleAuthorizeService roleAuthorizeApp, MenuService menuApp, MenuButtonService menuButtonApp)
         {
             this.itemDetailApp = itemDetailApp;
             this.itemsApp = itemsApp;

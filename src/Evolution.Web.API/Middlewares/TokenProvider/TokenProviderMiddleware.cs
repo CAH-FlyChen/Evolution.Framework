@@ -22,16 +22,16 @@ namespace JWT.Common.Middlewares.TokenProvider
     {
         private readonly RequestDelegate _next;
         private readonly TokenProviderOptions _options;
-        private UserApp userApp;
-        private RoleApp roleApp;
-        private RoleAuthorizeApp roleAuth;
+        private UserService userApp;
+        private RoleService roleApp;
+        private RoleAuthorizeService roleAuth;
         private IDistributedCache dCache;
         private IMemoryCache mCache;
         private IConfigurationRoot configuration;
         public TokenProviderMiddleware(
             RequestDelegate next,
-            IOptions<TokenProviderOptions> options,UserApp uapp,RoleApp r,
-            RoleAuthorizeApp ra, IDistributedCache dCache,IMemoryCache mCache)
+            IOptions<TokenProviderOptions> options,UserService uapp,RoleService r,
+            RoleAuthorizeService ra, IDistributedCache dCache,IMemoryCache mCache)
         {
             _next = next;
             _options = options.Value;
@@ -49,10 +49,11 @@ namespace JWT.Common.Middlewares.TokenProvider
         /// <param name="context"></param>
         /// <returns></returns>
         public async Task Invoke(HttpContext context)
-        {           
+        {   
+                   
             if (context.Request.Path.Equals(_options.Path, StringComparison.Ordinal))
             {
-                // Request must be POST with Content-Type: application/x-www-form-urlencoded
+                //get token 
                 if (!context.Request.Method.Equals("POST")
                    || !context.Request.HasFormContentType)
                 {
@@ -63,6 +64,7 @@ namespace JWT.Common.Middlewares.TokenProvider
             }
             else if(context.Request.Path.Equals(_options.RefreshTokenPath, StringComparison.Ordinal))
             {
+                //refresh token
                 if (!context.Request.Method.Equals("POST") || !context.Request.HasFormContentType)
                 {
                     await ReturnBadRequest(context);
@@ -125,9 +127,9 @@ namespace JWT.Common.Middlewares.TokenProvider
                     var response = new
                     {
                         access_token = encodedJwt,
-                        expires_in = (int)_options.Expiration.TotalSeconds,
+                        expires_in = ((int)_options.Expiration.TotalSeconds).ToString(),
                         expires_dt = dtNow.Add(_options.Expiration).ToLocalTime(),
-                        token_type = "Bearer"
+                        token_type = "Bearer",
                     };
 
                     string r = JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
@@ -212,7 +214,8 @@ namespace JWT.Common.Middlewares.TokenProvider
                 {
                     mCache.Set(k, urlStr);
                 }
-                return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] {
+                return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), 
+                    new Claim[] {
                     new Claim(ClaimTypes.NameIdentifier, u.Id),
                     new Claim(ClaimTypes.Role, r.FullName),
                     new Claim(OperatorModelClaimNames.RoleId, r.Id),
@@ -275,7 +278,10 @@ namespace JWT.Common.Middlewares.TokenProvider
                 access_token = encodedJwt,
                 expires_in = (int)_options.Expiration.TotalSeconds,
                 expires_dt = now.Add(_options.Expiration).ToLocalTime(),
-                token_type = "Bearer"
+                token_type = "Bearer",
+                user_name = ci.FindFirst(ClaimTypes.Name).Value,
+                user_code = ci.FindFirst(ClaimTypes.NameIdentifier).Value,
+                role_name = ci.FindFirst(ClaimTypes.Role).Value
             };            
 
             return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });

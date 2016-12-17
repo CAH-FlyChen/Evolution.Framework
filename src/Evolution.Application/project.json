@@ -4,6 +4,7 @@
   "dependencies": {
     "Evolution.Data": "1.0.0-*",
     "Evolution.Framework": "1.0.0-*",
+    "Evolution.IServices": "1.0.0-*",
     "Evolution.Repository": "1.0.0-*",
     "Microsoft.AspNetCore.Http": "1.0.0",
     "Microsoft.AspNetCore.Identity": "1.0.0",

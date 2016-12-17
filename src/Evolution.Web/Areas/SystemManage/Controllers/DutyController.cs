@@ -17,9 +17,9 @@ namespace Evolution.Web.Areas.SystemManage.Controllers
     [Area("SystemManage")]
     public class DutyController : EvolutionControllerBase
     {
-        private DutyApp dutyApp = null;
+        private DutyService dutyApp = null;
 
-        public DutyController(DutyApp dutyApp)
+        public DutyController(DutyService dutyApp)
         {
             this.dutyApp = dutyApp;
         }

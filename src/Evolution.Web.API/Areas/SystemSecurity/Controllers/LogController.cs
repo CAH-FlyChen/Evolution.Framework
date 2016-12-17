@@ -18,9 +18,9 @@ namespace Evolution.Web.API.Areas.SystemSecurity.Controllers
     [Area("SystemSecurity")]
     public class LogController : EvolutionControllerBase
     {
-        private LogApp logApp = null;
+        private LogService logApp = null;
 
-        public LogController(LogApp logApp)
+        public LogController(LogService logApp)
         {
             this.logApp = logApp;
         }

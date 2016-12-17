@@ -29,6 +29,22 @@ namespace Evolution.Web.Controllers
     [AllowAnonymous]
     public class LoginController : Controller
     {
+        #region 私有变量
+        UserService userApp = null;
+        LogService logApp = null;
+        UserLogOnService logonApp = null;
+        RoleService roleApp = null;
+        #endregion
+        #region 构造函数
+        public LoginController(UserService userapp, LogService logApp, UserLogOnService logonApp, RoleService roleApp)
+        {
+            this.userApp = userapp;
+            this.logApp = logApp;
+            this.logonApp = logonApp;
+            this.roleApp = roleApp;
+        }
+        #endregion
+
         /// <summary>
         /// 首页
         /// </summary>
@@ -58,21 +74,21 @@ namespace Evolution.Web.Controllers
         [HttpGet]
         public ActionResult OutLogin()
         {
-            var userCode = HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserCode).Value;
+            var userCode = HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserId).Value;
             var userName = HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserName).Value;
 
-            //logApp.WriteDbLog(new LogEntity
-            //{
-            //    ModuleName = "系统登录",
-            //    Type = DbLogType.Exit.ToString(),
-            //    Account = userCode,
-            //    NickName = userName,
-            //    Result = true,
-            //    Description = "安全退出系统",
-            //}, HttpContext);
+            logApp.WriteDbLog(new LogEntity
+            {
+                ModuleName = "系统登录",
+                Type = DbLogType.Exit.ToString(),
+                Account = userCode,
+                NickName = userName,
+                Result = true,
+                Description = "安全退出系统",
+            }, HttpContext);
             //Session.Abandon();
             HttpContext.Session.Clear();
-            //logonApp.SignOut(HttpContext);
+            logonApp.SignOut(HttpContext);
             return RedirectToAction("Index", "Login");
         }
         /// <summary>
@@ -133,7 +149,7 @@ namespace Evolution.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code)
+        public async Task<ActionResult> CheckLoginJwt(string username, string password, string code)
         {
             //初始化登录日志
             LogEntity logEntity = new LogEntity();
@@ -152,7 +168,7 @@ namespace Evolution.Web.Controllers
                 string res = message_token.Content.ReadAsStringAsync().Result;
                 Token token = Newtonsoft.Json.JsonConvert.DeserializeObject<Token>(res);
                 UserEntity userEntity = null;
-                if (token!=null)
+                if (token != null)
                 {
                     userEntity = userApp.GetEntityByName(username).Result;
                 }

@@ -17,10 +17,10 @@ namespace Evolution.Web.Areas.SystemSecurity.Controllers
     [Area("SystemSecurity")]
     public class DbBackupController : EvolutionControllerBase
     {
-        private DbBackupApp dbBackupApp = null;
+        private DbBackupService dbBackupApp = null;
         private readonly IHostingEnvironment wwwPath;
 
-        public DbBackupController(IHostingEnvironment evn, DbBackupApp dbBackupApp)
+        public DbBackupController(IHostingEnvironment evn, DbBackupService dbBackupApp)
         {
             wwwPath = evn;
             this.dbBackupApp = dbBackupApp;

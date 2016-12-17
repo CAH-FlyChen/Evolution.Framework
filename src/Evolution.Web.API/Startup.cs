@@ -16,7 +16,6 @@ using Evolution.Plugins.Abstract;
 using Evolution.Framework;
 using static Evolution.Framework.Jwt.SimpleTokenProvider;
 using Microsoft.IdentityModel.Tokens;
-using Evolution.Web.API.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evolution.Web.API
@@ -99,7 +98,8 @@ namespace Evolution.Web.API
             app.GenJWTEndpoint(Configuration);
             //配置token验证
             app.ConfigureJwtAuth(Configuration);
-            app.UseMiddleware<ResourceFilterMiddleware>();
+
+            //app.UseMiddleware<ResourceFilterMiddleware>();
             app.UseCoreProfiler(true);
 
             app.UseMvc(routes =>
@@ -113,6 +113,8 @@ namespace Evolution.Web.API
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
 
 
             //***  Initialize the DB ***//

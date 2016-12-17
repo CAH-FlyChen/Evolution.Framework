@@ -1,0 +1,125 @@
+@using Evolution.Plugins.ScrumKanBan.Models;
+@model UserStoryListViewModel
+@{
+    ViewBag.Title = "Project Page";
+    Layout = "~/Views/Shared/_Layout_project.cshtml";
+}
+<div class="fill" id="activity_pane">
+    <!--Menu-->
+    <div class="slide_bar" id="mendu_side_bar">
+        <div class="block_header">
+            <span class="glyphicon glyphicon-menu-hamburger block_header_left_padding block_header_icon_color"
+                  aria-hidden="true" id="m_btn_showhidemenu"></span>
+            <span id="project_title">@ViewBag.ProjectName</span>
+        </div>
+        <ul class="slide_bar_content" style="padding-left:10px">
+            <li><a href="#" id="m_btn_current">Current</a></li>
+            <li><a href="#" id="m_btn_backlog">BackLog</a></li>
+            <li><a href="#" id="m_btn_icebox">ICEBox</a></li>
+            <li><a href="#" id="m_btn_done">Done</a></li>
+        </ul>
+    </div>
+    @*right*@
+    <div class="right_content" id="story_container">
+        <ul class="storylist_container">
+            <li id="block_current" class="storylist_item">
+                <!--Current-->
+                <div class="storylist_title">
+                    <span class="glyphicon glyphicon-remove block_header_left_padding block_header_icon_color"
+                          aria-hidden="true"></span>
+                    <spans>Current</spans>
+                    <span class="glyphicon glyphicon-plus block_header_padding_right block_header_icon_color"
+                          aria-hidden="true" name="btn_addStory" listID="Current"></span>
+                </div>
+                if(@Model!=null)
+                {
+                <div class="storylist_sumary">·@Model.CurrentItemCount    Aug 15-Current   pts: 0 of 10  20%</div>
+                }
+                <div  class="story_item_container">
+                    <ul id="Current">
+                        @foreach (var t in Model.CurrentItems)
+                        {
+                            <li itemid=@t.ID class="story_item">
+                                <span style="color:#afafaf" class="glyphicon glyphicon-triangle-right" name="btn_edit" id="btn_edit_@t.ID"></span>
+                                <span style="color:#e0c85e" class="glyphicon glyphicon-star"></span>
+                                <span>[@t.Point]&nbsp;&nbsp;&nbsp;</span>
+                                <div style="display:inline-block;cursor:move">@t.Title (<a href="#">@t.CreatorName</a>)</div>
+                                <span>@await Component.InvokeAsync("StatusButton", new { model = t })</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+            <li id="block_backlog" class="storylist_item">
+                <!--BackLog-->
+                <div class="storylist_title">
+                    <span class="glyphicon glyphicon-remove block_header_remove block_header_left_padding block_header_icon_color" aria-hidden="true"></span>
+                    <spans>Backlog</spans>
+                    <span class="glyphicon glyphicon-plus block_header_padding_right block_header_icon_color" aria-hidden="true" name="btn_addStory" listID="Backlog"></span>
+                </div>
+                <div class="storylist_sumary">·@Model.BacklogItemCount    Aug 15-Current   pts: 0 of 10</div>
+                <div class="story_item_container">
+                    <ul id="Backlog">
+                        @foreach (var t in Model.BacklogItems)
+                        {
+                            <li itemid=@t.ID class="story_item">
+                                <span style="color:#afafaf" class="glyphicon glyphicon-triangle-right" name="btn_edit" id="btn_edit_@t.ID"></span>
+                                <span style="color:#e0c85e" class="glyphicon glyphicon-star"></span>
+                                <span>[@t.Point]&nbsp;&nbsp;&nbsp;</span>
+                                <div style="display:inline-block;cursor:move">@t.Title (<a href="#">@t.CreatorName</a>)</div>
+                                <span>@await Component.InvokeAsync("StatusButton", new { model = t })</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+            <li id="block_icebox" class="storylist_item">
+                <!--BackLog-->
+                <div class="storylist_title">
+                    <span class="glyphicon glyphicon-remove block_header_remove block_header_left_padding block_header_icon_color" aria-hidden="true"></span>
+                    <spans>ICE Box</spans>
+                    <span class="glyphicon glyphicon-plus block_header_padding_right block_header_icon_color" aria-hidden="true" name="btn_addStory" listID="ICEBox"></span>
+                </div>
+                <div class="storylist_sumary">·@Model.ICEItemCount    Aug 15-Current   pts: 0 of 10</div>
+                <div class="story_item_container">
+                    <ul id="Done">
+                        @foreach (var t in Model.ICEItems)
+                        {
+                            <li itemid=@t.ID class="story_item">
+                                <span style="color:#afafaf" class="glyphicon glyphicon-triangle-right" name="btn_edit" id="btn_edit_@t.ID"></span>
+                                <span style="color:#e0c85e" class="glyphicon glyphicon-star"></span>
+                                <span>[@t.Point]&nbsp;&nbsp;&nbsp;</span>
+                                <div style="display:inline-block;cursor:move">@t.Title (<a href="#">@t.CreatorName</a>)</div>
+                                <span>@await Component.InvokeAsync("StatusButton", new { model = t })</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+            <li id="block_done" class="storylist_item" style="display:none">
+                <!--BackLog-->
+                <div class="storylist_title">
+                    <span class="glyphicon glyphicon-remove block_header_remove block_header_left_padding block_header_icon_color" aria-hidden="true"></span>
+                    <spans>Done</spans>
+                    <span class="glyphicon glyphicon-plus block_header_padding_right block_header_icon_color" aria-hidden="true" name="btn_addStory" listID="Done"></span>
+                </div>
+                <div class="storylist_sumary">·@Model.DoneItemsCount    Aug 15-Current   pts: 0 of 10</div>
+                <div class="story_item_container">
+                    <ul id="Done">
+                        @foreach (var t in Model.DoneItems)
+                        {
+                            <li itemid=@t.ID class="story_item">
+                                <span style="color:#afafaf" class="glyphicon glyphicon-triangle-right" name="btn_edit" id="btn_edit_@t.ID"></span>
+                                <span style="color:#e0c85e" class="glyphicon glyphicon-star"></span>
+                                <span>[@t.Point]&nbsp;&nbsp;&nbsp;</span>
+                                <div style="display:inline-block;cursor:move">@t.Title (<a href="#">@t.CreatorName</a>)</div>
+                                <span>@await Component.InvokeAsync("StatusButton", new { model = t })</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>

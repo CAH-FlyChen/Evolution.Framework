@@ -17,12 +17,12 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
     public class RoleController : EvolutionControllerBase
     {
         #region 私有变量
-        private RoleApp roleApp = null;
-        private RoleAuthorizeApp roleAuthorizeApp = null;
-        private MenuButtonApp moduleButtonApp = null;
+        private RoleService roleApp = null;
+        private RoleAuthorizeService roleAuthorizeApp = null;
+        private MenuButtonService moduleButtonApp = null;
         #endregion
         #region 构造函数
-        public RoleController(RoleApp roleApp, RoleAuthorizeApp roleAuthorizeApp, MenuButtonApp moduleButtonApp)
+        public RoleController(RoleService roleApp, RoleAuthorizeService roleAuthorizeApp, MenuButtonService moduleButtonApp)
         {
             this.roleApp = roleApp;
             this.roleAuthorizeApp = roleAuthorizeApp;

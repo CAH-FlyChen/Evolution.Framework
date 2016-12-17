@@ -19,10 +19,10 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
     public class ResourceController : EvolutionControllerBase
     {
         #region 私有变量
-        private ResourceApp resourceApp = null;
+        private ResourceService resourceApp = null;
         #endregion
         #region 构造函数
-        public ResourceController(ResourceApp resourceApp)
+        public ResourceController(ResourceService resourceApp)
         {
             this.resourceApp = resourceApp;
         }

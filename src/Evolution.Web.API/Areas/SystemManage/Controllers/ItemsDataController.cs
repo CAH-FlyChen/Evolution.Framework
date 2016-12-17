@@ -18,9 +18,9 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
     [Area("SystemManage")]
     public class ItemsDataController : EvolutionControllerBase
     {
-        private ItemsDetailApp itemsDetailApp = null;
+        private ItemsDetailService itemsDetailApp = null;
 
-        public ItemsDataController(ItemsDetailApp itemsDetailApp)
+        public ItemsDataController(ItemsDetailService itemsDetailApp)
         {
             this.itemsDetailApp = itemsDetailApp;
         }

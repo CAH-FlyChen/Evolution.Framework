@@ -30,13 +30,13 @@ namespace Evolution.Web.API.Controllers
     public class LoginController : Controller
     {
         #region 私有变量
-        UserApp userApp = null;
-        LogApp logApp = null;
-        UserLogOnApp logonApp = null;
-        RoleApp roleApp = null;
+        UserService userApp = null;
+        LogService logApp = null;
+        UserLogOnService logonApp = null;
+        RoleService roleApp = null;
         #endregion
         #region 构造函数
-        public LoginController(UserApp userapp, LogApp logApp, UserLogOnApp logonApp,RoleApp roleApp)
+        public LoginController(UserService userapp, LogService logApp, UserLogOnService logonApp,RoleService roleApp)
         {
             this.userApp = userapp;
             this.logApp = logApp;

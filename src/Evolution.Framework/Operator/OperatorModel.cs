@@ -65,6 +65,10 @@ namespace Evolution.Framework
         {
             get { return "EF:Permission"; }
         }
+        public static string Token
+        {
+            get { return "EF:Token"; }
+        }
     }
 
     /// <summary>

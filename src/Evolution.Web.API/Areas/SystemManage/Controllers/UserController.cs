@@ -17,11 +17,11 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
     public class UserController : EvolutionControllerBase
     {
         #region 私有变量
-        private UserApp userApp = null;
-        private UserLogOnApp userLogOnApp = null;
+        private UserService userApp = null;
+        private UserLogOnService userLogOnApp = null;
         #endregion
         #region 构造函数
-        public UserController(UserApp userApp, UserLogOnApp userLogOnApp)
+        public UserController(UserService userApp, UserLogOnService userLogOnApp)
         {
             this.userApp = userApp;
             this.userLogOnApp = userLogOnApp;

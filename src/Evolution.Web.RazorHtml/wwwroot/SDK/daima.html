@@ -1,0 +1,45 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="sdk.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    代码结构图如下：<br />
+    <table>
+        <tr>
+            <td><img src="img/project_struct.png" /></td>
+            <td style="vertical-align:top">
+                <ul style="list-style-type:decimal">
+                    <li>基础类库，提供基本的技术组件。包括：缓存，EF，加密，Excel处理，
+                    Json处理，Security，序列化，Web函数，压缩处理，正则检查，验证码生成，
+                    Http请求，邮件处理，日志处理等。
+                    </li>
+                    <li>
+                        基础结构组件,一系列接口。此接口作用于Entity上。实现此接口则表示提供相关功能。
+                        <ul style="list-style-type:square">
+                            <li>ICreationAudited ：添加创建日志</li>
+                            <li>IDeleteAudited ：添加删除日志</li>
+                            <li>IModificationAudited ：添加修改日志</li>
+                        </ul>
+                    </li>
+                    <li>插件处理的抽象类。定义了基本的插件处理功能。</li>
+                    <li>应用类。即Service层。</li>
+                    <li>数据模型。其中包括系统的Entity，ViewModel及其相关配置。基础DBContext上下文。</li>
+                    <li>数据模型基类。所有数据模型均继承自此类型。</li>
+                    <li>仓储类。定义数据访问仓储。</li>
+                    <li>仓储基类。所有仓储类继承此类型。</li>
+                    <li>可以运行的网站</li>
+                    <li>网站抽象类，定义ContollerBase处理基类。网站的Controller继承于此。</li>
+                    <li>网站使用的Attribute均在此类当中定义</li>
+                    <li>业务插件-区域插件</li>
+                    <li>业务插件-Demo</li>
+                    <li>业务插件-文档管理</li>
+                    <li>业务插件-Scrum敏捷开发看板</li>
+                    <li>业务插件-微信组件</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>

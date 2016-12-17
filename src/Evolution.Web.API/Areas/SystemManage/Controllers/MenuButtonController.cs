@@ -19,11 +19,11 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
     public class MenuButtonController : EvolutionControllerBase
     {
         #region 私有变量
-        private MenuApp menuApp = null;
-        private MenuButtonApp menuButtonApp = null;
+        private MenuService menuApp = null;
+        private MenuButtonService menuButtonApp = null;
         #endregion
         #region 构造函数
-        public MenuButtonController(MenuApp menuApp, MenuButtonApp moduleButtonApp)
+        public MenuButtonController(MenuService menuApp, MenuButtonService moduleButtonApp)
         {
             this.menuApp = menuApp;
             this.menuButtonApp = moduleButtonApp;
