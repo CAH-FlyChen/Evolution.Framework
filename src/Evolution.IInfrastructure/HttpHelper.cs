@@ -161,7 +161,7 @@ namespace Evolution.IInfrastructure
                 }
                 else
                 {
-                    throw new HttpRequestException("Error:HttpCode is " + response.StatusCode.ToString());
+                    throw new HttpRequestException("Error:HttpCode is " + response.ToString());
                 }
             }
             //HttpWebRequest request;
