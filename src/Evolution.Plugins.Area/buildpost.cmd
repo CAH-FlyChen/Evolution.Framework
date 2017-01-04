@@ -1,3 +1,3 @@
-copy /y bin\Debug\netcoreapp1.0\Evolution.Plugins.Area.dll D:\Code\Evolution.Framework\src\Evolution.Web\Plugins\Evolution.Plugins.Area\bin\
-copy /y bin\Debug\netcoreapp1.0\Evolution.Plugins.Area.pdb D:\Code\Evolution.Framework\src\Evolution.Web\Plugins\Evolution.Plugins.Area\bin\
-xcopy /E /y Views D:\Code\Evolution.Framework\src\Evolution.Web\Plugins\Evolution.Plugins.Area\Views
+xcopy /y bin\Debug\netcoreapp1.0\Evolution.Plugins.Area.dll ..\Evolution.Web\Plugins\Evolution.Plugins.Area\bin\
+xcopy /y bin\Debug\netcoreapp1.0\Evolution.Plugins.Area.pdb ..\Evolution.Web\Plugins\Evolution.Plugins.Area\bin\
+xcopy /E /y Views*.* ..\Evolution.Web\Plugins\Evolution.Plugins.Area\Views*.*
