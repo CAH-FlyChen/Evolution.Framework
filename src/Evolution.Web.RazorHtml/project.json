@@ -37,8 +37,6 @@
     "Microsoft.Extensions.Caching.Redis.Core": "1.0.2",
     "CoreProfiler": "1.0.3",
     "CoreProfiler.Web": "1.0.3",
-    "System.ServiceModel.Primitives": "4.0.0",
-    "System.ServiceModel.Http": "4.0.0",
     "Evolution.Web.Attributes": "1.0.0-*",
     "Evolution.Web.Abstract": "1.0.0-*",
     "Evolution.Plugins.Abstract": "1.0.0-*",
