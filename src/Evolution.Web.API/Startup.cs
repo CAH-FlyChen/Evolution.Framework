@@ -81,7 +81,9 @@ namespace Evolution.Web.API
             loggerFactory.AddDebug();
             loggerFactory.AddNLog();
             env.ConfigureNLog("nlog.config");
+            ILogger _logger = loggerFactory.CreateLogger("MyApplication.Startup");
 
+            _logger.LogInformation("系统启动【开始】");
             app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
@@ -118,8 +120,7 @@ namespace Evolution.Web.API
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            ILogger _logger = loggerFactory.CreateLogger("MyApplication.Startup");
-            
+
 
 
             //***  Initialize the DB ***//
@@ -153,6 +154,7 @@ namespace Evolution.Web.API
             _logger.LogInformation("初始化插件数据");
             pluginManager.InitPluginData(dbContext, app.ApplicationServices,env.WebRootPath);
             dbContext.SaveChanges();
+            _logger.LogInformation("系统启动【完成】");
         }
 
     }

@@ -10,7 +10,7 @@ using Evolution.Web;
 
 namespace Evolution.Web.API.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
 
     public class HomeController : Controller
     {
