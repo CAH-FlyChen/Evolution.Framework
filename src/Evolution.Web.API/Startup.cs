@@ -17,6 +17,8 @@ using Evolution.Framework;
 using static Evolution.Framework.Jwt.SimpleTokenProvider;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace Evolution.Web.API
 {
@@ -77,6 +79,9 @@ namespace Evolution.Web.API
             App = app;
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            loggerFactory.AddNLog();
+            env.ConfigureNLog("nlog.config");
+
             app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
@@ -113,8 +118,8 @@ namespace Evolution.Web.API
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
+            ILogger _logger = loggerFactory.CreateLogger("MyApplication.Startup");
+            
 
 
             //***  Initialize the DB ***//
@@ -122,10 +127,13 @@ namespace Evolution.Web.API
             //   InitializeBasicDb(app.ApplicationServices).Wait();
             //将插件数据写入数据库
             EvolutionDBContext dbContext = app.ApplicationServices.GetService<EvolutionDBContext>();
+            _logger.LogInformation("初始化测试数据【开始】");
             app.InitFreameworkDbData(app.ApplicationServices, env.WebRootPath, dbContext);
+            _logger.LogInformation("初始化测试数据【完成】");
             //add plugin info to MainDb
             foreach (var p in pluginManager.PluginAssemblies)
             {
+                _logger.LogInformation(string.Format("开始处理插件[{0}]数据库",p.Name));
                 try
                 {
                     var exist = dbContext.Plugins.CountAsync(t => t.Id == p.Id).Result;
@@ -139,11 +147,12 @@ namespace Evolution.Web.API
                     continue;
                 }
             }
+            _logger.LogInformation("合并插件数据库结构到主数据库");
             //exec db
             pluginManager.MeragePluginDBStruct(app.ApplicationServices);
+            _logger.LogInformation("初始化插件数据");
             pluginManager.InitPluginData(dbContext, app.ApplicationServices,env.WebRootPath);
             dbContext.SaveChanges();
-                   
         }
 
     }

@@ -48,7 +48,9 @@
     "Evolution.Plugins.Abstract": "1.0.0-*",
     "Evolution.Application": "1.0.0-*",
     "Evolution.Web.Attributes": "1.0.5-*",
-    "Evolution.Web.Abstract": "1.0.0-*"
+    "Evolution.Web.Abstract": "1.0.0-*",
+    "NLog.Extensions.Logging": "1.0.0-*",
+    "NLog.Web.AspNetCore":"4.3.0"
   },
 
   "tools": {
@@ -88,7 +90,8 @@
       "Areas/**/*.cshtml",
       "appsettings.json",
       "web.config",
-      "coreprofiler.json"
+      "coreprofiler.json",
+      "nlog.config"
     ]
   },
 
