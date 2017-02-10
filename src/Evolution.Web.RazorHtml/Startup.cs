@@ -104,7 +104,7 @@ namespace Evolution.Web
                 AutomaticChallenge = true
             });
 
-            app.UseMiddleware<TransportMiddleware>();
+            app.UseMiddleware<ServerProxyMiddleware>();
 
             app.UseCoreProfiler(true);
             app.UseMvc(routes =>

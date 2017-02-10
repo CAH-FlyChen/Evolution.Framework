@@ -9,16 +9,23 @@
     "Evolution.RepositoryBase": "1.0.5-*",
     "Evolution.Web.Abstract": "1.0.0-*",
     "Evolution.Web.Attributes": "1.0.5-*",
-    "Microsoft.AspNetCore.Mvc": "1.0.0",
-    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.9",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.1.0"
     },
     "Evolution.Plugins.Abstract": "1.0.0-*",
-    "Evolution.Data.EntityBase": "1.0.0-*"
+    "Evolution.Data.EntityBase": "1.0.0-*",
+    "Microsoft.EntityFrameworkCore.Design": {
+      "type": "build",
+      "version": "1.1.0"
+    },
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final",
+    "Microsoft.AspNetCore.Mvc": "1.1.1",
+    "SapientGuardian.EntityFrameworkCore.MySql": "7.1.19"
   },
-
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"
+  },
   "frameworks": {
     "netcoreapp1.0": {
       "imports": "dnxcore50"

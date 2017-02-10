@@ -9,7 +9,9 @@ namespace Evolution.Plugins.Area.Modules
         public DbSet<AreaEntity> Areas { get; set; }
         public AreaDbContext(DbContextOptions<AreaDbContext> options)
             : base(options)
-        {}
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

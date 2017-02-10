@@ -8,7 +8,7 @@
   "dependencies": {
     "Evolution.Data": "1.0.5-*",
     "Evolution.Framework": "1.0.5-*",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.1"
   },
 
   "frameworks": {
