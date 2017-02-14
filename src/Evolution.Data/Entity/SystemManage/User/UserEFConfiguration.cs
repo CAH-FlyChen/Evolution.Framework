@@ -35,6 +35,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.SecurityLevel).HasColumnName("F_SecurityLevel");
             entity.Property(t => t.Signature).HasColumnName("F_Signature");
             entity.Property(t => t.WeChat).HasColumnName("F_WeChat");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantID");
         }
     }
 

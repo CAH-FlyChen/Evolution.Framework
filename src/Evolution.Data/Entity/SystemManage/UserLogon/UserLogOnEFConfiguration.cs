@@ -36,6 +36,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.UserOnLine).HasColumnName("F_UserOnLine");
             entity.Property(t => t.UserPassword).HasColumnName("F_UserPassword");
             entity.Property(t => t.UserSecretkey).HasColumnName("F_UserSecretkey");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
 
     }

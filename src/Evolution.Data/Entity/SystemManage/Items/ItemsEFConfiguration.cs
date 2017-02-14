@@ -22,6 +22,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.EnCode).HasColumnName("F_EnCode");
             entity.Property(t => t.FullName).HasColumnName("F_FullName");
             entity.Property(t => t.IsTree).HasColumnName("F_IsTree");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
 
 

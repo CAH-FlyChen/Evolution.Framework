@@ -26,6 +26,7 @@ namespace Evolution.EFConfiguration.SystemSecurity
             entity.Property(t => t.NickName).HasColumnName("F_NickName");
             entity.Property(t => t.Result).HasColumnName("F_Result");
             entity.Property(t => t.Type).HasColumnName("F_Type");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
     }
 }

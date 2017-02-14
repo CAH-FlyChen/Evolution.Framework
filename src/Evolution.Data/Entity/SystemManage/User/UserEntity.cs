@@ -29,5 +29,6 @@ namespace Evolution.Domain.Entity.SystemManage
         public string RoleId { get; set; }
         public string DutyId { get; set; }
         public bool? IsAdministrator { get; set; }
+        public string TenantId { get; set; }
     }
 }

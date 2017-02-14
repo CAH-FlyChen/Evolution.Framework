@@ -28,5 +28,6 @@ namespace Evolution.Data.Entity.SystemManage
         public string Address { get; set; }
         public bool? AllowEdit { get; set; }
         public bool? AllowDelete { get; set; }
+        public string TenantId { get; set; }
     }
 }

@@ -19,5 +19,6 @@ namespace Evolution.Domain.Entity.SystemManage
         public string Type { get; set; }
         public bool? AllowEdit { get; set; }
         public bool? AllowDelete { get; set; }
+        public string TenantId { get; set; }
     }
 }

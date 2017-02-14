@@ -83,6 +83,7 @@ namespace Evolution.Web.API.Extentions
                         entity.DeleteMark = GetDefaultBool(colums[7], false);
                         entity.EnabledMark = GetDefaultBool(colums[8], true);
                         entity.CreateTime = DateTime.MinValue;
+                    entity.TenantId = colums[16];
                         dbContext.Items.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_ItemsDetail", colums => {
@@ -112,6 +113,7 @@ namespace Evolution.Web.API.Extentions
                         entity.Description = colums[10];
                         entity.CreateTime = DateTime.MinValue;
                         entity.CreatorUserId = colums[12];
+                    entity.TenantId = colums[13];
                         dbContext.Logs.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_Menu", colums => {
@@ -135,6 +137,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[20];
+                        entity.TenantId = colums[23];
                         dbContext.Menus.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_MenuButton", colums => {
@@ -185,6 +188,7 @@ namespace Evolution.Web.API.Extentions
                         entity.DeleteMark = bool.Parse(colums[18]);
                         entity.EnabledMark = bool.Parse(colums[19]);
                         entity.CreateTime = DateTime.MinValue;
+                        entity.TenantId = colums[27];
                         dbContext.Organizes.Add(entity);
 
                     });
@@ -205,6 +209,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[15];
+                        entity.TenantId = colums[18];
                         dbContext.Roles.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_RoleAuthorize", colums => {
@@ -238,6 +243,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[25];
+                        entity.TenantId = colums[28];
                         dbContext.Users.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_UserLogOn", colums => {
@@ -252,6 +258,7 @@ namespace Evolution.Web.API.Extentions
                             entityt.LastVisitTime = DateTime.Parse(colums[10]);
                         if (!string.IsNullOrEmpty(colums[13]))
                             entityt.LogOnCount = int.Parse(colums[13]);
+                        entityt.TenantId = colums[20];
                         dbContext.UserLogOn.Add(entityt);
                     });
                 DataInitTool.ProcessSheet("Sys_Tenant", colums => {

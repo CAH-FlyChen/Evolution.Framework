@@ -21,5 +21,6 @@ namespace Evolution.Domain.Entity.SystemSecurity
         public string ModuleId { get; set; }
         public string ModuleName { get; set; }
         public bool? Result { get; set; }
+        public string TenantId { get; set; }
     }
 }

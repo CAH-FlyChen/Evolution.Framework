@@ -29,6 +29,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.IsPublic).HasColumnName("F_IsPublic");
             entity.Property(t => t.AllowEdit).HasColumnName("F_AllowEdit");
             entity.Property(t => t.AllowDelete).HasColumnName("F_AllowDelete");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
 
         }
 

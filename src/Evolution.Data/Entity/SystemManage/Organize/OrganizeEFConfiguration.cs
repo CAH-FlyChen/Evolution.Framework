@@ -33,6 +33,7 @@ namespace Evolution.EFConfiguration
             entity.Property(t => t.ShortName).HasColumnName("F_ShortName");
             entity.Property(t => t.TelePhone).HasColumnName("F_TelePhone");
             entity.Property(t => t.WeChat).HasColumnName("F_WeChat");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
     }
 }

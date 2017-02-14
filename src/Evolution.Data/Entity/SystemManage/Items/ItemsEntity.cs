@@ -17,6 +17,6 @@ namespace Evolution.Domain.Entity.SystemManage
         public string FullName { get; set; }
         public bool? IsTree { get; set; }
         public int? Layers { get; set; }
-
+        public string TenantId { get; set; }
     }
 }
