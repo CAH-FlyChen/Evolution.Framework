@@ -19,12 +19,14 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         #region 私有变量
         private UserService userApp = null;
         private UserLogOnService userLogOnApp = null;
+        string tenantId = null;
         #endregion
         #region 构造函数
         public UserController(UserService userApp, UserLogOnService userLogOnApp)
         {
             this.userApp = userApp;
             this.userLogOnApp = userLogOnApp;
+            tenantId = HttpContext.Request.Headers["TenantId"];
         }
         #endregion
         /// <summary>
@@ -39,7 +41,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         {
             var data = new
             {
-                rows = await userApp.GetList(pagination, keyword),
+                rows = await userApp.GetList(pagination, keyword, tenantId),
                 total = pagination.total,
                 page = pagination.page,
                 records = pagination.records
@@ -55,7 +57,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await userApp.GetEntityById(keyValue);
+            var data = await userApp.GetEntityById(keyValue,tenantId);
             return Content(data.ToJson());
         }
         /// <summary>

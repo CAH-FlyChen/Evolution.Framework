@@ -90,7 +90,7 @@ namespace Evolution.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code)
+        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code,string tid)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Evolution.Web.Controllers
                 var data = new Dictionary<string, string>();
                 data.Add("username", username);
                 data.Add("password", password);
-
+                data.Add("tid", tid);
                 string res = await httpHelper.HttpPost("/auth/token", data);
                 Token token = JsonConvert.DeserializeObject<Token>(res);
 
@@ -109,7 +109,7 @@ namespace Evolution.Web.Controllers
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, token.user_code));
                 identity.AddClaim(new Claim(ClaimTypes.Role, token.role_name));
                 identity.AddClaim(new Claim(OperatorModelClaimNames.Token, token.access_token));
-                
+                identity.AddClaim(new Claim(OperatorModelClaimNames.TenantId, tid));
                 ClaimsPrincipal cp = new ClaimsPrincipal(identity);
                 //"Cookies",CookieAuthenticationDefaults.AuthenticationScheme
                 await HttpContext.Authentication.SignInAsync("CookieAuth", cp);

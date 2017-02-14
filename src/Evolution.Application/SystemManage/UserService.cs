@@ -49,7 +49,7 @@ namespace Evolution.Application.SystemManage
         /// <param name="pagination">分页信息</param>
         /// <param name="keyword">关键字，只允用户名，真实姓名，电话号码</param>
         /// <returns>用户实体列表</returns>
-        public Task<List<UserEntity>> GetList(Pagination pagination, string keyword)
+        public Task<List<UserEntity>> GetList(Pagination pagination, string keyword,string tenantId)
         {
             var expression = ExtLinq.True<UserEntity>();
             if (!string.IsNullOrEmpty(keyword))
@@ -59,6 +59,7 @@ namespace Evolution.Application.SystemManage
                 expression = expression.Or(t => t.MobilePhone.Contains(keyword));
             }
             expression = expression.And(t => t.Account != "admin");
+            expression = expression.And(t => t.TenantId == tenantId);
             return service.FindListAsync(expression, pagination);
         }
         /// <summary>
@@ -66,16 +67,16 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="id">用户Id</param>
         /// <returns>用户实体对象</returns>
-        public Task<UserEntity> GetEntityById(string id)
+        public Task<UserEntity> GetEntityById(string id, string tenantId)
         {
-            return service.FindEntityAsync(id);
+            return service.FindEntityASync(t => t.Id == id && t.TenantId == tenantId);
         }
 
-        public Task<UserEntity> GetEntityByName(string userName)
+        public Task<UserEntity> GetEntityByName(string userName, string tenantId)
         {
             if (string.IsNullOrEmpty(userName)) return null;
             //获取用户对象
-            UserEntity userEntity = service.FindEntityASync(t => t.Account == userName).Result;
+            UserEntity userEntity = service.FindEntityASync(t => t.Account == userName && t.TenantId==tenantId).Result;
             if (userEntity == null) throw new Exception("账户不存在，请重新输入");
             if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
             return Task.FromResult(userEntity);
@@ -117,10 +118,10 @@ namespace Evolution.Application.SystemManage
         /// <param name="username">用户名</param>
         /// <param name="password">md5（16位）加密后的秘密</param>
         /// <returns></returns>
-        public async Task<UserEntity> CheckLogin(string username, string password)
+        public async Task<UserEntity> CheckLogin(string username, string password,string tenantId)
         {
             //获取用户对象
-            UserEntity userEntity = await service.FindEntityASync(t => t.Account == username);
+            UserEntity userEntity = await service.FindEntityASync(t => t.Account == username && t.TenantId==tenantId);
             if (userEntity == null) throw new Exception("账户不存在，请重新输入");
             if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
             //获取用户登录对象

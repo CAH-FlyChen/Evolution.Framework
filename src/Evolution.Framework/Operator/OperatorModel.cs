@@ -13,6 +13,12 @@ namespace Evolution.Framework
     /// </summary>
     public static class OperatorModelClaimNames
     {
+        public static string TenantId
+        {
+            get {
+                return "EF:TenantId";
+            }
+        }
         public static string UserId
         {
             get { return "EF:UserId"; }
@@ -89,5 +95,6 @@ namespace Evolution.Framework
         public string LoginToken { get; set; }
         public DateTime LoginTime { get; set; }
         public bool IsSystem { get; set; }
+        public string TenantId { get; set; }
     }
 }

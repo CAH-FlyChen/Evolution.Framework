@@ -53,6 +53,7 @@ namespace Evolution.Application.SystemManage
             identity.AddClaim(new Claim(OperatorModelClaimNames.UserId, om.UserId));
             identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, om.UserName));
             identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.TenantId, om.TenantId));
 
             identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId))));
 

@@ -157,8 +157,9 @@ namespace JWT.Common.Middlewares.TokenProvider
         {         
             var username = context.Request.Form["username"];
             var password = context.Request.Form["password"];
+            var tenantId = context.Request.Form["tid"];
 
-            var identity = await GetIdentity(username, password);
+            var identity = await GetIdentity(username, password,tenantId);
             if (identity == null)
             {
                 await ReturnBadRequest(context);
@@ -176,9 +177,9 @@ namespace JWT.Common.Middlewares.TokenProvider
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private Task<ClaimsIdentity> GetIdentity(string username, string password, string tenantId)
         {
-           UserEntity u = userApp.CheckLogin(username, password).Result;
+           UserEntity u = userApp.CheckLogin(username, password,tenantId).Result;
             if(u!=null)
             {
                 var r = roleApp.GetRoleById(u.RoleId).Result;

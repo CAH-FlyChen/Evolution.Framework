@@ -141,7 +141,7 @@ namespace Evolution.IInfrastructure
         /// <param name="url">URL.</param>
         /// <param name="param">POST的数据</param>
         /// <returns></returns>
-        public async Task<string> HttpPost(string url, Dictionary<string, string> data = null, string baseUrl = null)
+        public async Task<string> HttpPost(string url, Dictionary<string, string> data = null, string baseUrl = null,Dictionary<string,string> headers=null)
         {
             if (baseUrl == null)
             {
@@ -152,6 +152,13 @@ namespace Evolution.IInfrastructure
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
+                if(headers!=null)
+                {
+                    foreach (string k in headers.Keys)
+                        client.DefaultRequestHeaders.Add(k, headers[k]);
+                }
+
+
                 HttpContent ct = new FormUrlEncodedContent(data);
                 var response = await client.PostAsync(url, ct);
                 if (response.IsSuccessStatusCode)

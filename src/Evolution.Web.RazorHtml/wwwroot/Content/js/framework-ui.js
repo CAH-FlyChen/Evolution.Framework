@@ -1,6 +1,9 @@
 ﻿$(function () {
     // 设置jQuery Ajax全局的参数  
     $.ajaxSetup({
+        headers: { // 默认添加请求头
+            "TenantId": "386A9E99C9F94791B223829EA5F5E494"
+        },
         error: function (jqXHR, textStatus, errorThrown) {
             debugger;
             switch (jqXHR.status) {

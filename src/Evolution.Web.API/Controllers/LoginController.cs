@@ -20,6 +20,7 @@ using Evolution.Web.Attributes;
 using System.Net.Http;
 using System.Collections.Generic;
 using JWT.Common;
+using Microsoft.Extensions.Configuration;
 
 namespace Evolution.Web.API.Controllers
 {
@@ -34,14 +35,16 @@ namespace Evolution.Web.API.Controllers
         LogService logApp = null;
         UserLogOnService logonApp = null;
         RoleService roleApp = null;
+        IConfiguration config = null;
         #endregion
         #region 构造函数
-        public LoginController(UserService userapp, LogService logApp, UserLogOnService logonApp,RoleService roleApp)
+        public LoginController(UserService userapp, LogService logApp, UserLogOnService logonApp,RoleService roleApp, IConfiguration config)
         {
             this.userApp = userapp;
             this.logApp = logApp;
             this.logonApp = logonApp;
             this.roleApp = roleApp;
+            this.config = config;
         }
         #endregion
 
@@ -100,7 +103,7 @@ namespace Evolution.Web.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public async Task<ActionResult> CheckLogin(string username, string password, string code)
+        public async Task<ActionResult> CheckLogin(string username, string password, string code,string tid)
         {
             //初始化登录日志
             LogEntity logEntity = new LogEntity();
@@ -113,7 +116,7 @@ namespace Evolution.Web.API.Controllers
                 if (verifyCodeInSession.IsEmpty() || Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
                     throw new Exception("验证码错误，请重新输入！");
                 //验证用户名密码
-                var userEntity = await userApp.CheckLogin(username, password);
+                var userEntity = await userApp.CheckLogin(username, password,tid);
                 if (userEntity == null)
                     throw new Exception("密码不正确，请重新输入");
                 var role = await roleApp.GetRoleById(userEntity.RoleId);
@@ -149,7 +152,7 @@ namespace Evolution.Web.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [HandlerAjaxOnly]
-        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code)
+        public async Task<ActionResult> CheckLoginJwt(string username,string password,string code,string tid)
         {
             //初始化登录日志
             LogEntity logEntity = new LogEntity();
@@ -163,14 +166,15 @@ namespace Evolution.Web.API.Controllers
                 var data = new Dictionary<string, string>();
                 data.Add("username", username);
                 data.Add("password", password);
+                string url = config["ApiServerBaseUrl"];
                 HttpContent ct = new FormUrlEncodedContent(data);
-                HttpResponseMessage message_token = _client.PostAsync("http://localhost:5000/auth/token", ct).Result;
+                HttpResponseMessage message_token = _client.PostAsync(url+"/auth/token", ct).Result;
                 string res = message_token.Content.ReadAsStringAsync().Result;
                 Token token = Newtonsoft.Json.JsonConvert.DeserializeObject<Token>(res);
                 UserEntity userEntity = null;
                 if (token!=null)
                 {
-                    userEntity = userApp.GetEntityByName(username).Result;
+                    userEntity = userApp.GetEntityByName(username,tid).Result;
                 }
 
                 //var userEntity = await userApp.CheckLogin(username, password);

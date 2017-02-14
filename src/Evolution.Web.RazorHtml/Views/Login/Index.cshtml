@@ -28,6 +28,7 @@
                 <h1><span>Evolution</span>快速开发平台</h1>
             </div>
             <form class="form">
+                <input id="tenant_id" value="386A9E99C9F94791B223829EA5F5E494" type="hidden" />
                 <div class="row">
                     <input id="txt_account" type="text" placeholder="用户名/手机号/邮箱">
                     <i class="fa fa-user"></i>
@@ -96,7 +97,7 @@
                         $("#login_button").attr('disabled', 'disabled').find('span').html("loading...");
                         $.ajax({
                             url: "/Login/CheckLoginJwt",
-                            data: { username: $.trim($username.val()), password: $.md5($.trim($password.val())), code: $.trim($code.val()) },
+                            data: { username: $.trim($username.val()), password: $.md5($.trim($password.val())), code: $.trim($code.val()), tid: $("#tenant_id").val() },
                             type: "post",
                             dataType: "json",
                             success: function (data) {
