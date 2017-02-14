@@ -45,8 +45,9 @@ namespace Evolution.Web.API.Extentions
                 if (sqlServerDatabase.EnsureCreated())
                 {
                 //sqlServerDatabase.Migrate();
+                DataInitTool.OpenExcel("InitData.xlsx", webRootPath);
 
-                DataInitTool.ProcessFile("Sys_DbBackup.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_DbBackup", colums => {
                         DbBackupEntity entity = new DbBackupEntity();
                         entity.Id = colums[0];
                         entity.BackupType = colums[1];
@@ -59,7 +60,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         dbContext.DbBackups.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_FilterIP.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_FilterIP", colums => {
                         FilterIPEntity entity = new FilterIPEntity();
                         entity.Id = colums[0];
                         entity.Type = bool.Parse(colums[1]);
@@ -70,7 +71,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.Parse(colums[8]);
                         dbContext.FilterIPs.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_Items.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_Items", colums => {
                         ItemsEntity entity = new ItemsEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -84,7 +85,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         dbContext.Items.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_ItemsDetail.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_ItemsDetail", colums => {
                         ItemsDetailEntity entity = new ItemsDetailEntity();
                         entity.Id = colums[0];
                         entity.ItemId = colums[1];
@@ -97,7 +98,7 @@ namespace Evolution.Web.API.Extentions
                         entity.EnabledMark = GetDefaultBool(colums[10], true);
                         dbContext.ItemsDetails.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_Log.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_Log", colums => {
                         LogEntity entity = new LogEntity();
                         entity.Id = colums[0];
                         entity.Date = DateTime.Parse(colums[1]);
@@ -113,7 +114,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreatorUserId = colums[12];
                         dbContext.Logs.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_Menu.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_Menu", colums => {
                         MenuEntity entity = new MenuEntity();
                         entity.Id = colums[0];
                         entity.ParentId = colums[1];
@@ -136,7 +137,7 @@ namespace Evolution.Web.API.Extentions
                         entity.LastModifyUserId = colums[20];
                         dbContext.Menus.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_MenuButton.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_MenuButton", colums => {
                         MenuButtonEntity entity = new MenuButtonEntity();
                         entity.Id = colums[0];
                         entity.MenuId = colums[1];
@@ -168,7 +169,7 @@ namespace Evolution.Web.API.Extentions
                         entity.LastModifyUserId = colums[20];
                         dbContext.ModuleButtons.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_Organize.csv", webRootPath, colums =>
+                DataInitTool.ProcessSheet("Sys_Organize", colums =>
                     {
                         OrganizeEntity entity = new OrganizeEntity();
                         entity.Id = colums[0];
@@ -187,7 +188,7 @@ namespace Evolution.Web.API.Extentions
                         dbContext.Organizes.Add(entity);
 
                     });
-                DataInitTool.ProcessFile("Sys_Role.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_Role", colums => {
                         RoleEntity entity = new RoleEntity();
                         entity.Id = colums[0];
                         entity.OrganizeId = colums[1];
@@ -206,7 +207,7 @@ namespace Evolution.Web.API.Extentions
                         entity.LastModifyUserId = colums[15];
                         dbContext.Roles.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_RoleAuthorize.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_RoleAuthorize", colums => {
                         RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
                         entity.Id = colums[0];
                         entity.ItemType = int.Parse(colums[1]);
@@ -218,7 +219,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreatorUserId = colums[7];
                         dbContext.RoleAuthorize.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_User.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_User", colums => {
                         UserEntity entity = new UserEntity();
                         entity.Id = colums[0];
                         entity.Account = colums[1];
@@ -239,7 +240,7 @@ namespace Evolution.Web.API.Extentions
                         entity.LastModifyUserId = colums[25];
                         dbContext.Users.Add(entity);
                     });
-                DataInitTool.ProcessFile("Sys_UserLogOn.csv", webRootPath, colums => {
+                DataInitTool.ProcessSheet("Sys_UserLogOn", colums => {
                         UserLogOnEntity entityt = new UserLogOnEntity();
                         entityt.Id = colums[0];
                         entityt.UserId = colums[1];
@@ -253,7 +254,16 @@ namespace Evolution.Web.API.Extentions
                             entityt.LogOnCount = int.Parse(colums[13]);
                         dbContext.UserLogOn.Add(entityt);
                     });
-                    dbContext.SaveChanges();
+                DataInitTool.ProcessSheet("Sys_Tenant", colums => {
+                    TenantEntity entityt = new TenantEntity();
+                    entityt.Id = colums[0];
+                    entityt.EnCode = colums[1];
+                    entityt.FullName = colums[2];
+                    entityt.CreateTime = DateTime.MinValue;
+                    entityt.LastModifyTime = DateTime.MinValue;
+                    dbContext.Tenants.Add(entityt);
+                });
+                dbContext.SaveChanges();
                 }
         }
 

@@ -7,7 +7,7 @@
   "dependencies": {
     "NETStandard.Library": "1.6.1",
     "Microsoft.Extensions.Caching.Memory": "1.1.0",
-    "CoreCompat.System.Drawing": "1.0.0-beta006",
+    //"CoreCompat.System.Drawing": "1.0.0-beta006",
     "System.Linq.Queryable": "4.3.0",
     "System.Security.Cryptography.Algorithms": "4.3.0",
     "Microsoft.NETCore.Platforms": "1.1.0",
@@ -31,7 +31,8 @@
     "System.Text.Encodings.Web": "4.3.0",
     "System.Xml.XmlDocument": "4.3.0",
     "System.Xml.XmlSerializer": "4.3.0",
-    "EPPlus.Core": "1.2.0"
+    //"EPPlus.Core": "1.2.0",
+    "Savorboard.NPOI.Core.Ooxml": "1.1.3"
   },
   "frameworks": {
     "netstandard1.6": {

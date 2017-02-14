@@ -26,9 +26,17 @@ namespace Evolution.Plugins.Abstract
         /// <param name="applicationServices"></param>
         public void MeragePluginDataBase(IServiceProvider applicationServices)
         {
-            this.ServiceProvider = applicationServices;
-            var dbContext = applicationServices.GetService<T>();
-            dbContext.Database.Migrate();
+            try
+            {
+                this.ServiceProvider = applicationServices;
+                var dbContext = applicationServices.GetService<T>();
+                dbContext.Database.Migrate();
+            }
+            catch(Exception ex)
+            {
+
+            }
+
         }
         /// <summary>
         /// 初始化EF插件

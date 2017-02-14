@@ -20,6 +20,7 @@
     "Evolution.Web.Attributes": "1.0.0-*",
     "Evolution.Web.Abstract": "1.0.0-*",
     "Evolution.Plugins.Abstract": "1.0.0-*",
+    "Evolution.RepositoryBase": "1.0.0-*",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0",
     "Evolution.Data.EntityBase": "1.0.0-*",
     "AutoMapper": "5.2.0",

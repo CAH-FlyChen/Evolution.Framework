@@ -128,6 +128,7 @@ namespace Evolution.Web.API.Extentions
             services.AddTransient<IMenuRepository, MenuRepository>();
             services.AddTransient<IOrganizeRepository, OrganizeRepository>();
             services.AddTransient<IPluginRepository, PluginRepository>();
+            services.AddTransient<ITenantRepository, TenantRepository>();
 
             services.AddTransient<MenuButtonService>();
             services.AddTransient<RoleAuthorizeService>();
@@ -146,6 +147,7 @@ namespace Evolution.Web.API.Extentions
             services.AddTransient<ResourceService>();
             services.AddTransient<OrganizeService>();
             services.AddTransient<PluginService>();
+            services.AddTransient<ITenantService,TenantService>();
             #endregion
         }
 

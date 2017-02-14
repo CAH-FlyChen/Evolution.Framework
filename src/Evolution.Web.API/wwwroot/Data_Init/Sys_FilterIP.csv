@@ -1,3 +1,0 @@
-﻿F_Id,F_Type,F_StartIP,F_EndIP,F_SortCode,F_DeleteMark,F_EnabledMark,F_Description,F_CreateTime,F_CreatorUserId,F_LastModifyTime,F_LastModifyUserId,F_DeleteTime,F_DeleteUserId
-4e035f2b-a03b-49b5-a38d-1c6d211a2a04,TRUE,192.168.1.1,192.168.1.10,,,TRUE,测试,2016/7/18 17:51,,,,,
-b3fbe66f-82cd-4f4a-ada3-61eb5a2d9eee,FALSE,192.168.0.20,192.168.0.25,,,TRUE,,2016/7/18 17:52,,,,,

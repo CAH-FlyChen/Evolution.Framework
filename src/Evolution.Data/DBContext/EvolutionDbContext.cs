@@ -60,6 +60,7 @@ namespace Evolution.Data
             modelBuilder.AddConfiguration(new MenuEFConfiguration());
             modelBuilder.AddConfiguration(new OrganizeEFConfiguration());
             modelBuilder.AddConfiguration(new PluginEFConfiguration());
+            modelBuilder.AddConfiguration(new TenantEFConfiguration());
             //添加并配置第三方插件
             EvolutionPluginManager.AddPluginEFModle(modelBuilder);
 
@@ -81,5 +82,6 @@ namespace Evolution.Data
         public DbSet<LogEntity> Logs { get; set; }
         public DbSet<MenuEntity> Menus { get; set; }
         public DbSet<PluginEntity> Plugins { get; set; }
+        public DbSet<TenantEntity> Tenants { get; set; }
     }
 }

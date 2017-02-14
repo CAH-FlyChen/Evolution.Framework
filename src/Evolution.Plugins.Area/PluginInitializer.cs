@@ -26,7 +26,7 @@ namespace Evolution.Plugins.Area
             {
                 return;
             }
-            DataInitTool.ProcessFile("Sys_Area.csv", webRootPath, colums => {
+            DataInitTool.ProcessSheet("Sys_Area", colums => {
                 AreaEntity entity = new AreaEntity();
                 entity.Id = colums[0];
                 entity.ParentId = colums[1];
