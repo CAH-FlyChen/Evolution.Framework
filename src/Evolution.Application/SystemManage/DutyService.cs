@@ -23,7 +23,7 @@ namespace Evolution.Application.SystemManage
             this.service = service;
         }
 
-        public Task<List<RoleEntity>> GetList(string keyword = "")
+        public Task<List<RoleEntity>> GetList(string keyword,string tenantId)
         {
             var expression = ExtLinq.True<RoleEntity>();
             if (!string.IsNullOrEmpty(keyword))
@@ -31,21 +31,22 @@ namespace Evolution.Application.SystemManage
                 expression = expression.And(t => t.FullName.Contains(keyword));
                 expression = expression.Or(t => t.EnCode.Contains(keyword));
             }
-            expression = expression.And(t => t.Category == 2);
+            expression = expression.And(t => t.Category == 2).And(x=>x.TenantId==tenantId);
             return service.IQueryable(expression).OrderBy(t => t.SortCode).ToListAsync();
         }
-        public Task<RoleEntity> GetForm(string keyValue)
+        public Task<RoleEntity> GetForm(string keyValue,string tenantId)
         {
-            return service.FindEntityAsync(keyValue);
+            return service.FindEntityASync(t=>t.Id==keyValue && t.TenantId==tenantId);
         }
-        public Task<int> Delete(string keyValue)
+        public Task<int> Delete(string keyValue,string tenantId)
         {
-            return service.DeleteAsync(t => t.Id == keyValue);
+            return service.DeleteAsync(t => t.Id == keyValue && t.TenantId==tenantId);
         }
-        public Task<int> Save(RoleEntity roleEntity, string keyValue,HttpContext context)
+        public Task<int> Save(RoleEntity roleEntity, string keyValue,string tenantId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
+                roleEntity.TenantId = tenantId;
                 //roleEntity.Modify(keyValue, context);
                 return service.UpdateAsync(roleEntity);
             }
@@ -53,6 +54,7 @@ namespace Evolution.Application.SystemManage
             {
                 //roleEntity.Create(context);
                 roleEntity.Category = 2;
+                roleEntity.TenantId = tenantId;
                 return service.InsertAsync(roleEntity);
             }
         }

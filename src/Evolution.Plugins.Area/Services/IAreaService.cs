@@ -12,6 +12,6 @@ namespace Evolution.Plugins.Area.IServices
         Task<List<AreaEntity>> GetList();
         Task<AreaEntity> GetForm(string keyValue);
         Task<int> Delete(string keyValue);
-        Task<int> Save(AreaEntity organizeEntity, string keyValue, HttpContext context);
+        Task<int> Save(AreaEntity organizeEntity, string keyValue, string userId);
     }
 }

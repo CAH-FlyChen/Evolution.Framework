@@ -46,9 +46,12 @@ namespace Evolution.Application.SystemManage
         }
         #endregion
 
-        public Task<List<PluginEntity>> GetList(Pagination pagination, string keyword)
+        public Task<List<PluginEntity>> GetList(Pagination pagination, string keyword,string tenantId)
         {
-            return repo.GetAllAsync();
+            Pagination p = new Pagination();
+            p.page = 1;
+            p.rows = Int32.MaxValue;
+            return repo.FindListAsync(t=>t.TenantId==tenantId,p);
         }
 
         public bool Activate(string pluginId)

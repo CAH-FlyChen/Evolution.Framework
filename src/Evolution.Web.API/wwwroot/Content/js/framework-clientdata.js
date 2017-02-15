@@ -13,6 +13,7 @@ $.clientsInit = function () {
         authorizeButton: []
     };
     var init = function () {
+        debugger;
         $.ajax({
             url: "/ClientsData/GetClientsDataJson",
             type: "get",

@@ -40,16 +40,16 @@ namespace Evolution.Application.SystemSecurity
         {
             return service.DeleteAsync(t => t.Id == keyValue);
         }
-        public Task<int> Save(FilterIPEntity filterIPEntity, string keyValue,HttpContext context)
+        public Task<int> Save(FilterIPEntity filterIPEntity, string keyValue,string userId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                filterIPEntity.AttachModifyInfo(keyValue, context);
+                filterIPEntity.AttachModifyInfo(keyValue, userId);
                 return service.UpdateAsync(filterIPEntity);
             }
             else
             {
-                filterIPEntity.AttachCreateInfo(context);
+                filterIPEntity.AttachCreateInfo(userId);
                 return service.InsertAsync(filterIPEntity);
             }
         }

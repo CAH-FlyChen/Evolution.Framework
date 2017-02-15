@@ -22,8 +22,8 @@ namespace Evolution.Application.SystemManage
         private RoleService roleApp = null;
         private RoleAuthorizeService roleAuth = null;
         private MenuButtonService mb = null;
-
-        public UserLogOnService(IUserLogOnRepository service, RoleService roleApp,RoleAuthorizeService roleAuth,MenuButtonService mb)
+        public UserLogOnService(IUserLogOnRepository service, 
+            RoleService roleApp,RoleAuthorizeService roleAuth,MenuButtonService mb)
         {
             this.service = service;
             this.roleApp = roleApp;
@@ -55,7 +55,7 @@ namespace Evolution.Application.SystemManage
             identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
             identity.AddClaim(new Claim(OperatorModelClaimNames.TenantId, om.TenantId));
 
-            identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId))));
+            identity.AddClaim(new Claim(OperatorModelClaimNames.Permission,JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId,om.TenantId))));
 
             ClaimsPrincipal cp = new ClaimsPrincipal(identity);
             //"Cookies",CookieAuthenticationDefaults.AuthenticationScheme
@@ -68,9 +68,9 @@ namespace Evolution.Application.SystemManage
             context.Authentication.SignOutAsync("CookieAuth");
         }
 
-        public Task<UserLogOnEntity> GetForm(string keyValue)
+        public Task<UserLogOnEntity> GetForm(string keyValue,string tenantId)
         {
-            return service.FindEntityAsync(keyValue);
+            return service.FindEntityASync(t=>t.Id==keyValue&&t.TenantId==tenantId);
         }
         public Task<int> UpdateForm(UserLogOnEntity userLogOnEntity)
         {

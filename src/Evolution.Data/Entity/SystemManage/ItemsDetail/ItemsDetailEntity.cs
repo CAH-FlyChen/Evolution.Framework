@@ -19,5 +19,8 @@ namespace Evolution.Domain.Entity.SystemManage
         public string SimpleSpelling { get; set; }
         public bool? IsDefault { get; set; }
         public int? Layers { get; set; }
+
+        public string TenantId { get; set; }
+
     }
 }

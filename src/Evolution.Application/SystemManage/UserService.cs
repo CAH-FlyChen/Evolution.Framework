@@ -85,9 +85,9 @@ namespace Evolution.Application.SystemManage
         /// 删除用户实体对象
         /// </summary>
         /// <param name="id">用户id</param>
-        public Task<int> Delete(string id)
+        public Task<int> Delete(string id, string tenantId)
         {
-            return service.Delete(id);
+            return service.DeleteAsync(t=>t.Id==id && t.TenantId==tenantId);
         }
         /// <summary>
         /// 保存用户对象
@@ -95,13 +95,13 @@ namespace Evolution.Application.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">登录实体</param>
         /// <param name="id">用户Id，为空则创建实体，否则更新实体</param>
-        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
+        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id,string userId)
         {
             if (!string.IsNullOrEmpty(id))
-                userEntity.AttachModifyInfo(id, currentContext);
+                userEntity.AttachModifyInfo(id, userId);
             else
-                userEntity.AttachCreateInfo(currentContext);
-            return service.Save(userEntity, userLogOnEntity, id);
+                userEntity.AttachCreateInfo(userId);
+            return service.Save(userEntity, userLogOnEntity, id, userId);
         }
         /// <summary>
         /// 更新用户实体
@@ -125,7 +125,7 @@ namespace Evolution.Application.SystemManage
             if (userEntity == null) throw new Exception("账户不存在，请重新输入");
             if (userEntity.EnabledMark == false) throw new Exception("账户被系统锁定,请联系管理员");
             //获取用户登录对象
-            UserLogOnEntity userLogOnEntity = await userLogOnApp.GetForm(userEntity.Id);
+            UserLogOnEntity userLogOnEntity = await userLogOnApp.GetForm(userEntity.Id,tenantId);
             //密码0000 MD5加密后 de54ef2d07c608096fddb77a27c5f126
             //验证密码
             string pwd = Encryptor.EncryptPWD(password, userLogOnEntity.UserSecretkey);

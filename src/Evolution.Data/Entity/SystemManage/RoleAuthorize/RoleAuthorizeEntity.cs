@@ -22,5 +22,7 @@ namespace Evolution.Domain.Entity.SystemManage
         /// </summary>
         public int? ObjectType { get; set; }
         public string ObjectId { get; set; }
+
+        public string TenantId { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetTreeSelectJson(string menuId)
         {
-            var data = await  menuButtonApp.GetListByMenuId(menuId);
+            var data = await  menuButtonApp.GetListByMenuId(menuId, this.TenantId);
             var treeList = new List<TreeSelectModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -59,7 +59,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetTreeGridJson(string menuId)
         {
-            var data = await menuButtonApp.GetListByMenuId(menuId);
+            var data = await menuButtonApp.GetListByMenuId(menuId, this.TenantId);
             var treeList = new List<TreeGridModel>();
             foreach (MenuButtonEntity item in data)
             {
@@ -83,7 +83,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await menuButtonApp.GetMenuButtonById(keyValue);
+            var data = await menuButtonApp.GetMenuButtonById(keyValue, this.TenantId);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -97,7 +97,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(MenuButtonEntity entity, string keyValue)
         {
-            await menuButtonApp.Save(entity, keyValue);
+            await menuButtonApp.Save(entity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         /// <summary>
@@ -110,7 +110,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await menuButtonApp.Delete(keyValue);
+            await menuButtonApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
         /// <summary>
@@ -130,8 +130,8 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetCloneButtonTreeJson()
         {
-            var menuData = await  menuApp.GetList();
-            var buttonData = await  menuButtonApp.GetList();
+            var menuData = await  menuApp.GetList(this.TenantId);
+            var buttonData = await  menuButtonApp.GetList(this.TenantId);
             var treeList = new List<TreeViewModel>();
             foreach (MenuEntity item in menuData)
             {
@@ -176,7 +176,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> SubmitCloneButton(string menuId, string Ids)
         {
-            await menuButtonApp.SaveCloneButton(menuId, Ids);
+            await menuButtonApp.SaveCloneButton(menuId, Ids, this.TenantId);
             return Success("克隆成功。");
         }
     }

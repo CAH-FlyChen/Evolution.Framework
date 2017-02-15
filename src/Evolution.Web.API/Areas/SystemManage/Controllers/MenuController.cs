@@ -43,12 +43,12 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetPermissionTree(string roleId)
         {
-            var moduledata = await menuApp.GetList();
-            var buttondata = await menuButtonApp.GetList();
+            var moduledata = await menuApp.GetList(this.TenantId);
+            var buttondata = await menuButtonApp.GetList(this.TenantId);
             var authorizedata = new List<RoleAuthorizeEntity>();
             if (!string.IsNullOrEmpty(roleId))
             {
-                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId);
+                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId, this.TenantId);
             }
             var treeList = new List<TreeViewModel>();
             foreach (MenuEntity item in moduledata)
@@ -97,7 +97,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveMenuPermission(RoleEntity roleEntity, string menuIds, string keyValue)
         {
-            await roleApp.Save(roleEntity, menuIds.Split(','), keyValue);
+            await roleApp.Save(roleEntity, menuIds.Split(','), keyValue,this.TenantId);
             return Success("操作成功。");
         }
 
@@ -109,7 +109,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetTreeSelectJson()
         {
-            var data = await menuApp.GetList();
+            var data = await menuApp.GetList(this.TenantId);
             var treeList = new List<TreeSelectModel>();
             foreach (MenuEntity item in data)
             {
@@ -131,7 +131,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetTreeGridJson(string keyword)
         {
-            var data = await menuApp.GetList();
+            var data = await menuApp.GetList(this.TenantId);
             if (!string.IsNullOrEmpty(keyword))
             {
                 data = data.TreeWhere(t => t.FullName.Contains(keyword));
@@ -160,7 +160,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await menuApp.GetMenuById(keyValue);
+            var data = await menuApp.GetMenuById(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
 
@@ -175,7 +175,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(MenuEntity menuEntity, string keyValue)
         {
-            await menuApp.Save(menuEntity, keyValue);
+            await menuApp.Save(menuEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
 
@@ -189,7 +189,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await menuApp.Delete(keyValue);
+            await menuApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
     }

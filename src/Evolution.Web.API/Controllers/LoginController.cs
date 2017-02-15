@@ -88,7 +88,7 @@ namespace Evolution.Web.API.Controllers
                 NickName = userName,
                 Result = true,
                 Description = "安全退出系统",
-            }, HttpContext);
+            }, userCode);
             //Session.Abandon();
             HttpContext.Session.Clear();
             logonApp.SignOut(HttpContext);
@@ -101,48 +101,48 @@ namespace Evolution.Web.API.Controllers
         /// <param name="password">密码</param>
         /// <param name="code">验证码</param>
         /// <returns></returns>
-        [HttpPost]
-        [HandlerAjaxOnly]
-        public async Task<ActionResult> CheckLogin(string username, string password, string code,string tid)
-        {
-            //初始化登录日志
-            LogEntity logEntity = new LogEntity();
-            logEntity.ModuleName = "系统登录";
-            logEntity.Type = DbLogType.Login.ToString();
-            try
-            {
-                //验证 '验证码'
-                var verifyCodeInSession = WebHelper.GetSession("evolution_session_verifycode", HttpContext);
-                if (verifyCodeInSession.IsEmpty() || Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
-                    throw new Exception("验证码错误，请重新输入！");
-                //验证用户名密码
-                var userEntity = await userApp.CheckLogin(username, password,tid);
-                if (userEntity == null)
-                    throw new Exception("密码不正确，请重新输入");
-                var role = await roleApp.GetRoleById(userEntity.RoleId);
-                //设置登录对象
-                LoginModel operatorModel = CreateLoginModel(userEntity, role);
-                //写入登录日志
-                logEntity.Account = userEntity.Account;
-                logEntity.NickName = userEntity.RealName;
-                logEntity.Result = true;
-                logEntity.Description = "登录成功";
-                await logApp.WriteDbLog(logEntity, HttpContext);
-                //登录
-                logonApp.SignIn(operatorModel, HttpContext);
+        //[HttpPost]
+        //[HandlerAjaxOnly]
+        //public async Task<ActionResult> CheckLogin(string username, string password, string code,string tid)
+        //{
+        //    //初始化登录日志
+        //    LogEntity logEntity = new LogEntity();
+        //    logEntity.ModuleName = "系统登录";
+        //    logEntity.Type = DbLogType.Login.ToString();
+        //    try
+        //    {
+        //        //验证 '验证码'
+        //        var verifyCodeInSession = WebHelper.GetSession("evolution_session_verifycode", HttpContext);
+        //        if (verifyCodeInSession.IsEmpty() || Md5.md5(code.ToLower(), 16) != verifyCodeInSession)
+        //            throw new Exception("验证码错误，请重新输入！");
+        //        //验证用户名密码
+        //        var userEntity = await userApp.CheckLogin(username, password,tid);
+        //        if (userEntity == null)
+        //            throw new Exception("密码不正确，请重新输入");
+        //        var role = await roleApp.GetRoleById(userEntity.RoleId,);
+        //        //设置登录对象
+        //        LoginModel operatorModel = CreateLoginModel(userEntity, role);
+        //        //写入登录日志
+        //        logEntity.Account = userEntity.Account;
+        //        logEntity.NickName = userEntity.RealName;
+        //        logEntity.Result = true;
+        //        logEntity.Description = "登录成功";
+        //        await logApp.WriteDbLog(logEntity, HttpContext);
+        //        //登录
+        //        logonApp.SignIn(operatorModel, HttpContext);
 
-                return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
-            }
-            catch (Exception ex)
-            {
-                logEntity.Account = username;
-                logEntity.NickName = username;
-                logEntity.Result = false;
-                logEntity.Description = "登录失败，" + ex.Message;
-                await logApp.WriteDbLog(logEntity, HttpContext);
-                return Content(new AjaxResult { state = ResultType.error.ToString(), message = ex.Message }.ToJson());
-            }
-        }
+        //        return Content(new AjaxResult { state = ResultType.success.ToString(), message = "登录成功。" }.ToJson());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logEntity.Account = username;
+        //        logEntity.NickName = username;
+        //        logEntity.Result = false;
+        //        logEntity.Description = "登录失败，" + ex.Message;
+        //        await logApp.WriteDbLog(logEntity, HttpContext);
+        //        return Content(new AjaxResult { state = ResultType.error.ToString(), message = ex.Message }.ToJson());
+        //    }
+        //}
         /// <summary>
         /// 用jwt校验并写入cookie
         /// </summary>
@@ -158,6 +158,7 @@ namespace Evolution.Web.API.Controllers
             LogEntity logEntity = new LogEntity();
             logEntity.ModuleName = "系统登录";
             logEntity.Type = DbLogType.Login.ToString();
+            UserEntity userEntity = null;
             try
             {
                 //验证用户名密码
@@ -171,7 +172,7 @@ namespace Evolution.Web.API.Controllers
                 HttpResponseMessage message_token = _client.PostAsync(url+"/auth/token", ct).Result;
                 string res = message_token.Content.ReadAsStringAsync().Result;
                 Token token = Newtonsoft.Json.JsonConvert.DeserializeObject<Token>(res);
-                UserEntity userEntity = null;
+                
                 if (token!=null)
                 {
                     userEntity = userApp.GetEntityByName(username,tid).Result;
@@ -180,7 +181,7 @@ namespace Evolution.Web.API.Controllers
                 //var userEntity = await userApp.CheckLogin(username, password);
                 if (userEntity == null)
                     throw new Exception("密码不正确，请重新输入");
-                var role = await roleApp.GetRoleById(userEntity.RoleId);
+                var role = await roleApp.GetRoleById(userEntity.RoleId,tid);
                 //设置登录对象
                 LoginModel operatorModel = CreateLoginModel(userEntity, role);
                 //写入登录日志
@@ -188,7 +189,7 @@ namespace Evolution.Web.API.Controllers
                 logEntity.NickName = userEntity.RealName;
                 logEntity.Result = true;
                 logEntity.Description = "登录成功";
-                await logApp.WriteDbLog(logEntity, HttpContext);
+                await logApp.WriteDbLog(logEntity,userEntity.Id);
                 //登录
                 logonApp.SignIn(operatorModel, HttpContext);
                 HttpContext.Response.Cookies.Append("access_token", token.access_token);
@@ -200,7 +201,7 @@ namespace Evolution.Web.API.Controllers
                 logEntity.NickName = username;
                 logEntity.Result = false;
                 logEntity.Description = "登录失败，" + ex.Message;
-                await logApp.WriteDbLog(logEntity, HttpContext);
+                await logApp.WriteDbLog(logEntity, userEntity.Id);
                 return Content(new AjaxResult { state = ResultType.error.ToString(), message = ex.Message }.ToJson());
             }
         }

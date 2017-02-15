@@ -182,7 +182,7 @@ namespace JWT.Common.Middlewares.TokenProvider
            UserEntity u = userApp.CheckLogin(username, password,tenantId).Result;
             if(u!=null)
             {
-                var r = roleApp.GetRoleById(u.RoleId).Result;
+                var r = roleApp.GetRoleById(u.RoleId,tenantId).Result;
 
                 //ClaimsIdentity identity = new ClaimsIdentity("local");
                 ////system
@@ -204,7 +204,7 @@ namespace JWT.Common.Middlewares.TokenProvider
                 //identity.AddClaim(new Claim(OperatorModelClaimNames.UserName, r.));
                 //identity.AddClaim(new Claim(OperatorModelClaimNames.RoleName, om.RoleName));
                 //identity.AddClaim(new Claim(OperatorModelClaimNames.Permission, JsonConvert.SerializeObject(roleAuth.GetResorucePermissionsByRoleId(om.RoleId))));
-                List<string> urls = roleAuth.GetResorucePermissionsByRoleId(u.RoleId).Result;
+                List<string> urls = roleAuth.GetResorucePermissionsByRoleId(u.RoleId,tenantId).Result;
                 string urlStr = JsonConvert.SerializeObject(urls);
                 string k = u.Account + "@AuthorizedUrl";
                 if (dCache!=null)

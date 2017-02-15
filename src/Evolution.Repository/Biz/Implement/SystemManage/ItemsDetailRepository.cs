@@ -26,11 +26,11 @@ namespace Evolution.Repository.SystemManage
         {
             this.ctx = ctx;
         }
-        public Task<List<ItemsDetailEntity>> GetItemList(string enCode)
+        public Task<List<ItemsDetailEntity>> GetItemList(string enCode,string tenantId)
         {
             var x = from a in ctx.ItemsDetails
                      join b in ctx.Items on a.ItemId equals b.Id
-                     where b.EnCode == enCode && a.EnabledMark == true && a.DeleteMark == false
+                     where b.EnCode == enCode && a.EnabledMark == true && a.DeleteMark == false && a.TenantId==tenantId
                      orderby a.SortCode
                      select a;
             return x.ToListAsync();

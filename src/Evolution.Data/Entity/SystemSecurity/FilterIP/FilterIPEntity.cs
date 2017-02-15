@@ -15,6 +15,7 @@ namespace Evolution.Domain.Entity.SystemSecurity
         public bool? Type { get; set; }
         public string StartIP { get; set; }
         public string EndIP { get; set; }
+        public string TenantId { get; set; }
 
     }
 }

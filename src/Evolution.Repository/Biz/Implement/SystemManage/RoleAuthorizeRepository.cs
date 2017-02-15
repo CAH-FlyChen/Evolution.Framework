@@ -28,9 +28,9 @@ namespace Evolution.Repository.SystemManage
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns>被授权的ItemId</returns>
-        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId)
+        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId,string tenantId)
         {
-            var hasPermissionPathres =  dbcontext.Set<RoleAuthorizeEntity>().Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4)
+            var hasPermissionPathres =  dbcontext.Set<RoleAuthorizeEntity>().Where(t => t.ObjectType == 1 && t.ObjectId == roleId && t.ItemType == 4 && t.TenantId==tenantId)
                 .Select(t => t.ItemId)
                 .ToListAsync();
             return hasPermissionPathres;

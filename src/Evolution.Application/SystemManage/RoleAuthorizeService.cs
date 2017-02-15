@@ -51,9 +51,9 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="ObjectId">权限所有者对象Id（OwnerId）</param>
         /// <returns>授权对象</returns>
-        public Task<List<RoleAuthorizeEntity>> GetListByObjectId(string ObjectId)
+        public Task<List<RoleAuthorizeEntity>> GetListByObjectId(string ObjectId, string tenantId)
         {
-            return service.IQueryable(t => t.ObjectId == ObjectId).ToListAsync();
+            return service.IQueryable(t => t.ObjectId == ObjectId && t.TenantId==tenantId).ToListAsync();
         }
         /// <summary>
         /// 通过角色Id获取该角色的资源授权
@@ -61,24 +61,24 @@ namespace Evolution.Application.SystemManage
         /// <param name="roleId">角色Id</param>
         /// <param name="permissionIds">输出参数：逗号分隔的权限Id文本</param>
         /// <returns>角色对象</returns>
-        public Task<RoleEntity> GetResoucesByRoleId(string roleId,out string permissionIds)
+        public Task<RoleEntity> GetResoucesByRoleId(string roleId, string tenantId, out string permissionIds)
         {
-            List<string> r = service.IQueryable(t => t.ItemType == 4 && t.ObjectType == 1 && t.ObjectId == roleId).Select(t=>t.ItemId).ToList();
+            List<string> r = service.IQueryable(t => t.ItemType == 4 && t.ObjectType == 1 && t.ObjectId == roleId && t.TenantId==tenantId).Select(t=>t.ItemId).ToList();
             permissionIds = String.Join(",", r);
-            return roleApp.GetRoleById(roleId);
+            return roleApp.GetRoleById(roleId,tenantId);
         }
         /// <summary>
         /// 保存角色资源授权
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <param name="resourceIds">资源Ids</param>
-        public async Task<int> Save(string roleId,List<string> resourceIds)
+        public async Task<int> Save(string roleId,List<string> resourceIds,string userId,string tenantId)
         {
-            await service.DeleteAsync(t => t.ObjectId == roleId && t.ObjectType == 1 && t.ItemType == 4);
+            await service.DeleteAsync(t => t.ObjectId == roleId && t.ObjectType == 1 && t.ItemType == 4 && t.TenantId==tenantId);
             foreach(string resourceId in resourceIds)
             {
                 RoleAuthorizeEntity entity = new RoleAuthorizeEntity();
-                entity.AttachCreateInfo(context);
+                entity.AttachCreateInfo(userId);
                 entity.ItemId = resourceId;
                 entity.ItemType = 4;
                 entity.ObjectId = roleId;
@@ -135,9 +135,9 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns>资源权限列表</returns>
-        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId)
+        public Task<List<string>> GetResorucePermissionsByRoleId(string roleId, string tenantId)
         {
-            return service.GetResorucePermissionsByRoleId(roleId);
+            return service.GetResorucePermissionsByRoleId(roleId,tenantId);
         }
 /// <summary>
         /// 检测资源（Resource）的权限。

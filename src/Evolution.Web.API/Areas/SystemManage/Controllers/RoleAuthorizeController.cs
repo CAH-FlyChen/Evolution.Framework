@@ -47,7 +47,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
             var authorizedata = new List<RoleAuthorizeEntity>();
             if (!string.IsNullOrEmpty(roleId))
             {
-                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId);
+                authorizedata = await roleAuthorizeApp.GetListByObjectId(roleId, this.TenantId);
             }
             var treeList = new List<TreeViewModel>();
             foreach (ResourceEntity item in resourcedata)
@@ -85,7 +85,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
                 if (d.Key == "FullName" || d.Key== "EnCode" || d.Key == "Id") continue;
                 keys.Add(d.Key);
             }
-            await roleAuthorizeApp.Save(keyValue, keys);
+            await roleAuthorizeApp.Save(keyValue, keys,this.UserId, this.TenantId);
             return Success("操作成功。");
         }
         /// <summary>
@@ -98,7 +98,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
             string permissionIds = "";
-            var data = await roleAuthorizeApp.GetResoucesByRoleId(keyValue,out permissionIds);
+            var data = await roleAuthorizeApp.GetResoucesByRoleId(keyValue,this.TenantId,out permissionIds);
             var rData = new
             {
                 Id = keyValue,

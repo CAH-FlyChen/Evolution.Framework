@@ -13,6 +13,6 @@ namespace Evolution.Domain.IRepository.SystemManage
 {
     public interface IItemsDetailRepository : IRepositoryBase<ItemsDetailEntity>
     {
-        Task<List<ItemsDetailEntity>> GetItemList(string enCode);
+        Task<List<ItemsDetailEntity>> GetItemList(string enCode,string tenantId);
     }
 }

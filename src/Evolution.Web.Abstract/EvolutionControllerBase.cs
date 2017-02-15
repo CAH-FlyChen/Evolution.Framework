@@ -1,6 +1,7 @@
 ﻿
 using Evolution.Framework;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Evolution.Web
 {
@@ -33,6 +34,27 @@ namespace Evolution.Web
         protected virtual ActionResult Error(string message)
         {
             return Content(new AjaxResult { state = ResultType.error.ToString(), message = message }.ToJson());
+        }
+
+        public string TenantId
+        {
+            get {
+                return HttpContext.Request.Headers["TenantId"];
+            }
+        }
+        public string UserId
+        {
+            get
+            {
+                return HttpContext.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.UserId).Value;
+            }
+        }
+        public string IsSystem
+        {
+            get
+            {
+                return HttpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
+            }
         }
     }
 }

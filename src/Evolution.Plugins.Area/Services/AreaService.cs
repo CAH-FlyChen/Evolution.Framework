@@ -42,16 +42,16 @@ namespace Evolution.Plugins.Area.Services
                 return repo.DeleteAsync(t => t.Id == keyValue);
             }
         }
-        public Task<int> Save(AreaEntity organizeEntity, string keyValue,HttpContext context)
+        public Task<int> Save(AreaEntity organizeEntity, string keyValue,string userId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                organizeEntity.AttachModifyInfo(keyValue, context);
+                organizeEntity.AttachModifyInfo(keyValue, userId);
                 return repo.UpdateAsync(organizeEntity);
             }
             else
             {
-                organizeEntity.AttachCreateInfo(context);
+                organizeEntity.AttachCreateInfo(userId);
                 return repo.InsertAsync(organizeEntity);
             }
         }

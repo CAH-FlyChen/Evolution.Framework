@@ -22,14 +22,11 @@ namespace Evolution.Data
         public DateTime? DeleteTime { get; set; }
         public string DeleteUserId { get; set; }
 
-        public void AttachCreateInfo(HttpContext httpContext)
+        public void AttachCreateInfo(string userId)
         {
             var entity = this as ICreationAudited;
             this.Id = Common.GuId();
-            //get userid
-            var userClaim = httpContext.User.Claims.SingleOrDefault(t => t.Type == OperatorModelClaimNames.UserId);
-            if (userClaim != null)
-                entity.CreatorUserId = userClaim.Value;
+            entity.CreatorUserId = userId;
             entity.CreateTime = DateTime.Now;
         }
         /// <summary>
@@ -37,11 +34,10 @@ namespace Evolution.Data
         /// </summary>
         /// <param name="id">实体Id</param>
         /// <param name="httpContext"></param>
-        public void AttachModifyInfo(string id, HttpContext httpContext)
+        public void AttachModifyInfo(string id, string userId)
         {
             var entity = this as IModificationAudited;
             this.Id = id;
-            var userId = httpContext.User.Claims.First(t => t.Type == OperatorModelClaimNames.UserId).Value;
             entity.LastModifyUserId = userId;
             entity.LastModifyTime = DateTime.Now;
         }

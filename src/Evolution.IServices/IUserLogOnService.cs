@@ -7,7 +7,7 @@ namespace Evolution.Application.SystemManage
 {
     public interface IUserLogOnService
     {
-        Task<UserLogOnEntity> GetForm(string keyValue);
+        Task<UserLogOnEntity> GetForm(string keyValue,string tenantId);
         Task<int> RevisePassword(string userPassword, string keyValue);
         void SignIn(LoginModel om, HttpContext context);
         void SignOut(HttpContext context);

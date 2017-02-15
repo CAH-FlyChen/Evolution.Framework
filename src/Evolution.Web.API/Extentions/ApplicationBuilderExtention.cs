@@ -69,6 +69,7 @@ namespace Evolution.Web.API.Extentions
                         entity.EnabledMark = bool.Parse(colums[6]);
                         entity.Description = colums[7];
                         entity.CreateTime = DateTime.Parse(colums[8]);
+                        entity.TenantId = colums[14];
                         dbContext.FilterIPs.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_Items", colums => {
@@ -83,7 +84,7 @@ namespace Evolution.Web.API.Extentions
                         entity.DeleteMark = GetDefaultBool(colums[7], false);
                         entity.EnabledMark = GetDefaultBool(colums[8], true);
                         entity.CreateTime = DateTime.MinValue;
-                    entity.TenantId = colums[16];
+                        entity.TenantId = colums[16];
                         dbContext.Items.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_ItemsDetail", colums => {
@@ -97,6 +98,7 @@ namespace Evolution.Web.API.Extentions
                         entity.SortCode = int.Parse(colums[8]);
                         entity.DeleteMark = GetDefaultBool(colums[9], false);
                         entity.EnabledMark = GetDefaultBool(colums[10], true);
+                    entity.TenantId = colums[18];
                         dbContext.ItemsDetails.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_Log", colums => {
@@ -170,6 +172,7 @@ namespace Evolution.Web.API.Extentions
                         entity.CreateTime = DateTime.MinValue;
                         entity.LastModifyTime = DateTime.MinValue;
                         entity.LastModifyUserId = colums[20];
+                    entity.TenantId = colums[24];
                         dbContext.ModuleButtons.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_Organize", colums =>
@@ -222,6 +225,7 @@ namespace Evolution.Web.API.Extentions
                         //entity.SortCode = int.Parse(colums[5]);
                         entity.CreateTime = DateTime.MinValue;
                         entity.CreatorUserId = colums[7];
+                    entity.TenantId = colums[8];
                         dbContext.RoleAuthorize.Add(entity);
                     });
                 DataInitTool.ProcessSheet("Sys_User", colums => {

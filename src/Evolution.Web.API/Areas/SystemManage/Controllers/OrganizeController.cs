@@ -37,7 +37,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [Authorize]
         public async Task<ActionResult> GetTreeSelectJson()
         {
-            var data = await organizeApp.GetList();
+            var data = await organizeApp.GetList(this.TenantId);
             var treeList = new List<TreeSelectModel>();
             foreach (OrganizeEntity item in data)
             {
@@ -55,7 +55,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("获取组织结构数据树状列表", "获取组织结构数据树状列表")]
         public async Task<ActionResult> GetTreeJson()
         {
-            var data = await organizeApp.GetList();
+            var data = await organizeApp.GetList(this.TenantId);
             var treeList = new List<TreeViewModel>();
             foreach (OrganizeEntity item in data)
             {
@@ -77,7 +77,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("获取组织结构数据列表", "获取组织结构数据列表")]
         public async Task<ActionResult> GetTreeGridJson(string keyword)
         {
-            var data = await organizeApp.GetList();
+            var data = await organizeApp.GetList(this.TenantId);
 
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -102,7 +102,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("获取一个组织结构数据", "获取一个组织结构数据")]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await organizeApp.GetForm(keyValue);
+            var data = await organizeApp.GetForm(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
         [HttpPost]
@@ -111,7 +111,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("保存组织结构数据", "保存组织结构数据")]
         public async Task<IActionResult> SubmitForm(OrganizeEntity organizeEntity, string keyValue)
         {
-            await organizeApp.Save(organizeEntity, keyValue, HttpContext);
+            await organizeApp.Save(organizeEntity, keyValue, this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -121,7 +121,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [PermissionLevelDescrip("删除组织结构数据", "删除组织结构数据")]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await organizeApp.Delete(keyValue);
+            await organizeApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
     }

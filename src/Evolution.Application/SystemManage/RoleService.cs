@@ -35,7 +35,7 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="keyword">搜索关键字</param>
         /// <returns></returns>
-        public Task<List<RoleEntity>> GetList(string keyword = "")
+        public Task<List<RoleEntity>> GetList(string keyword,string tenantId)
         {
             var expression = ExtLinq.True<RoleEntity>();
             if (!string.IsNullOrEmpty(keyword))
@@ -43,7 +43,7 @@ namespace Evolution.Application.SystemManage
                 expression = expression.And(t => t.FullName.Contains(keyword));
                 expression = expression.Or(t => t.EnCode.Contains(keyword));
             }
-            expression = expression.And(t => t.Category == 1);
+            expression = expression.And(t => t.Category == 1).And(x=>x.TenantId==tenantId);
             return service.IQueryable(expression).OrderBy(t => t.SortCode).ToListAsync();
         }
         /// <summary>
@@ -51,17 +51,17 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="id">角色Id</param>
         /// <returns></returns>
-        public Task<RoleEntity> GetRoleById(string id)
+        public Task<RoleEntity> GetRoleById(string id,string tenantId)
         {
-            return service.FindEntityAsync(id);
+            return service.FindEntityASync(t=>t.TenantId==tenantId);
         }
         /// <summary>
         /// 删除角色对象及相关授权
         /// </summary>
         /// <param name="id">角色对象</param>
-        public Task<int> Delete(string id)
+        public Task<int> Delete(string id, string tenantId)
         {
-            return service.DeleteAsync(id);
+            return service.DeleteAsync(t=>t.Id==id && t.TenantId==tenantId);
         }
         /// <summary>
         /// 保存角色及角色菜单授权
@@ -69,7 +69,7 @@ namespace Evolution.Application.SystemManage
         /// <param name="roleEntity">角色对象</param>
         /// <param name="permissionIds">菜单授权Id</param>
         /// <param name="keyValue">角色Id</param>
-        public async Task<int> Save(RoleEntity roleEntity, string[] permissionIds, string keyValue)
+        public async Task<int> Save(RoleEntity roleEntity, string[] permissionIds, string keyValue,string tenantId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
@@ -79,8 +79,8 @@ namespace Evolution.Application.SystemManage
             {
                 roleEntity.Id = Common.GuId();
             }
-            var menuData = await menuApp.GetList();
-            var buttonData = await moduleButtonApp.GetList();
+            var menuData = await menuApp.GetList(tenantId);
+            var buttonData = await moduleButtonApp.GetList(tenantId);
             List<RoleAuthorizeEntity> roleAuthorizeEntitys = new List<RoleAuthorizeEntity>();
             foreach (var itemId in permissionIds)
             {

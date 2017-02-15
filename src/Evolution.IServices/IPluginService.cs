@@ -8,6 +8,6 @@ namespace Evolution.Application.SystemManage
     public interface IPluginService
     {
         bool Activate(string pluginId);
-        Task<List<PluginEntity>> GetList(Pagination pagination, string keyword);
+        Task<List<PluginEntity>> GetList(Pagination pagination, string keyword, string tenantId);
     }
 }

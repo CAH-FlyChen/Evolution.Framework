@@ -21,6 +21,7 @@ namespace Evolution.EFConfiguration
             entity.Property(t => t.Activated).HasColumnName("F_Activated");
             entity.Property(t => t.AssessmblyName).HasColumnName("F_AssessmblyName");
             entity.Property(t => t.Name).HasColumnName("F_Name");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantID");
         }
     }
 }

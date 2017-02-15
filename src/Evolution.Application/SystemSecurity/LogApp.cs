@@ -91,16 +91,16 @@ namespace Evolution.Application.SystemSecurity
             logEntity.IPAddressName = Net.GetLocation(logEntity.IPAddress);
             logEntity.Result = result;
             logEntity.Description = resultLog;
-            logEntity.AttachCreateInfo(context);
+            logEntity.AttachCreateInfo(userCode);
             return service.InsertAsync(logEntity);
         }
-        public Task<int> WriteDbLog(LogEntity logEntity,HttpContext context)
+        public Task<int> WriteDbLog(LogEntity logEntity,string userId)
         {
             logEntity.Id = Common.GuId();
             logEntity.Date = DateTime.Now;
             logEntity.IPAddress = "117.81.192.182";
             logEntity.IPAddressName = Net.GetLocation(logEntity.IPAddress);
-            logEntity.AttachCreateInfo(context);
+            logEntity.AttachCreateInfo(userId);
             return service.InsertAsync(logEntity);
         }
     }

@@ -49,5 +49,10 @@ namespace Evolution.Framework
                 }
             }
         }
+        public Pagination()
+        {
+            this.sord = "asc";
+            this.sidx = "CreateTime";
+        }
     }
 }

@@ -18,6 +18,6 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns>资源权限列表</returns>
-        Task<List<string>> GetResorucePermissionsByRoleId(string roleId);
+        Task<List<string>> GetResorucePermissionsByRoleId(string roleId,string tenantId);
     }
 }

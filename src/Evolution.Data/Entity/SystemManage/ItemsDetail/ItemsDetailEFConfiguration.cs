@@ -24,6 +24,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.ItemName).HasColumnName("F_ItemName");
             entity.Property(t => t.SimpleSpelling).HasColumnName("F_SimpleSpelling");
             entity.Property(t => t.IsDefault).HasColumnName("F_IsDefault");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
 
     }

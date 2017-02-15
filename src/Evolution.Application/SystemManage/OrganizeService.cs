@@ -22,15 +22,15 @@ namespace Evolution.Application.SystemManage
         {
             this.repo = repo;
         }
-        public Task<List<OrganizeEntity>> GetList()
+        public Task<List<OrganizeEntity>> GetList(string tenantId)
         {
-            return repo.IQueryable().OrderBy(t => t.CreateTime).ToListAsync();
+            return repo.IQueryable().Where(t=>t.TenantId==tenantId).OrderBy(t => t.CreateTime).ToListAsync();
         }
-        public Task<OrganizeEntity> GetForm(string keyValue)
+        public Task<OrganizeEntity> GetForm(string keyValue,string tenantId)
         {
-            return repo.FindEntityAsync(keyValue);
+            return repo.FindEntityASync(t=>t.Id==keyValue && t.TenantId==tenantId);
         }
-        public Task<int> Delete(string keyValue)
+        public Task<int> Delete(string keyValue,string tenantId)
         {
             if (repo.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -38,19 +38,19 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                return repo.DeleteAsync(t => t.Id == keyValue);
+                return repo.DeleteAsync(t => t.Id == keyValue && t.TenantId==tenantId);
             }
         }
-        public Task<int> Save(OrganizeEntity organizeEntity, string keyValue,HttpContext context)
+        public Task<int> Save(OrganizeEntity organizeEntity, string keyValue,string userId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                organizeEntity.AttachModifyInfo(keyValue, context);
+                organizeEntity.AttachModifyInfo(keyValue, userId);
                 return repo.UpdateAsync(organizeEntity);
             }
             else
             {
-                organizeEntity.AttachCreateInfo(context);
+                organizeEntity.AttachCreateInfo(userId);
                 return repo.InsertAsync(organizeEntity);
             }
         }

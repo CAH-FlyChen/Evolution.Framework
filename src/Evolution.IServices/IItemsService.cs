@@ -7,9 +7,9 @@ namespace Evolution.Application.SystemManage
 {
     public interface IItemsService
     {
-        Task<int> Delete(string keyValue);
-        Task<ItemsEntity> GetForm(string keyValue);
-        Task<List<ItemsEntity>> GetList();
-        Task<int> Save(ItemsEntity itemsEntity, string keyValue, HttpContext context);
+        Task<int> Delete(string keyValue, string tenantId);
+        Task<ItemsEntity> GetForm(string keyValue, string tenantId);
+        Task<List<ItemsEntity>> GetList(string tenantId);
+        Task<int> Save(ItemsEntity itemsEntity, string keyValue, string userId);
     }
 }

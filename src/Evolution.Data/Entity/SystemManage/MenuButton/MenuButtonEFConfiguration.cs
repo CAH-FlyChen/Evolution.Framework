@@ -30,6 +30,7 @@ namespace Evolution.EFConfiguration.SystemManage
             entity.Property(t => t.AllowDelete).HasColumnName("F_AllowDelete");
             entity.Property(t => t.JsEvent).HasColumnName("F_JsEvent");
             entity.Property(t => t.Split).HasColumnName("F_Split");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
 
     }

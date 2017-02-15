@@ -94,6 +94,7 @@ namespace Evolution.IInfrastructure
         public async Task<string> GetResponseFromNewRequest(HttpRequest oldRequest,string tokenStr)
         {
             string token = tokenStr;
+            string tenantId = oldRequest.Headers["TenantId"];
             string url = UriHelper.GetDisplayUrl(oldRequest);
             var x = url.IndexOf("/", 7);
             var start = url.Substring(x);
@@ -106,6 +107,7 @@ namespace Evolution.IInfrastructure
                 //copy header
                 client.DefaultRequestHeaders.Add("Authorization","Bearer " + token);
                 client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+                client.DefaultRequestHeaders.Add("TenantId",tenantId);
                 switch (oldRequest.Method)
                 {
                     case "POST": {

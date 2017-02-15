@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Runtime.InteropServices;
 using Evolution.Plugins.Abstract;
 using Evolution.Application;
+using Microsoft.AspNetCore.Http;
 
 namespace Evolution.Web.API.Extentions
 {
@@ -112,7 +113,7 @@ namespace Evolution.Web.API.Extentions
             //services.AddSingleton<ClaimListProvider, ClaimListProvider>();
 
             services.AddScoped<IAuthorizationHandler, PermissionHandler>();
-            //services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IItemsDetailRepository, ItemsDetailRepository>();
             services.AddTransient<IItemsRepository, ItemsRepository>();
             services.AddTransient<IMenuButtonRepository, MenuButtonRepository>();

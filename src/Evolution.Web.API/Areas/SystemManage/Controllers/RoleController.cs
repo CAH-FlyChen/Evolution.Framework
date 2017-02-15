@@ -38,7 +38,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetGridJson(string keyword)
         {
-            var data = await roleApp.GetList(keyword);
+            var data = await roleApp.GetList(keyword,this.TenantId);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -50,7 +50,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetFormJson(string keyValue)
         {
-            var data = await roleApp.GetRoleById(keyValue);
+            var data = await roleApp.GetRoleById(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -65,7 +65,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SubmitForm(RoleEntity roleEntity, string permissionIds, string keyValue)
         {
-            await roleApp.Save(roleEntity, permissionIds.Split(','), keyValue);
+            await roleApp.Save(roleEntity, permissionIds.Split(','), keyValue,this.TenantId);
             return Success("操作成功。");
         }
         /// <summary>
@@ -78,7 +78,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await roleApp.Delete(keyValue);
+            await roleApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
         /// <summary>

@@ -19,14 +19,12 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         #region 私有变量
         private UserService userApp = null;
         private UserLogOnService userLogOnApp = null;
-        string tenantId = null;
         #endregion
         #region 构造函数
         public UserController(UserService userApp, UserLogOnService userLogOnApp)
         {
             this.userApp = userApp;
             this.userLogOnApp = userLogOnApp;
-            tenantId = HttpContext.Request.Headers["TenantId"];
         }
         #endregion
         /// <summary>
@@ -41,7 +39,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         {
             var data = new
             {
-                rows = await userApp.GetList(pagination, keyword, tenantId),
+                rows = await userApp.GetList(pagination, keyword, this.TenantId),
                 total = pagination.total,
                 page = pagination.page,
                 records = pagination.records
@@ -57,7 +55,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await userApp.GetEntityById(keyValue,tenantId);
+            var data = await userApp.GetEntityById(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
         /// <summary>
@@ -72,7 +70,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string keyValue)
         {
-            await userApp.Save(userEntity, userLogOnEntity, keyValue);
+            await userApp.Save(userEntity, userLogOnEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         /// <summary>
@@ -85,7 +83,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await userApp.Delete(keyValue);
+            await userApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
         /// <summary>

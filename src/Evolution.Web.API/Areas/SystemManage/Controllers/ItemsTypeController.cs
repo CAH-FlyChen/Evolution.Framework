@@ -29,7 +29,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetTreeSelectJson()
         {
-            var data = await itemsApp.GetList();
+            var data = await itemsApp.GetList(this.TenantId);
             var treeList = new List<TreeSelectModel>();
             foreach (ItemsEntity item in data)
             {
@@ -45,7 +45,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetTreeJson()
         {
-            var data = await itemsApp.GetList();
+            var data = await itemsApp.GetList(this.TenantId);
             var treeList = new List<TreeViewModel>();
             foreach (ItemsEntity item in data)
             {
@@ -66,7 +66,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetTreeGridJson()
         {
-            var data = await itemsApp.GetList();
+            var data = await itemsApp.GetList(this.TenantId);
             var treeList = new List<TreeGridModel>();
             foreach (ItemsEntity item in data)
             {
@@ -85,7 +85,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await itemsApp.GetForm(keyValue);
+            var data = await itemsApp.GetForm(keyValue, this.TenantId);
             return Content(data.ToJson());
         }
         [HttpPost]
@@ -93,7 +93,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(ItemsEntity itemsEntity, string keyValue)
         {
-            await itemsApp.Save(itemsEntity, keyValue,HttpContext);
+            await itemsApp.Save(itemsEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -101,7 +101,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await itemsApp.Delete(keyValue);
+            await itemsApp.Delete(keyValue, this.TenantId);
             return Success("删除成功。");
         }
     }

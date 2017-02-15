@@ -45,10 +45,19 @@ namespace Evolution.Web.API.Controllers
             this.menuButtonApp = menuButtonApp;
         }
         #endregion 
+
+        public string TenantId
+        {
+            get
+            {
+                return HttpContext.Request.Headers["TenantId"];
+            }
+        }
         [HttpGet]
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetClientsDataJson()
         {
+            if (TenantId == null) return null;
             var data = new
             {
                 dataItems = await this.GetDataItemList(),
@@ -63,9 +72,9 @@ namespace Evolution.Web.API.Controllers
         }
         private async Task<object> GetDataItemList()
         {
-            var itemdata = await itemDetailApp.GetList();
+            var itemdata = await itemDetailApp.GetList("","",this.TenantId);
             Dictionary<string, object> dictionaryItem = new Dictionary<string, object>();
-            foreach (var item in await itemsApp.GetList())
+            foreach (var item in await itemsApp.GetList(this.TenantId))
             {
                 var dataItemList = itemdata.FindAll(t => t.ItemId.Equals(item.Id));
                 Dictionary<string, string> dictionaryItemList = new Dictionary<string, string>();
@@ -79,7 +88,7 @@ namespace Evolution.Web.API.Controllers
         }
         private async Task<object> GetOrganizeList()
         {
-            var data = await this.organizeApp.GetList();
+            var data = await this.organizeApp.GetList(this.TenantId);
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (OrganizeEntity item in data)
             {
@@ -94,7 +103,7 @@ namespace Evolution.Web.API.Controllers
         }
         private async Task<object> GetRoleList()
         {
-            var data = await this.roleApp.GetList();
+            var data = await this.roleApp.GetList("",this.TenantId);
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (RoleEntity item in data)
             {
@@ -109,7 +118,7 @@ namespace Evolution.Web.API.Controllers
         }
         private async Task<object> GetDutyList()
         {
-            var data = await this.dutyApp.GetList();
+            var data = await this.dutyApp.GetList("",this.TenantId);
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (RoleEntity item in data)
             {
@@ -129,7 +138,8 @@ namespace Evolution.Web.API.Controllers
                 return null;
             }
             string roleId = HttpContext.User.Claims.FirstOrDefault(t => t.Type== OperatorModelClaimNames.RoleId).Value;
-            return ToMenuJson(await this.menuApp.GetMenuListByRoleId(roleId), "0");
+            string isSystem = HttpContext.User.Claims.FirstOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
+            return ToMenuJson(await this.menuApp.GetMenuListByRoleId(roleId,this.TenantId,isSystem), "0");
         }
         private string ToMenuJson(List<MenuEntity> data, string parentId)
         {
@@ -154,7 +164,8 @@ namespace Evolution.Web.API.Controllers
             var roleClaim = User.Claims.FirstOrDefault(t => t.Type == OperatorModelClaimNames.RoleId);
             if (roleClaim == null) return null;
             var roleId = roleClaim.Value;
-            var authedButtonList = await menuButtonApp.GetButtonListByRoleId(roleId);
+            var isSystem = User.Claims.First(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
+            var authedButtonList = await menuButtonApp.GetButtonListByRoleId(roleId,isSystem.ToBool(),this.TenantId);
             var distinctAuthedMenuButtonList = authedButtonList.Distinct(new ExtList<MenuButtonEntity>("MenuId"));
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
             foreach (MenuButtonEntity item in distinctAuthedMenuButtonList)

@@ -39,7 +39,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         {
             var data = new
             {
-                rows = await service.GetList(pagination, keyword),
+                rows = await service.GetList(pagination, keyword,this.TenantId),
                 total = pagination.total,
                 page = pagination.page,
                 records = pagination.records

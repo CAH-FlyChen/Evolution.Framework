@@ -20,6 +20,7 @@ namespace Evolution.EFConfiguration.SystemSecurity
             entity.Property(t => t.StartIP).HasColumnName("F_StartIP");
             entity.Property(t => t.EndIP).HasColumnName("F_EndIP");
             entity.Property(t => t.Type).HasColumnName("F_Type");
+            entity.Property(t => t.TenantId).HasColumnName("F_TenantId");
         }
 
     }

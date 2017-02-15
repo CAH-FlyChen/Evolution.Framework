@@ -29,14 +29,14 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetGridJson(string keyword)
         {
-            var data = await dutyApp.GetList(keyword);
+            var data = await dutyApp.GetList(keyword,this.TenantId);
             return Content(data.ToJson());
         }
         [HttpGet]
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await dutyApp.GetForm(keyValue);
+            var data = await dutyApp.GetForm(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
         [HttpPost]
@@ -44,7 +44,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(RoleEntity roleEntity, string keyValue)
         {
-            await dutyApp.Save(roleEntity, keyValue,HttpContext);
+            await dutyApp.Save(roleEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -53,7 +53,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await dutyApp.Delete(keyValue);
+            await dutyApp.Delete(keyValue,this.TenantId);
             return Success("删除成功。");
         }
     }

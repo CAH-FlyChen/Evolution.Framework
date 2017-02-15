@@ -29,14 +29,14 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetGridJson(string itemId, string keyword)
         {
-            var data = await itemsDetailApp.GetList(itemId, keyword);
+            var data = await itemsDetailApp.GetList(itemId, keyword, this.TenantId);
             return Content(data.ToJson());
         }
         [HttpGet]
         [HandlerAjaxOnly]
         public async Task<ActionResult> GetSelectJson(string enCode)
         {
-            var data = await itemsDetailApp.GetItemList(enCode);
+            var data = await itemsDetailApp.GetItemList(enCode,this.TenantId);
             List<object> list = new List<object>();
             foreach (ItemsDetailEntity item in data)
             {
@@ -48,7 +48,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [HandlerAjaxOnly]
         public async Task<IActionResult> GetFormJson(string keyValue)
         {
-            var data = await itemsDetailApp.GetForm(keyValue);
+            var data = await itemsDetailApp.GetForm(keyValue,this.TenantId);
             return Content(data.ToJson());
         }
         [HttpPost]
@@ -56,7 +56,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(ItemsDetailEntity itemsDetailEntity, string keyValue)
         {
-            await itemsDetailApp.Save(itemsDetailEntity, keyValue,HttpContext);
+            await itemsDetailApp.Save(itemsDetailEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]
@@ -65,7 +65,7 @@ namespace Evolution.Web.API.Areas.SystemManage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteForm(string keyValue)
         {
-            await itemsDetailApp.Delete(keyValue);
+            await itemsDetailApp.Delete(keyValue,this.TenantId);
             return Success("删除成功。");
         }
     }

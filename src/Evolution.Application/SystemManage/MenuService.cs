@@ -22,14 +22,12 @@ namespace Evolution.Application.SystemManage
         #region 私有变量
         private IMenuRepository service = null;
         private IRoleAuthorizeRepository roleAuthRepo = null;
-        private HttpContext context = null;
         #endregion
         #region 构造函数
-        public MenuService(IMenuRepository service,IRoleAuthorizeRepository roleAuthRepo,IHttpContextAccessor contextAccessor)
+        public MenuService(IMenuRepository service,IRoleAuthorizeRepository roleAuthRepo)
         {
             this.service = service;
             this.roleAuthRepo = roleAuthRepo;
-            this.context = contextAccessor.HttpContext;
         }
         #endregion
         /// <summary>
@@ -37,22 +35,21 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="roleId">角色Id</param>
         /// <returns></returns>
-        public async Task<List<MenuEntity>> GetMenuListByRoleId(string roleId)
+        public async Task<List<MenuEntity>> GetMenuListByRoleId(string roleId,string tenantId,string isSystem)
         {
             var data = new List<MenuEntity>();
-            var isSystem = context.User.Claims.FirstOrDefault(t => t.Type == OperatorModelClaimNames.IsSystem).Value;
             if (isSystem == null) return null;
             if (isSystem.ToBool())
             {
-                data = await this.GetList();
+                data = await this.GetList(tenantId);
             }
             else
             {
-                var menuData = await this.GetList();
-                var authmenudata = await roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 1).ToListAsync();
+                var menuData = await this.GetList(tenantId);
+                var authmenudata = await roleAuthRepo.IQueryable(t => t.ObjectId == roleId && t.ItemType == 1 && t.TenantId==tenantId).ToListAsync();
                 foreach (var item in authmenudata)
                 {
-                    MenuEntity moduleEntity = menuData.Find(t => t.Id == item.ItemId);
+                    MenuEntity moduleEntity = menuData.Find(t => t.Id == item.ItemId && t.TenantId==tenantId);
                     if (moduleEntity != null)
                         data.Add(moduleEntity);
                 }
@@ -63,24 +60,24 @@ namespace Evolution.Application.SystemManage
         /// 获取所有菜单列表
         /// </summary>
         /// <returns></returns>
-        public Task<List<MenuEntity>> GetList()
+        public Task<List<MenuEntity>> GetList(string tenantId)
         {
-            return service.IQueryable().OrderBy(t => t.SortCode).ToListAsync();
+            return service.IQueryable().Where(t=> t.TenantId == tenantId).OrderBy(t => t.SortCode).ToListAsync();
         }
         /// <summary>
         /// 通过菜单Id获取菜单
         /// </summary>
         /// <param name="keyValue">菜单Id</param>
         /// <returns></returns>
-        public Task<MenuEntity> GetMenuById(string keyValue)
+        public Task<MenuEntity> GetMenuById(string keyValue,string tenantId)
         {
-            return service.FindEntityAsync(keyValue);
+            return service.FindEntityASync(t=>t.Id==keyValue && t.TenantId==tenantId);
         }
         /// <summary>
         /// 删除菜单，若有父菜单，则禁止删除
         /// </summary>
         /// <param name="keyValue">菜单Id</param>
-        public Task<int> Delete(string keyValue)
+        public Task<int> Delete(string keyValue, string tenantId)
         {
             if (service.IQueryable().Count(t => t.ParentId.Equals(keyValue)) > 0)
             {
@@ -88,7 +85,7 @@ namespace Evolution.Application.SystemManage
             }
             else
             {
-                return service.DeleteAsync(t => t.Id == keyValue);
+                return service.DeleteAsync(t => t.Id == keyValue && t.TenantId==tenantId);
             }
         }
         /// <summary>
@@ -96,16 +93,16 @@ namespace Evolution.Application.SystemManage
         /// </summary>
         /// <param name="menuEntity">菜单实体</param>
         /// <param name="keyValue">菜单Id，有id则更新，无id则新建</param>
-        public Task<int> Save(MenuEntity menuEntity, string keyValue)
+        public Task<int> Save(MenuEntity menuEntity, string keyValue,string userId)
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                menuEntity.AttachModifyInfo(keyValue, context);
+                menuEntity.AttachModifyInfo(keyValue, userId);
                 return service.UpdateAsync(menuEntity);
             }
             else
             {
-                menuEntity.AttachCreateInfo(context);
+                menuEntity.AttachCreateInfo(userId);
                 return service.InsertAsync(menuEntity);
             }
         }

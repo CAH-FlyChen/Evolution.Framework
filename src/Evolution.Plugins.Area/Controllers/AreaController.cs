@@ -79,7 +79,7 @@ namespace Evolution.Plugins.Area.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(AreaEntity areaEntity, string keyValue)
         {
-            await areaService.Save(areaEntity, keyValue, HttpContext);
+            await areaService.Save(areaEntity, keyValue, this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]

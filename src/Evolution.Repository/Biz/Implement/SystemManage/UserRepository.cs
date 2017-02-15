@@ -45,7 +45,7 @@ namespace Evolution.Repository.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">用户登录实体</param>
         /// <param name="id">Id</param>
-        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id)
+        public Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id,string userId)
         {
             using (var repo = new RepositoryBase(dbcontext).BeginTrans())
             {
@@ -55,7 +55,7 @@ namespace Evolution.Repository.SystemManage
                 }
                 else
                 {
-                    userEntity.AttachCreateInfo(context);
+                    userEntity.AttachCreateInfo(userId);
                     userLogOnEntity.Id = userEntity.Id;
                     userLogOnEntity.UserId = userEntity.Id;
                     userLogOnEntity.UserSecretkey = Md5.md5(Common.CreateNo(), 16).ToLower();

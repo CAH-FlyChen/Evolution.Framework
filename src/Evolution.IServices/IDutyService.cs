@@ -7,9 +7,9 @@ namespace Evolution.Application.SystemManage
 {
     public interface IDutyService
     {
-        Task<int> Delete(string keyValue);
-        Task<RoleEntity> GetForm(string keyValue);
-        Task<List<RoleEntity>> GetList(string keyword = "");
-        Task<int> Save(RoleEntity roleEntity, string keyValue, HttpContext context);
+        Task<int> Delete(string keyValue, string tenantId);
+        Task<RoleEntity> GetForm(string keyValue, string tenantId);
+        Task<List<RoleEntity>> GetList(string keyword, string tenantId);
+        Task<int> Save(RoleEntity roleEntity, string keyValue,string tenantId);
     }
 }

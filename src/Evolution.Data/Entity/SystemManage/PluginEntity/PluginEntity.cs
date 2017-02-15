@@ -16,5 +16,6 @@ namespace Evolution.Domain.Entity.SystemManage
         public string AssessmblyName { get; set; }
         public string Path { get; set; }
         public bool Activated { get; set; }
+        public string TenantId { get; set; }
     }
 }

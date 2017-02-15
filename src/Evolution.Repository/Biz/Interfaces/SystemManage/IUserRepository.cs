@@ -24,6 +24,6 @@ namespace Evolution.Domain.IRepository.SystemManage
         /// <param name="userEntity">用户实体</param>
         /// <param name="userLogOnEntity">用户登录实体</param>
         /// <param name="id">Id</param>
-        Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id);
+        Task<int> Save(UserEntity userEntity, UserLogOnEntity userLogOnEntity, string id,string userId);
     }
 }

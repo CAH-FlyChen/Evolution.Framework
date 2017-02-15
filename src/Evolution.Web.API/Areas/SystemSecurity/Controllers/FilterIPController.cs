@@ -42,7 +42,7 @@ namespace Evolution.Web.API.Areas.SystemSecurity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForm(FilterIPEntity filterIPEntity, string keyValue)
         {
-            await filterIPApp.Save(filterIPEntity, keyValue,HttpContext);
+            await filterIPApp.Save(filterIPEntity, keyValue,this.UserId);
             return Success("操作成功。");
         }
         [HttpPost]
