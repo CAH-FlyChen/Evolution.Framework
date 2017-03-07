@@ -34,5 +34,8 @@ namespace Evolution.IRepository
         Task<List<TEntity>> FindListAsync(string strSql, DbParameter[] dbParameter);
         Task<List<TEntity>> FindListAsync(Pagination pagination);
         Task<List<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate, Pagination pagination);
+        //void BeginTrans();
+        //void CommitTrans();
+        //void RollbackTrans();
     }
 }

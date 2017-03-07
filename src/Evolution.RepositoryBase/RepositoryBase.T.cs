@@ -18,6 +18,7 @@ using Evolution.Framework;
 using Evolution.Data.Extensions;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Evolution.Repository
 {
@@ -162,6 +163,21 @@ namespace Evolution.Repository
             pagination.records = await tempData.CountAsync();
             tempData = tempData.Skip<TEntity>(pagination.rows * (pagination.page - 1)).Take<TEntity>(pagination.rows).AsQueryable();
             return await tempData.ToListAsync();
+        }
+
+        public IDbContextTransaction BeginTrans()
+        {
+            return dbcontext.Database.BeginTransaction();
+        }
+
+        public void CommitTrans(IDbContextTransaction trans)
+        {
+            this.dbcontext.Database.CommitTransaction();
+        }
+
+        public void RollbackTrans()
+        {
+            this.dbcontext.Database.RollbackTransaction();
         }
     }
 }

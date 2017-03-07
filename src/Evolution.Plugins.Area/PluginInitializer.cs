@@ -26,6 +26,8 @@ namespace Evolution.Plugins.Area
             {
                 return;
             }
+            if (DataInitTool.workbook == null)
+                DataInitTool.OpenExcel("InitData.xlsx", webRootPath);
             DataInitTool.ProcessSheet("Sys_Area", colums => {
                 AreaEntity entity = new AreaEntity();
                 entity.Id = colums[0];

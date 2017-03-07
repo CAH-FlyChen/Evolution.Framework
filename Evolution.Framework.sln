@@ -50,6 +50,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Evolution.Web.RazorHtml", "
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Evolution.IServices", "src\Evolution.IServices\Evolution.IServices.xproj", "{11E9B7F3-26BC-4EB3-A9E5-BBEEA5444E09}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Evolution.Plugins.WeiXin", "src\Evolution.Plugins.WeiXin\Evolution.Plugins.WeiXin.xproj", "{D9042116-94DD-4328-878C-5C4669A9854F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,10 @@ Global
 		{11E9B7F3-26BC-4EB3-A9E5-BBEEA5444E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E9B7F3-26BC-4EB3-A9E5-BBEEA5444E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E9B7F3-26BC-4EB3-A9E5-BBEEA5444E09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9042116-94DD-4328-878C-5C4669A9854F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9042116-94DD-4328-878C-5C4669A9854F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9042116-94DD-4328-878C-5C4669A9854F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9042116-94DD-4328-878C-5C4669A9854F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,5 +147,6 @@ Global
 		{56AF7E55-5878-463D-A01F-A2FEF53FAC07} = {48F93FD1-2EE8-42DB-BD31-9894C5F5396B}
 		{2392912D-F248-4508-9FBA-15EDC7E5C1AD} = {48F93FD1-2EE8-42DB-BD31-9894C5F5396B}
 		{11E9B7F3-26BC-4EB3-A9E5-BBEEA5444E09} = {48F93FD1-2EE8-42DB-BD31-9894C5F5396B}
+		{D9042116-94DD-4328-878C-5C4669A9854F} = {D10BE1BC-CDE8-4734-8657-4D6C05467C87}
 	EndGlobalSection
 EndGlobal
